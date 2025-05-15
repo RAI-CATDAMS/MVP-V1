@@ -16,13 +16,6 @@ with open("ingest_schema.json") as f:
 def home():
     return "Hello, CATAMS!"
 
-@app.route("/health")
-
-def health():
-
-        return {"status": "ok"}, 200
-
-
 @app.route("/ingest", methods=["POST"])
 def ingest():
     payload = request.get_json(force=True)
@@ -31,7 +24,8 @@ def ingest():
     except ValidationError as e:
         return {"error": e.message}, 400
 
-        return {"status": "accepted"}, 202
+    # If we get here, validation passed
+    return {"status": "accepted"}, 202
 
 
 if __name__ == "__main__":
