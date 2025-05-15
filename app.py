@@ -1,7 +1,10 @@
+import os
 from flask import Flask
 app = Flask(__name__)
-@app.route("/")
 
+
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "fallback-secret")
+@app.route("/")
 def home():
     return "Hello, CATAMS!"
 
