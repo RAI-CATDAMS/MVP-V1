@@ -75,6 +75,9 @@ def create_app(test_config=None):
     return app
 
 # ─── Entry point ───────────────────────────────────────────────────────────────
+# ─── Expose a WSGI‐ready app for Azure/Gunicorn ──────────────────────────
+app = create_app()
+
 if __name__ == "__main__":
     # No test_config: uses default SQLite file
     app = create_app()
