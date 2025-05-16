@@ -76,6 +76,7 @@ def create_app(test_config=None):
 
 # ─── Entry point ───────────────────────────────────────────────────────────────
 # ─── Expose a WSGI‐ready app for Azure/Gunicorn ──────────────────────────
+
 app = create_app()
 
 if __name__ == "__main__":
