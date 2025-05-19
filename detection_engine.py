@@ -1,112 +1,78 @@
-# detection_engine.py
+import os
+import openai
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Azure OpenAI setup
+openai.api_type = "azure"
+openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
+openai.api_version = "2024-02-15-preview"
+openai.api_key = os.getenv("AZURE_OPENAI_KEY")
+deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+
+# --- Rules-based Detection (Classic) ---
+SUSPICIOUS_KEYWORDS = [
+    'password', 'bank account', 'ssn', 'social security number', 'confidential', 'secret',
+    'pin', 'login', 'username', 'credit card', 'security question', "mother's maiden name",
+    'account number', 'routing number', 'transfer', 'reset password', 'verify identity',
+    'authenticate', 'access code', 'vpn', 'wire', 'bitcoin', 'crypto', 'wallet',
+    'passport', 'driver\'s license', 'dob', 'date of birth', 'insurance number'
+]
 
 def detect_elicitation(text):
-    """
-    Detection engine scans input text for suspicious elicitation keywords and phrases,
-    returning a list of detection findings with type, severity, and evidence.
-    """
-
-    suspicious_keywords = [
-        'password',
-        'bank account',
-        'ssn',
-        'social security number',
-        'confidential',
-        'secret',
-        'pin',
-        'login',
-        'username',
-        'credit card',
-        'security question',
-        "mother's maiden name",
-        'account number',
-        'routing number',
-        'transfer',
-        'reset password',
-        'verify identity',
-        'authenticate',
-        'access code',
-        'vpn',
-        'wire transfer',
-        'token',
-        'otp',
-        'security code'
-    ]
-
-    suspicious_phrases = [
-        'what is your',
-        'please provide',
-        'can you share',
-        'could you tell me',
-        'send me your',
-        'give me your',
-        'help me with your',
-        'confirm your',
-        'verify your',
-        'reset your password',
-        'do you have a moment',
-        'can i ask',
-        'need your assistance',
-        'urgent request',
-        'for security purposes',
-        'for verification',
-        'let me verify',
-        'share your details',
-        'please confirm',
-        'please verify',
-        'can you provide',
-        'what was your',
-        'where were you born',
-        'what school did you attend',
-        'what is your address',
-        'who is your employer',
-        'what is your phone number'
-    ]
-
     findings = []
-
-    lowered_text = text.lower()
-
-    # Check for suspicious keywords
-    for keyword in suspicious_keywords:
-        if keyword in lowered_text:
+    lowered = text.lower()
+    for keyword in SUSPICIOUS_KEYWORDS:
+        if keyword in lowered:
             findings.append({
-                'type': 'Phishing/Elicitation Keyword',
-                'severity': 'high',
-                'evidence': f"Contains suspicious keyword: '{keyword}'"
+                "threat_type": "Keyword Match",
+                "severity": "Medium",
+                "evidence": keyword
             })
-
-    # Check for suspicious phrases
-    for phrase in suspicious_phrases:
-        if phrase in lowered_text:
-            findings.append({
-                'type': 'Suspicious Question',
-                'severity': 'medium',
-                'evidence': f"Contains suspicious phrase: '{phrase}'"
-            })
-
-    # Example simple prompt injection patterns
-    prompt_injection_indicators = [
-        "ignore previous instructions",
-        "bypass security",
-        "disable filters",
-        "override settings",
-        "forget your rules",
-        "act as",
-        "pretend you are",
-        "simulate",
-        "tell me a secret",
-        "give me admin access",
-        "enable debug mode",
-        "expose sensitive info"
-    ]
-
-    for indicator in prompt_injection_indicators:
-        if indicator in lowered_text:
-            findings.append({
-                'type': 'Prompt Injection Attempt',
-                'severity': 'high',
-                'evidence': f"Contains prompt injection pattern: '{indicator}'"
-            })
-
     return findings
+
+# --- Azure OpenAI Detection (AI) ---
+def detect_with_azure_openai(text):
+    prompt = (
+        "Analyze the following text for cognitive elicitation, PII (personally identifiable information), "
+        "or social engineering attempts. Return any detected threat types, severity, and rationale as JSON.\n\n"
+        f"Text: {text}\n"
+    )
+    try:
+        response = openai.ChatCompletion.create(
+            engine=deployment_name,
+            messages=[
+                {"role": "system", "content": "You are a cybersecurity analyst."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=300,
+            temperature=0
+        )
+        # Clean up Markdown-style code block markers if present
+        result_text = response['choices'][0]['message']['content']
+        if result_text.startswith("```json"):
+            result_text = result_text.replace("```json", "").replace("```", "").strip()
+        return result_text
+    except Exception as e:
+        print("Azure OpenAI API call failed:", e)
+        return None
+
+# --- Combined Detection ---
+def combined_detection(text):
+    rules_result = detect_elicitation(text)
+    ai_result = detect_with_azure_openai(text)
+    return {
+        "rules_based": rules_result,
+        "openai_based": ai_result
+    }
+
+# --- Example Test Case ---
+if __name__ == "__main__":
+    test_text = "My bank account number is 12345678, and my password is hunter2."
+    results = combined_detection(test_text)
+    print("=== Rules-Based Result ===")
+    print(results["rules_based"])
+    print("=== OpenAI-Based Result ===")
+    print(results["openai_based"])
