@@ -9,7 +9,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from jsonschema import validate, ValidationError
 from detection_engine import combined_detection
-from flask_cors import CORS  # <-- CORS import added
+from flask_cors import CORS  # <-- CORS import
 
 db = SQLAlchemy()
 
@@ -35,7 +35,8 @@ def get_country_from_ip(ip):
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    CORS(app)  # <-- CORS enabled
+    # --- EXPLICIT CORS SETTINGS ---
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "fallback-secret")
     app.config.from_mapping(
         SQLALCHEMY_DATABASE_URI=(
