@@ -5,7 +5,7 @@ from datetime import datetime
 from collections import Counter, defaultdict
 from statistics import mean
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, make_response
 from flask_sqlalchemy import SQLAlchemy
 from jsonschema import validate, ValidationError
 from detection_engine import combined_detection
@@ -99,10 +99,18 @@ def create_app(test_config=None):
     def health():
         return "OK", 200
 
-    @app.route("/ingest", methods=["POST"])
+    @app.route("/ingest", methods=["POST", "OPTIONS"])
     def ingest():
+        if request.method == "OPTIONS":
+            # Explicit CORS preflight response
+            response = make_response()
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+            response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+            return response
+
         payload = request.get_json(force=True)
-        
+
         # Get requester IP and add to payload
         requester_ip = request.remote_addr
         payload["ip_address"] = requester_ip
