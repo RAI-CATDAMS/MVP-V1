@@ -9,16 +9,16 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from jsonschema import validate, ValidationError
 from detection_engine import combined_detection
-from flask_cors import CORS  # <-- CORS import
+from flask_cors import CORS
 
 db = SQLAlchemy()
 
 class Telemetry(db.Model):
     __tablename__ = "telemetry"
-    id          = db.Column(db.Integer, primary_key=True)
-    timestamp   = db.Column(db.String,  nullable=False)
-    data        = db.Column(db.JSON,    nullable=False)
-    enrichments = db.Column(db.JSON,    nullable=True)
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.String, nullable=False)
+    data = db.Column(db.JSON, nullable=False)
+    enrichments = db.Column(db.JSON, nullable=True)
 
 def get_country_from_ip(ip):
     try:
@@ -35,8 +35,6 @@ def get_country_from_ip(ip):
 
 def create_app(test_config=None):
     app = Flask(__name__)
-
-    # Enable CORS for all routes and origins globally (development/testing)
     CORS(app)
 
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "fallback-secret")
@@ -49,7 +47,6 @@ def create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
 
-    # Log the actual database URI being used (safe for debugging)
     print("USING DATABASE:", app.config["SQLALCHEMY_DATABASE_URI"])
 
     if test_config:
@@ -108,16 +105,12 @@ def create_app(test_config=None):
     @app.route("/ingest", methods=["POST"])
     def ingest():
         payload = request.get_json(force=True)
-
-        # Get requester IP and add to payload inside metadata
         requester_ip = request.remote_addr
 
         if "metadata" not in payload or not isinstance(payload["metadata"], dict):
             payload["metadata"] = {}
-
         payload["metadata"]["ip_address"] = requester_ip
 
-        # Lookup country from IP and add to payload at root level
         country = get_country_from_ip(requester_ip)
         payload["country"] = country
 
@@ -128,7 +121,6 @@ def create_app(test_config=None):
 
         messages = payload.get("messages", [])
         enrichment_results = enrich_messages(messages)
-
         ts = datetime.utcnow().isoformat() + "Z"
         entry = Telemetry(timestamp=ts, data=payload, enrichments=enrichment_results)
         try:
@@ -220,7 +212,6 @@ def create_app(test_config=None):
                     is_alert = True
                     severe_alerts += 1
 
-            # ---- FILTERING LOGIC ----
             if user_id and user_id.lower() not in (data.get("user_id", "") or "").lower():
                 continue
             if min_risk is not None and risk_level < min_risk:
@@ -248,7 +239,6 @@ def create_app(test_config=None):
                     "label": data.get("user_id", "Entity")
                 })
 
-            # ---- COUNTRY AGGREGATION LOGIC ----
             country = data.get("country")
             if country:
                 country_counts[country] += 1
@@ -271,7 +261,7 @@ def create_app(test_config=None):
                 "session_id": data.get("session_id"),
                 "agent_id": data.get("agent_id"),
                 "messages": data.get("messages"),
-                "threat_vectors": detected_vectors,  # now named for UI clarity
+                "threat_vectors": detected_vectors,
                 "risk_level": risk_level,
                 "alert": is_alert,
                 "enrichments": enrichments,
@@ -289,7 +279,6 @@ def create_app(test_config=None):
         }
         chart_threat_vector_data = {tag: threat_vector_counts.get(tag, 0) for tag in THREAT_VECTORS}
 
-        # ---- TOP THREAT COUNTRIES LOGIC ----
         top_countries = country_counts.most_common(5)
         country_labels = [item[0] for item in top_countries]
         country_values = [item[1] for item in top_countries]
@@ -307,8 +296,8 @@ def create_app(test_config=None):
             chart_alerts_data=chart_alerts_data,
             chart_threat_vector_data=chart_threat_vector_data,
             geo_points=geo_points,
-            geo_labels=country_labels,    # now for countries!
-            geo_values=country_values,    # now for countries!
+            geo_labels=country_labels,
+            geo_values=country_values,
             threat_vectors=THREAT_VECTORS,
             selected_vector=selected_vector,
             request=request
@@ -317,3 +306,8 @@ def create_app(test_config=None):
     return app
 
 app = create_app()
+
+# Only run locally, NOT in Azure with Gunicorn!
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host="0.0.0.0", port=port)
