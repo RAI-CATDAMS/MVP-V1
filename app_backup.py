@@ -9,7 +9,6 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from jsonschema import validate, ValidationError
 from detection_engine import combined_detection
-from flask_cors import CORS  # <-- CORS import
 
 db = SQLAlchemy()
 
@@ -35,22 +34,14 @@ def get_country_from_ip(ip):
 
 def create_app(test_config=None):
     app = Flask(__name__)
-
-    # Enable CORS for all routes and origins globally (development/testing)
-    CORS(app)
-
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "fallback-secret")
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI=os.environ.get(
-            "SQLALCHEMY_DATABASE_URI",
+        SQLALCHEMY_DATABASE_URI=(
             "mssql+pyodbc://catdamsadmin:Chloe310$$@catdamsadmin.database.windows.net:1433/"
             "catdamsadmin?driver=ODBC+Driver+18+for+SQL+Server"
         ),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
-
-    # Log the actual database URI being used (safe for debugging)
-    print("USING DATABASE:", app.config["SQLALCHEMY_DATABASE_URI"])
 
     if test_config:
         app.config.update(test_config)
@@ -108,16 +99,12 @@ def create_app(test_config=None):
     @app.route("/ingest", methods=["POST"])
     def ingest():
         payload = request.get_json(force=True)
-
-        # Get requester IP and add to payload inside metadata
+        
+        # Get requester IP and add to payload
         requester_ip = request.remote_addr
+        payload["ip_address"] = requester_ip
 
-        if "metadata" not in payload or not isinstance(payload["metadata"], dict):
-            payload["metadata"] = {}
-
-        payload["metadata"]["ip_address"] = requester_ip
-
-        # Lookup country from IP and add to payload at root level
+        # Lookup country from IP and add to payload
         country = get_country_from_ip(requester_ip)
         payload["country"] = country
 
@@ -131,13 +118,8 @@ def create_app(test_config=None):
 
         ts = datetime.utcnow().isoformat() + "Z"
         entry = Telemetry(timestamp=ts, data=payload, enrichments=enrichment_results)
-        try:
-            db.session.add(entry)
-            db.session.commit()
-        except Exception as db_err:
-            print("DATABASE COMMIT ERROR:", db_err)
-            return {"error": str(db_err)}, 500
-
+        db.session.add(entry)
+        db.session.commit()
         return {
             "status": "accepted",
             "enrichment_results": enrichment_results
@@ -320,6 +302,5 @@ app = create_app()
 
 if __name__ == "__main__":
     print("Starting Flask app...")
-    # Azure will assign the correct port via PORT env variable
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app = create_app()
+    app.run(debug=True, host="0.0.0.0", port=8000)

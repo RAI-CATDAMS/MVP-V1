@@ -3,7 +3,8 @@ import json
 
 print("Starting test...")
 
-URL = "http://localhost:8000/ingest"  # Change this if needed
+# Use your Azure App Service URL here
+URL = "https://catdams-app-mv-d5fgg9fhc6g5hwg7.eastus-01.azurewebsites.net/ingest"
 
 payload = {
     "agent_id": "test-agent",

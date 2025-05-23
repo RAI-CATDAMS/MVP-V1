@@ -1,0 +1,27 @@
+{
+  "agent_id": "manual-test",
+  "session_id": "test-session-001",
+  "user_id": "test-user",
+  "timestamp": "2025-05-23T13:00:00Z",
+  "messages": [
+    {
+      "sequence": 1,
+      "sender": "user",
+      "text": "Manual test message",
+      "time": "2025-05-23T13:00:00Z"
+    },
+    {
+      "sequence": 2,
+      "sender": "ai",
+      "text": "Manual test AI response",
+      "time": "2025-05-23T13:00:00Z"
+    }
+  ],
+  "metadata": {
+    "agent_version": "manual-test-v1",
+    "policy_version": "2024-05",
+    "os": "Windows",
+    "application": "Manual",
+    "language": "en-US"
+  }
+}
