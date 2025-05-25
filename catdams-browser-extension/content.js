@@ -1,125 +1,218 @@
- // ==CATDAMS Gemini Chat Logger (Updated & Refined Selectors, Fixed for Backend)==
-// Purpose: Reliably log user prompts and AI responses from Google Gemini for CATDAMS backend.
+// ==CATDAMS Universal AI Chat Logger (Top 10 Platforms)==
+// Detects/logs user and AI chats on 10 major chatbots. Backend-ready and privacy-first.
 
-console.log("CATDAMS Gemini Chat Logger Loaded (Backend Fix Build).");
+console.log("CATDAMS Universal AI Chat Logger Loaded.");
 
-// --- Configuration ---
+// --- Anonymous User ID (per browser install) ---
+function getOrCreateUserId() {
+    let uid = localStorage.getItem("catdams_uid");
+    if (!uid) {
+        uid = `anon-${Math.random().toString(36).substr(2, 8)}`;
+        localStorage.setItem("catdams_uid", uid);
+    }
+    return uid;
+}
+
 const CONFIG = {
     BACKEND_ENDPOINT: 'https://catdams-app-mv-d5fgg9fhc6g5hwg7.eastus-01.azurewebsites.net/ingest',
-    AGENT_ID: "catdams-gemini-ext",
-    USER_ID: "michael-varga",
-    AGENT_VERSION: "v1.4.1",
+    AGENT_ID: "catdams-universal-ext",
+    USER_ID: getOrCreateUserId(),
+    AGENT_VERSION: "v1.0.0",
     POLICY_VERSION: "2024-05",
     PROCESS_DEBOUNCE_DELAY: 1200,
     INITIAL_LOAD_DELAY: 3500
 };
-
-// --- Persistent Session ID (per tab/window) ---
 const SESSION_ID = `sess-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8)}`;
 
-// --- DOM Selectors for Google Gemini ---
-const GEMINI_SELECTORS = {
-    inputArea: 'div[contenteditable="true"][role="textbox"]',
-    chatTranscriptItem: 'div[role="listitem"], div[data-testid*="chat-message"]',
-    userMessageContent: [
-        'div[data-is-user-message="true"]',
-        'div.message-item-text-model-id-user',
-        'div.user-text-content',
-        'span[data-text-content]'
-    ],
-    aiMessageContent: [
-        'div[data-is-ai-response="true"]',
-        'div.message-item-text-model-id-2',
-        'div.model-response-content',
-        'span[data-text-content]'
-    ],
-    sendButton: 'button[aria-label="Send message"], button[data-testid="send-button"], div.send-button'
-};
+const HOST = window.location.hostname;
 
-/**
- * Recursively finds elements within a given root, piercing open Shadow DOMs.
- */
-function findElementsInDOM(root, selector) {
-    let foundElements = [];
-    try {
-        foundElements = Array.from(root.querySelectorAll(selector));
-    } catch (e) {
-        console.warn(`[CATDAMS-DOM] QuerySelector failed for "${selector}" on root:`, root, e);
-    }
-    const shadowRoots = Array.from(root.querySelectorAll('*'))
-        .filter(el => el.shadowRoot && el.shadowRoot.mode === 'open')
-        .map(el => el.shadowRoot);
-    for (const shadowRootEl of shadowRoots) {
-        foundElements = foundElements.concat(findElementsInDOM(shadowRootEl, selector));
-    }
-    return foundElements;
-}
-
-/**
- * Extracts the latest user prompt and AI response from the Gemini DOM.
- * If selectors fail, attempts brute-force fallback extraction.
- */
-function extractChat() {
-    let userPrompt = "";
-    let aiResponse = "";
-    let extractedUserBubbleText = "";
-    let extractedAiBubbleText = "";
-
-    // Step 1: Get User Prompt
-    const inputArea = findElementsInDOM(document.body, GEMINI_SELECTORS.inputArea)[0];
-    if (inputArea && inputArea.innerText) {
-        userPrompt = inputArea.innerText.trim();
-    }
-
-    // Then, find the last displayed message from the transcript
-    const chatItems = findElementsInDOM(document.body, GEMINI_SELECTORS.chatTranscriptItem);
-
-    if (chatItems.length > 0) {
-        const lastChatItem = chatItems[chatItems.length - 1];
-
-        // Try to find user message content within the last chat item
-        for (const sel of GEMINI_SELECTORS.userMessageContent) {
-            const userTextEl = findElementsInDOM(lastChatItem, sel)[0];
-            if (userTextEl && userTextEl.innerText) {
-                extractedUserBubbleText = userTextEl.innerText.trim();
-                break;
+// --- Site-Specific Selectors and Extractors ---
+const PLATFORM_DEFS = [
+    {
+        name: "ChatGPT",
+        host: "chat.openai.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector('textarea');
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const messageDivs = Array.from(document.querySelectorAll("div[data-message-author-role]"));
+            const userBubbles = messageDivs.filter(el => el.getAttribute('data-message-author-role') === "user");
+            const aiBubbles = messageDivs.filter(el => el.getAttribute('data-message-author-role') === "assistant");
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Gemini",
+        host: "gemini.google.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const inputArea = document.querySelector('div[contenteditable="true"][role="textbox"]');
+            if (inputArea && inputArea.innerText) userPrompt = inputArea.innerText.trim();
+            const chatItems = document.querySelectorAll('div[role="listitem"], div[data-testid*="chat-message"]');
+            if (chatItems.length) {
+                const lastChat = chatItems[chatItems.length - 1];
+                let userBub = lastChat.querySelector('div[data-is-user-message="true"], div.message-item-text-model-id-user, div.user-text-content, span[data-text-content]');
+                if (userBub && userBub.innerText) userPrompt = userBub.innerText.trim();
+                let aiBub = lastChat.querySelector('div[data-is-ai-response="true"], div.message-item-text-model-id-2, div.model-response-content, span[data-text-content]');
+                if (aiBub && aiBub.innerText) aiResponse = aiBub.innerText.trim();
             }
-        }
-
-        if (extractedUserBubbleText && extractedUserBubbleText !== userPrompt) {
-            userPrompt = extractedUserBubbleText;
-        }
-
-        // Step 2: Get AI Response
-        for (const sel of GEMINI_SELECTORS.aiMessageContent) {
-            const aiTextEl = findElementsInDOM(lastChatItem, sel)[0];
-            if (aiTextEl && aiTextEl.innerText) {
-                extractedAiBubbleText = aiTextEl.innerText.trim();
-                break;
+            if (!userPrompt || !aiResponse) {
+                const textEls = Array.from(document.querySelectorAll('span,div')).filter(el =>
+                    el.offsetParent !== null && el.innerText && el.innerText.trim().length > 0
+                );
+                textEls.sort((a, b) => b.innerText.length - a.innerText.length);
+                if (!userPrompt && textEls[0]) userPrompt = textEls[0].innerText.trim();
+                if (!aiResponse && textEls[1]) aiResponse = textEls[1].innerText.trim();
             }
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Claude",
+        host: "claude.ai",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const msgDivs = Array.from(document.querySelectorAll('.message, .Message'));
+            const userBubbles = msgDivs.filter(el =>
+                el.className && el.className.toLowerCase().includes("user") ||
+                el.getAttribute('role') === "user"
+            );
+            const aiBubbles = msgDivs.filter(el =>
+                el.className && el.className.toLowerCase().includes("assistant") ||
+                el.getAttribute('role') === "assistant"
+            );
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "DeepSeek",
+        host: "chat.deepseek.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector('textarea');
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const chatItems = Array.from(document.querySelectorAll('.message-item, .chat-item'));
+            const userBubbles = chatItems.filter(el =>
+                el.className && el.className.toLowerCase().includes("user")
+            );
+            const aiBubbles = chatItems.filter(el =>
+                el.className && (
+                    el.className.toLowerCase().includes("assistant") ||
+                    el.className.toLowerCase().includes("ai")
+                )
+            );
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Poe",
+        host: "poe.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const userBubbles = Array.from(document.querySelectorAll(".UserMessage"));
+            const aiBubbles = Array.from(document.querySelectorAll(".BotMessage, .AssistantMessage, .MessageGroup"));
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Perplexity",
+        host: "www.perplexity.ai",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const userBubbles = Array.from(document.querySelectorAll('.user-message'));
+            const aiBubbles = Array.from(document.querySelectorAll('.ai-message, .response, .assistant-message'));
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "HuggingChat",
+        host: "huggingface.co",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const msgGroups = Array.from(document.querySelectorAll('.chat-message, .message-group'));
+            const userBubbles = msgGroups.filter(el =>
+                el.className && el.className.toLowerCase().includes("user")
+            );
+            const aiBubbles = msgGroups.filter(el =>
+                el.className && el.className.toLowerCase().includes("assistant")
+            );
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Replika",
+        host: "replika.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const msgDivs = Array.from(document.querySelectorAll('.text-message, .user-message, .bot-message'));
+            const userBubbles = msgDivs.filter(el =>
+                el.className && (el.className.toLowerCase().includes("user") || el.className.toLowerCase().includes("me"))
+            );
+            const aiBubbles = msgDivs.filter(el =>
+                el.className && (el.className.toLowerCase().includes("bot") || el.className.toLowerCase().includes("ai"))
+            );
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "You.com",
+        host: "you.com",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const userBubbles = Array.from(document.querySelectorAll('.chatMessage.user, .userMessage, .user-bubble'));
+            const aiBubbles = Array.from(document.querySelectorAll('.chatMessage.ai, .aiMessage, .ai-bubble'));
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
+        }
+    },
+    {
+        name: "Pi.ai",
+        host: "pi.ai",
+        extract: function () {
+            let userPrompt = "", aiResponse = "";
+            const textarea = document.querySelector("textarea");
+            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
+            const bubbles = Array.from(document.querySelectorAll('.message, .user-message, .ai-message'));
+            const userBubbles = bubbles.filter(el =>
+                el.className && el.className.toLowerCase().includes("user")
+            );
+            const aiBubbles = bubbles.filter(el =>
+                el.className && (el.className.toLowerCase().includes("ai") || el.className.toLowerCase().includes("bot"))
+            );
+            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
+            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
+            return { userPrompt, aiResponse };
         }
     }
+];
 
-    aiResponse = extractedAiBubbleText;
-
-    // Brute-force fallback: If either userPrompt or aiResponse is missing, get two largest visible text blobs as last resort
-    if (!userPrompt || !aiResponse) {
-        const allSpans = Array.from(document.body.querySelectorAll('span,div'));
-        const textSpans = allSpans.filter(el =>
-            el.offsetParent !== null && el.innerText && el.innerText.trim().length > 0
-        );
-        textSpans.sort((a, b) => b.innerText.length - a.innerText.length);
-        if (!userPrompt && textSpans[0]) userPrompt = textSpans[0].innerText.trim();
-        if (!aiResponse && textSpans[1]) aiResponse = textSpans[1].innerText.trim();
-    }
-
-    return { userPrompt, aiResponse };
-}
-
-/**
- * Builds the data payload according to the defined schema (no title, no url).
- */
-function buildPayload(userPrompt, aiResponse) {
+// --- Helper Functions ---
+function buildPayload(userPrompt, aiResponse, platform) {
     const now = new Date().toISOString();
     return {
         agent_id: CONFIG.AGENT_ID,
@@ -127,33 +220,19 @@ function buildPayload(userPrompt, aiResponse) {
         user_id: CONFIG.USER_ID,
         timestamp: now,
         messages: [
-            {
-                sequence: 1,
-                sender: "user",
-                text: userPrompt || "",
-                time: now
-            },
-            {
-                sequence: 2,
-                sender: "ai",
-                text: aiResponse || "",
-                time: now
-            }
+            { sequence: 1, sender: "user", text: userPrompt || "", time: now },
+            { sequence: 2, sender: "ai", text: aiResponse || "", time: now }
         ],
         metadata: {
             agent_version: CONFIG.AGENT_VERSION,
             policy_version: CONFIG.POLICY_VERSION,
             os: navigator.platform,
-            application: "Google-Gemini-Web",
+            application: platform,
             language: navigator.language || "en-US"
-            // (REMOVED) url, title
         }
     };
 }
 
-/**
- * Posts the constructed payload to the backend.
- */
 async function postToBackend(payload) {
     console.log("[CATDAMS-Backend] Outgoing payload:", JSON.stringify(payload, null, 2));
     try {
@@ -176,97 +255,47 @@ async function postToBackend(payload) {
     }
 }
 
-// --- Main Logging Logic with Deduplication and Debouncing ---
+// --- Main Logic: Detect Platform, Observe, Log ---
 let lastLoggedUserPrompt = "";
 let lastLoggedAiResponse = "";
 let processChatTimeout = null;
 
-/**
- * Core logic: extracts, checks, and sends data. Debounced for stability.
- */
-function processAndSendChatData() {
+function processAndSendChatData(extractor, platformName) {
     clearTimeout(processChatTimeout);
 
     processChatTimeout = setTimeout(() => {
-        const { userPrompt, aiResponse } = extractChat();
+        const { userPrompt, aiResponse } = extractor();
+        if (!userPrompt || !aiResponse) return;
+        if (userPrompt === lastLoggedUserPrompt && aiResponse === lastLoggedAiResponse) return;
 
-        if (!userPrompt || !aiResponse) {
-            return;
-        }
-
-        // Deduplication: Only send if this specific pair hasn't been logged before.
-        if (userPrompt === lastLoggedUserPrompt && aiResponse === lastLoggedAiResponse) {
-            return;
-        }
-
-        const payload = buildPayload(userPrompt, aiResponse);
+        const payload = buildPayload(userPrompt, aiResponse, platformName);
         postToBackend(payload);
 
         lastLoggedUserPrompt = userPrompt;
         lastLoggedAiResponse = aiResponse;
-
     }, CONFIG.PROCESS_DEBOUNCE_DELAY);
 }
 
-// --- Event Listeners and Observers ---
+const platformObj = PLATFORM_DEFS.find(p => HOST.includes(p.host));
+if (platformObj) {
+    const observer = new MutationObserver(() => {
+        processAndSendChatData(platformObj.extract, platformObj.name);
+    });
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+    });
+    console.log(`[CATDAMS] Monitoring ${platformObj.name} (${platformObj.host})`);
 
-// 1. MutationObserver for dynamic content changes
-const observer = new MutationObserver(() => {
-    processAndSendChatData();
-});
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: false
-});
-console.log("[CATDAMS] MutationObserver initialized on document.body.");
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), 100);
+    });
+    setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), CONFIG.INITIAL_LOAD_DELAY);
 
-// 2. Optional: Direct trigger for "Send message" button clicks
-let sendButtonObserver = null;
-function attachSendButtonListener() {
-    const sendButton = findElementsInDOM(document.body, GEMINI_SELECTORS.sendButton)[0];
-    if (sendButton) {
-        if (!sendButton.__catdams_listener_attached) {
-            sendButton.addEventListener('click', () => {
-                setTimeout(processAndSendChatData, 100);
-            });
-            sendButton.__catdams_listener_attached = true;
-            if (sendButtonObserver) {
-                sendButtonObserver.disconnect();
-                sendButtonObserver = null;
-            }
-        }
-    } else {
-        if (!sendButtonObserver) {
-            sendButtonObserver = new MutationObserver(() => {
-                attachSendButtonListener();
-            });
-            const chatInputArea = findElementsInDOM(document.body, 'form[role="complementary"]')[0] || document.body;
-            sendButtonObserver.observe(chatInputArea, { childList: true, subtree: true });
-        }
+    if (document.readyState === 'complete') {
+        setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), CONFIG.INITIAL_LOAD_DELAY);
     }
-}
-attachSendButtonListener();
-
-// 3. Optional: Listen for Enter key press in the contenteditable div
-document.addEventListener('keydown', (event) => {
-    const inputArea = findElementsInDOM(document.body, GEMINI_SELECTORS.inputArea)[0];
-    if (event.key === 'Enter' && event.target === inputArea) {
-        setTimeout(processAndSendChatData, 100);
-    }
-});
-
-// 4. Initial check on page load, ensuring DOM is fully ready
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        processAndSendChatData();
-    }, CONFIG.INITIAL_LOAD_DELAY);
-});
-
-// Fallback for cases where DOMContentLoaded already fired
-if (document.readyState === 'complete') {
-    setTimeout(() => {
-        processAndSendChatData();
-    }, CONFIG.INITIAL_LOAD_DELAY);
+} else {
+    console.log(`[CATDAMS] No supported AI chat platform detected on ${HOST}`);
 }
