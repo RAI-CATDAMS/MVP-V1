@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>WebSocket Test</h2>
+    <div id="output"></div>
+    <script>
+      let ws = new WebSocket("ws://localhost:8080");
+      ws.onopen = () => console.log("WS CONNECTED!");
+      ws.onmessage = (event) => {
+        document.getElementById('output').innerText += "\n" + event.data;
+        console.log("MSG: ", event.data);
+      };
+      ws.onerror = (err) => console.error("WS ERR", err);
+      ws.onclose = () => console.warn("WS CLOSED");
+    </script>
+  </body>
+</html>

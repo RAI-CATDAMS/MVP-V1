@@ -1,0 +1,379 @@
+2025-05-28 13:11:33,934 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:13:37,048 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:13:46,051 - INFO - Keyword(s) found: ['chatgpt', 'gpt']
+2025-05-28 13:13:47,638 - WARNING - Backend returned non-200: 202
+2025-05-28 13:13:50,639 - INFO - Keyword(s) found: ['chatgpt', 'gpt']
+2025-05-28 13:13:51,206 - WARNING - Backend returned non-200: 202
+2025-05-28 13:13:57,210 - INFO - Keyword(s) found: ['chatgpt', 'gpt']
+2025-05-28 13:13:57,887 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:00,888 - INFO - Keyword(s) found: ['chatgpt', 'gpt']
+2025-05-28 13:14:01,633 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:04,634 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:05,281 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:14,283 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:14,852 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:17,853 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:18,351 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:21,353 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:21,951 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:24,958 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:25,558 - WARNING - Backend returned non-200: 202
+2025-05-28 13:14:28,570 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:14:29,181 - WARNING - Backend returned non-200: 202
+2025-05-28 13:20:41,275 - INFO - Keyword(s) found: ['replika']
+2025-05-28 13:20:42,403 - WARNING - Backend returned non-200: 202
+2025-05-28 13:45:14,923 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:48:36,006 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:51:16,346 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:52:40,363 - INFO - Keyword(s) found: ['gemini']
+2025-05-28 13:52:41,109 - INFO - Backend accepted payload: 202
+2025-05-28 13:52:44,110 - INFO - Keyword(s) found: ['gemini']
+2025-05-28 13:52:44,645 - INFO - Backend accepted payload: 202
+2025-05-28 13:52:47,652 - INFO - Keyword(s) found: ['gemini']
+2025-05-28 13:52:48,187 - INFO - Backend accepted payload: 202
+2025-05-28 13:52:51,191 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 13:52:51,764 - INFO - Backend accepted payload: 202
+2025-05-28 13:52:54,766 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 13:52:55,398 - INFO - Backend accepted payload: 202
+2025-05-28 13:55:06,518 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 13:55:33,526 - INFO - Keyword(s) found: ['gpt']
+2025-05-28 13:55:34,145 - INFO - Backend accepted payload: 202
+2025-05-28 13:56:04,152 - INFO - Keyword(s) found: ['gpt']
+2025-05-28 13:56:04,774 - INFO - Backend accepted payload: 202
+2025-05-28 13:57:38,680 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:00:41,568 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:05:26,479 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:05:44,483 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 14:05:45,140 - INFO - Backend accepted payload: 202
+2025-05-28 14:05:48,141 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 14:05:48,656 - INFO - Backend accepted payload: 202
+2025-05-28 14:05:51,658 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 14:05:52,170 - INFO - Backend accepted payload: 202
+2025-05-28 14:06:22,179 - INFO - Keyword(s) found: ['deepseek']
+2025-05-28 14:06:22,795 - INFO - Backend accepted payload: 202
+2025-05-28 14:14:22,154 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:25:11,009 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:31:53,533 - INFO - Starting CATDAMS Sentinel Agent...
+2025-05-28 14:39:43,073 - INFO - Agent starting...
+2025-05-28 14:40:38,283 - INFO - Monitoring started.
+2025-05-28 14:40:47,294 - INFO - Detected keywords: ['gpt']
+2025-05-28 14:40:48,174 - INFO - Sent payload. Status: 202
+2025-05-28 14:40:51,179 - INFO - Detected keywords: ['chatgpt', 'gpt']
+2025-05-28 14:40:51,712 - INFO - Sent payload. Status: 202
+2025-05-28 14:40:54,713 - INFO - Detected keywords: ['chatgpt', 'gpt']
+2025-05-28 14:40:55,231 - INFO - Sent payload. Status: 202
+2025-05-28 14:40:58,232 - INFO - Detected keywords: ['chatgpt', 'gpt']
+2025-05-28 14:40:58,797 - INFO - Sent payload. Status: 202
+2025-05-28 14:41:01,801 - INFO - Detected keywords: ['chatgpt', 'gpt']
+2025-05-28 14:41:02,293 - INFO - Sent payload. Status: 202
+2025-05-28 14:41:21,434 - INFO - Monitoring stopped.
+2025-05-28 14:48:43,179 - INFO - Agent starting...
+2025-05-28 14:48:47,227 - INFO - Monitoring started.
+2025-05-28 14:49:02,236 - INFO - Detected keywords: ['replika']
+2025-05-28 14:49:02,954 - INFO - Sent payload. Status: 202
+2025-05-28 14:49:44,963 - INFO - Detected keywords: ['deepseek']
+2025-05-28 14:49:45,527 - INFO - Sent payload. Status: 202
+2025-05-28 14:50:31,756 - INFO - Monitoring stopped.
+2025-05-28 15:07:25,745 - INFO - Agent starting...
+2025-05-28 15:07:29,294 - INFO - Monitoring started.
+2025-05-28 15:07:38,297 - INFO - Detected keywords: ['replika']
+2025-05-28 15:07:39,017 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:00,022 - INFO - Detected keywords: ['bard']
+2025-05-28 15:08:00,831 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:03,833 - INFO - Detected keywords: ['bard']
+2025-05-28 15:08:04,335 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:43,347 - INFO - Detected keywords: ['bard']
+2025-05-28 15:08:43,978 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:46,985 - INFO - Detected keywords: ['bard']
+2025-05-28 15:08:47,476 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:50,480 - INFO - Detected keywords: ['bard']
+2025-05-28 15:08:50,962 - INFO - Sent payload. Status: 202
+2025-05-28 15:08:53,962 - INFO - Detected keywords: ['perplexity']
+2025-05-28 15:08:54,575 - INFO - Sent payload. Status: 202
+2025-05-28 15:09:41,580 - INFO - Monitoring stopped.
+2025-05-28 15:13:46,647 - INFO - Agent starting...
+2025-05-28 15:13:51,771 - INFO - Monitoring started.
+2025-05-28 15:14:12,779 - INFO - Detected keywords: ['bard']
+2025-05-28 15:14:12,779 - ERROR - Monitor error: type object 'datetime.datetime' has no attribute 'timezone'
+2025-05-28 15:14:18,781 - INFO - Detected keywords: ['ai companion', 'candy ai']
+2025-05-28 15:14:18,781 - ERROR - Monitor error: type object 'datetime.datetime' has no attribute 'timezone'
+2025-05-28 15:14:21,782 - INFO - Detected keywords: ['ai companion', 'candy ai']
+2025-05-28 15:14:21,783 - ERROR - Monitor error: type object 'datetime.datetime' has no attribute 'timezone'
+2025-05-28 15:14:24,784 - INFO - Detected keywords: ['bard']
+2025-05-28 15:14:24,784 - ERROR - Monitor error: type object 'datetime.datetime' has no attribute 'timezone'
+2025-05-28 15:14:48,223 - INFO - Monitoring stopped.
+2025-05-28 21:43:25,707 - INFO - Agent starting...
+2025-05-28 21:43:57,332 - INFO - Agent starting...
+2025-05-28 21:44:05,513 - INFO - Monitoring started.
+2025-05-28 21:44:53,537 - INFO - Detected keywords: ['replika']
+2025-05-28 21:44:54,095 - ERROR - WebSocket error: server rejected WebSocket connection: HTTP 400
+2025-05-28 21:44:55,597 - INFO - HTTP sent payload. Status: 202
+2025-05-28 21:45:07,607 - INFO - Detected keywords: ['candy ai']
+2025-05-28 21:45:07,807 - ERROR - WebSocket error: server rejected WebSocket connection: HTTP 400
+2025-05-28 21:45:08,273 - INFO - HTTP sent payload. Status: 202
+2025-05-28 22:01:41,781 - INFO - Monitoring stopped.
+2025-05-29 10:18:20,702 - INFO - Agent starting...
+2025-05-29 10:18:28,538 - INFO - Monitoring started.
+2025-05-29 10:18:58,549 - INFO - Detected keywords: ['gemini']
+2025-05-29 10:18:58,561 - INFO - WebSocket sent payload to local server.
+2025-05-29 10:18:59,330 - INFO - WebSocket server response: Relay to backend: OK
+2025-05-29 10:19:02,332 - INFO - Detected keywords: ['gemini']
+2025-05-29 10:19:02,337 - INFO - WebSocket sent payload to local server.
+2025-05-29 10:19:02,563 - INFO - WebSocket server response: Relay to backend: OK
+2025-05-29 10:19:05,566 - INFO - Detected keywords: ['gemini']
+2025-05-29 10:19:05,568 - INFO - WebSocket sent payload to local server.
+2025-05-29 10:19:06,000 - INFO - WebSocket server response: Relay to backend: OK
+2025-05-29 10:19:09,006 - INFO - Detected keywords: ['gemini']
+2025-05-29 10:19:09,011 - INFO - WebSocket sent payload to local server.
+2025-05-29 10:19:09,190 - INFO - WebSocket server response: Relay to backend: OK
+2025-05-29 10:19:30,195 - INFO - Detected keywords: ['gemini']
+2025-05-29 10:19:30,196 - INFO - WebSocket sent payload to local server.
+2025-05-29 10:19:30,641 - INFO - WebSocket server response: Relay to backend: OK
+2025-05-29 21:27:54,410 - INFO - Agent starting...
+2025-05-29 21:28:10,014 - INFO - Monitoring started.
+2025-05-29 21:33:10,100 - INFO - Detected keywords: ['gemini']
+2025-05-29 21:33:10,107 - INFO - WebSocket sent payload to local server.
+2025-05-29 21:45:55,816 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-29 21:46:41,989 - INFO - Agent starting...
+2025-05-29 21:46:47,187 - INFO - Monitoring started.
+2025-05-29 21:46:53,201 - INFO - Detected keywords: ['gemini']
+2025-05-29 21:46:53,206 - INFO - WebSocket sent payload to local server.
+2025-05-29 21:49:18,561 - INFO - Monitoring stopped.
+2025-05-29 21:49:23,519 - INFO - Monitoring started.
+2025-05-29 21:49:29,534 - INFO - Detected keywords: ['deepseek']
+2025-05-29 21:49:29,537 - INFO - WebSocket sent payload to local server.
+2025-05-29 22:05:22,545 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-29 22:05:26,881 - INFO - Agent starting...
+2025-05-29 22:05:31,701 - INFO - Monitoring started.
+2025-05-29 22:05:46,722 - INFO - Detected keywords: ['gemini']
+2025-05-29 22:05:46,733 - INFO - WebSocket sent payload to local server.
+2025-05-29 22:15:35,171 - INFO - Detected keywords: ['deepseek']
+2025-05-29 22:15:35,172 - INFO - WebSocket sent payload to local server.
+2025-05-29 22:26:46,790 - INFO - Detected keywords: ['deepseek']
+2025-05-29 22:26:46,796 - INFO - WebSocket sent payload to local server.
+2025-05-29 22:35:18,836 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-29 22:49:08,290 - INFO - Agent starting...
+2025-05-29 22:49:13,930 - INFO - Monitoring started.
+2025-05-29 22:49:22,939 - INFO - Detected keywords: ['deepseek']
+2025-05-29 22:49:22,950 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:07:32,902 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-29 23:08:33,606 - INFO - Agent starting...
+2025-05-29 23:08:38,009 - INFO - Monitoring started.
+2025-05-29 23:08:47,021 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:08:47,033 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:08:47,038 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574527", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:08:47.021806+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:08:47.021806+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:08:50,041 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:08:50,045 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:08:50,049 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574530", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:08:50.042569+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:08:50.042569+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:08:53,050 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:08:53,054 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:08:53,056 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574533", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:08:53.051377+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:08:53.051377+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:08:56,058 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:08:56,062 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:08:56,064 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574536", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:08:56.058670+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:08:56.058670+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:08:59,066 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:08:59,071 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:08:59,071 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574539", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:08:59.066416+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:08:59.066416+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:09:02,076 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:09:02,080 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:02,080 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574542", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:02.076754+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:02.076754+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:09:05,085 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:09:05,089 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:05,092 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574545", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:05.086432+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:05.086432+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:09:26,099 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:09:26,103 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:26,106 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574566", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:26.100360+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:26.100360+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:09:29,109 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:09:29,113 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:29,116 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574569", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:29.110163+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:29.110163+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:09:32,118 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:09:32,120 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:32,121 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574572", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:32.118342+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:32.118342+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:09:35,122 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:09:35,124 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:35,124 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574575", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:35.122998+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:35.122998+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:09:38,132 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:09:38,134 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:09:38,134 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748574578", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:09:38.132510+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:09:38.132510+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:13:40,260 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-29 23:21:38,323 - INFO - Agent starting...
+2025-05-29 23:21:43,048 - INFO - Monitoring started.
+2025-05-29 23:22:01,057 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:01,064 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:01,065 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575321", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:01.057827+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:01.057827+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:04,067 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:04,071 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:04,075 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575324", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:04.068703+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:04.068703+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:07,076 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:07,079 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:07,081 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575327", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:07.076908+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:07.076908+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:10,083 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:10,088 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:10,091 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575330", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:10.083369+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:10.083369+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:13,093 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:13,093 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:13,093 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575333", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:13.093100+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:13.093100+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:16,105 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:16,108 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:16,108 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575336", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:16.105567+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:16.105567+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:19,115 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:19,118 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:19,121 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575339", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:19.115367+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:19.115367+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:22,122 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:22,126 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:22,129 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575342", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:22.122687+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:22.122687+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:25,130 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:25,130 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:25,137 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575345", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:25.130651+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:25.130651+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:28,138 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:22:28,140 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:28,144 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575348", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:28.138870+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:28.138870+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:22:49,149 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:22:49,153 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:49,156 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575369", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:49.149284+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:49.149284+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:22:52,160 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:22:52,163 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:52,166 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575372", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:52.160057+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:52.160057+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:22:55,167 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:22:55,169 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:55,170 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575375", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:55.167489+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:55.167489+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:22:58,172 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:22:58,176 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:22:58,179 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575378", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:22:58.173782+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:22:58.173782+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:23:01,181 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:23:01,186 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:23:01,189 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575381", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:23:01.181722+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:23:01.181722+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:23:04,190 - INFO - Detected keywords: ['gemini']
+2025-05-29 23:23:04,193 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:23:04,196 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575384", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:23:04.190641+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:23:04.190641+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "Google Gemini - Google Chrome", "language": "en-US"}, "window_title": "Google Gemini - Google Chrome", "detected_keywords": ["gemini"]}
+2025-05-29 23:24:01,211 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:01,213 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:01,214 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575441", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:01.211718+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:01.211718+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:04,216 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:04,220 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:04,223 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575444", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:04.216894+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:04.216894+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:07,225 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:07,228 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:07,229 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575447", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:07.225888+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:07.225888+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:10,230 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:10,233 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:10,237 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575450", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:10.230373+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:10.230373+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:13,239 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:13,239 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:13,239 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575453", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:13.239004+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:13.239004+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:16,247 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:16,251 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:16,254 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575456", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:16.247522+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:16.247522+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:19,256 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:19,260 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:19,263 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575459", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:19.256173+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:19.256173+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:24:22,265 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:24:22,268 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:24:22,270 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575462", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:24:22.265221+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:24:22.265221+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:27:16,308 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:27:16,311 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:27:16,314 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575636", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:27:16.308179+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:27:16.308179+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-29 23:27:19,315 - INFO - Detected keywords: ['deepseek']
+2025-05-29 23:27:19,319 - INFO - WebSocket sent payload to local server.
+2025-05-29 23:27:19,321 - INFO - WebSocket server response: {"agent_id": "catdams-desktop-agent", "session_id": "sess-1748575639", "user_id": "desktop-user-001", "timestamp": "2025-05-30T03:27:19.315994+00:00", "messages": [{"sequence": 1, "sender": "user", "text": "", "time": "2025-05-30T03:27:19.315994+00:00"}], "metadata": {"agent_version": "v1.0.0", "policy_version": "2024-05", "os": "nt", "application": "DeepSeek - Into the Unknown - Google Chrome", "language": "en-US"}, "window_title": "DeepSeek - Into the Unknown - Google Chrome", "detected_keywords": ["deepseek"]}
+2025-05-30 00:00:38,189 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-30 13:46:23,554 - INFO - Agent starting...
+2025-05-30 13:46:31,140 - INFO - Monitoring started.
+2025-05-30 13:50:28,192 - INFO - Detected keywords: ['replika']
+2025-05-30 13:50:28,192 - INFO - WebSocket sent payload to local server.
+2025-05-30 14:04:52,955 - INFO - Monitoring stopped.
+2025-05-30 14:05:29,900 - INFO - Monitoring started.
+2025-05-30 14:05:34,897 - INFO - Monitoring stopped.
+2025-05-30 14:30:15,260 - INFO - Agent starting...
+2025-05-30 14:30:21,574 - INFO - Monitoring started.
+2025-05-30 14:30:57,583 - INFO - Detected keywords: ['gemini']
+2025-05-30 14:30:57,596 - INFO - WebSocket sent payload to local server.
+2025-05-30 14:35:52,489 - INFO - Detected keywords: ['chatgpt']
+2025-05-30 14:35:56,552 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-05-30 14:35:57,202 - INFO - HTTP sent payload. Status: 202
+2025-05-30 14:51:04,467 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-30 14:55:29,909 - INFO - Agent starting...
+2025-05-30 14:55:36,651 - INFO - Monitoring started.
+2025-05-30 14:55:54,666 - INFO - Detected keywords: ['deepseek']
+2025-05-30 14:55:54,677 - INFO - WebSocket sent payload to local server.
+2025-05-30 15:18:57,597 - INFO - Detected keywords: ['deepseek']
+2025-05-30 15:18:57,599 - INFO - WebSocket sent payload to local server.
+2025-05-30 21:08:34,038 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-05-31 07:16:58,629 - INFO - Agent starting...
+2025-05-31 07:17:03,158 - INFO - Monitoring started.
+2025-05-31 07:18:12,175 - INFO - Detected keywords: ['gemini']
+2025-05-31 07:18:12,184 - INFO - WebSocket sent payload to local server.
+2025-05-31 07:35:58,957 - INFO - WebSocket server response: {"timestamp":"2025-05-31T13:45:00Z","user_id":"testUser","session_id":"S1","agent_id":"agentX","messages":["live!"],"enrichments":[]}
+2025-05-31 07:41:44,046 - INFO - Detected keywords: ['deepseek']
+2025-05-31 07:41:44,050 - INFO - WebSocket sent payload to local server.
+2025-05-31 08:34:29,048 - INFO - Detected keywords: ['gemini']
+2025-05-31 08:34:29,053 - INFO - WebSocket sent payload to local server.
+2025-05-31 08:38:31,544 - INFO - Detected keywords: ['gemini']
+2025-05-31 08:38:31,544 - INFO - WebSocket sent payload to local server.
+2025-05-31 08:50:49,390 - INFO - WebSocket server response: {"timestamp":"2025-05-31T12:00:00Z","user_id":"test123","session_id":"sess1","agent_id":"agentX","messages":["LIVE TEST"]}
+2025-05-31 08:56:46,488 - INFO - Detected keywords: ['gemini']
+2025-05-31 08:56:46,499 - INFO - WebSocket sent payload to local server.
+2025-05-31 08:57:26,001 - INFO - WebSocket server response: {"timestamp":"2025-05-31T12:00:00Z","user_id":"test123","session_id":"sess1","agent_id":"agentX","messages":["LIVE TEST"]}
+2025-05-31 09:07:59,190 - INFO - Detected keywords: ['gemini']
+2025-05-31 09:07:59,191 - INFO - WebSocket sent payload to local server.
+2025-05-31 09:09:34,822 - INFO - WebSocket server response: {"timestamp":"2025-05-31T12:00:00Z","user_id":"test123","session_id":"sess1","agent_id":"agentX","messages":["LIVE TEST"]}
+2025-05-31 09:09:40,835 - INFO - Detected keywords: ['gemini']
+2025-05-31 09:09:40,840 - INFO - WebSocket sent payload to local server.
+2025-05-31 09:37:43,053 - INFO - Detected keywords: ['gemini']
+2025-05-31 09:37:43,056 - INFO - WebSocket sent payload to local server.
+2025-05-31 09:52:03,907 - INFO - WebSocket server response: {"timestamp":"2025-05-31T12:34:56Z","user_id":"test123","session_id":"sess1","agent_id":"agentX","messages":[{"sender":"ai","sequence":1,"text":"LIVE TEST","time":"2025-05-31T12:34:56Z"}],"threat_vectors":["Credential Harvesting"],"risk_level":7,"enrichments":[]}
+2025-05-31 09:52:52,496 - INFO - Detected keywords: ['gemini']
+2025-05-31 09:52:52,505 - INFO - WebSocket sent payload to local server.
+2025-05-31 09:55:10,000 - INFO - WebSocket server response: {"timestamp":"2025-05-31T12:00:00Z","user_id":"test123","session_id":"sess1","agent_id":"agentX","messages":["LIVE TEST"]}
+2025-05-31 10:05:25,179 - INFO - Detected keywords: ['gemini']
+2025-05-31 10:05:25,184 - INFO - WebSocket sent payload to local server.
+2025-05-31 12:18:41,735 - INFO - WebSocket server response: {"timestamp":"2024-07-03T00:00:00Z","user_id":"test","session_id":"sid","agent_id":"aid","messages":[{"role":"user","content":"hello"}],"threat_vectors":["Test"],"risk_level":9,"enrichments":[]}
+2025-05-31 12:20:23,760 - INFO - Detected keywords: ['chatgpt']
+2025-05-31 12:20:23,760 - INFO - WebSocket sent payload to local server.
+2025-05-31 12:39:24,292 - INFO - Detected keywords: ['chatgpt']
+2025-05-31 12:39:28,345 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-05-31 12:39:28,746 - INFO - HTTP sent payload. Status: 202
+2025-05-31 12:49:44,743 - INFO - Monitoring stopped.
+2025-05-31 12:49:52,924 - INFO - Monitoring started.
+2025-05-31 12:51:34,962 - INFO - Detected keywords: ['gemini']
+2025-05-31 12:51:34,967 - INFO - WebSocket sent payload to local server.

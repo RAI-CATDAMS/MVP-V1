@@ -1,301 +1,330 @@
-// ==CATDAMS Universal AI Chat Logger (Top 10 Platforms)==
-// Detects/logs user and AI chats on 10 major chatbots. Backend-ready and privacy-first.
+// ====== CATDAMS Universal content script v2.6 (June 2025) ======
+// Logs both user input (prompts) and AI output (responses) for all major chat/companion platforms
 
-console.log("CATDAMS Universal AI Chat Logger Loaded.");
+console.log("CATDAMS AI Chat Detector: Universal monitoring loaded on", window.location.hostname);
 
-// --- Anonymous User ID (per browser install) ---
-function getOrCreateUserId() {
-    let uid = localStorage.getItem("catdams_uid");
-    if (!uid) {
-        uid = `anon-${Math.random().toString(36).substr(2, 8)}`;
-        localStorage.setItem("catdams_uid", uid);
-    }
-    return uid;
+// === CONFIGURATION ===
+const FORENSIC_MODE = false; // true = log every update, false = only final
+const LOG_HISTORY_SIZE = 100;
+const BACKEND_ENDPOINT = "http://localhost:8081/event"; // <-- Local CATDAMS live dashboard backend
+
+// ======= Deduplication =======
+const messageTimers = new WeakMap();
+const loggedMessages = [];
+function logMessageOnce(text, source = "AI") {
+    if (!text) return;
+    const normText = (source + ":" + text.replace(/\s+/g, ' ').trim());
+    if (loggedMessages.includes(normText)) return;
+    loggedMessages.push(normText);
+    if (loggedMessages.length > LOG_HISTORY_SIZE) loggedMessages.shift();
+    console.log(`[CATDAMS] ${source} Message captured:`, text);
+    postMessageToBackend(text, source);
 }
 
-const CONFIG = {
-    BACKEND_ENDPOINT: 'https://catdams-app-mv-d5fgg9fhc6g5hwg7.eastus-01.azurewebsites.net/ingest',
-    AGENT_ID: "catdams-universal-ext",
-    USER_ID: getOrCreateUserId(),
-    AGENT_VERSION: "v1.0.0",
-    POLICY_VERSION: "2024-05",
-    PROCESS_DEBOUNCE_DELAY: 1200,
-    INITIAL_LOAD_DELAY: 3500
+// ======= POST TO BACKEND =======
+function postMessageToBackend(text, sender) {
+    // Compose standardized payload for CATDAMS dashboard ingestion
+    const now = new Date().toISOString();
+    const payload = {
+        time: now,
+        type: "Chat Interaction",
+        severity: sender === "AI" ? "Medium" : "Low",
+        source: window.location.hostname,
+        country: "US",
+        message: text,
+        sender: sender
+    };
+    fetch(BACKEND_ENDPOINT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(r => {
+        if (r.ok) {
+            console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
+        } else {
+            console.error("[CATDAMS Backend] POST fail", r.status);
+        }
+    })
+    .catch(e => {
+        console.error("[CATDAMS Backend] POST error", e);
+    });
+}
+
+// ======= SELECTORS (Old Code, Preserved) =======
+const SELECTORS_BY_DOMAIN = {
+    "chat.openai.com": [
+        '.flex.flex-col.items-center > div',
+        '.prose', '.markdown',
+        '[data-message-author-role="assistant"]',
+        '[data-message-author-role="user"]'
+    ],
+    "chatgpt.com": [
+        '.flex.flex-col.items-center > div', '.prose', '.markdown',
+        '[data-message-author-role="assistant"]', '[data-message-author-role="user"]'
+    ],
+    "gemini.google.com": [
+        '[data-testid="bubble"]',
+        '.ProseMirror',
+        '.conversation-turn',
+        '.markdown',
+        'textarea',
+        'div[aria-label="User input"]',
+        '.leading-actions-wrapper'
+    ],
+    "bard.google.com": [
+        '.markdown', '.ProseMirror', '.conversation-turn',
+        '[data-testid="bubble"]', 'textarea'
+    ],
+    "chat.deepseek.com": [
+        '.ds-markdown-paragraph',
+        'textarea#chat-input',
+        '.chat-message', '.markdown', '[data-testid="chat-message"]',
+        'div.ds-markdown-block'
+    ],
+    "deepseek.com": [
+        '.ds-markdown-paragraph', 'textarea#chat-input', '.chat-message', '.markdown', '[data-testid="chat-message"]'
+    ]
 };
-const SESSION_ID = `sess-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8)}`;
 
-const HOST = window.location.hostname;
-
-// --- Site-Specific Selectors and Extractors ---
-const PLATFORM_DEFS = [
-    {
-        name: "ChatGPT",
-        host: "chat.openai.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector('textarea');
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const messageDivs = Array.from(document.querySelectorAll("div[data-message-author-role]"));
-            const userBubbles = messageDivs.filter(el => el.getAttribute('data-message-author-role') === "user");
-            const aiBubbles = messageDivs.filter(el => el.getAttribute('data-message-author-role') === "assistant");
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Gemini",
-        host: "gemini.google.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const inputArea = document.querySelector('div[contenteditable="true"][role="textbox"]');
-            if (inputArea && inputArea.innerText) userPrompt = inputArea.innerText.trim();
-            const chatItems = document.querySelectorAll('div[role="listitem"], div[data-testid*="chat-message"]');
-            if (chatItems.length) {
-                const lastChat = chatItems[chatItems.length - 1];
-                let userBub = lastChat.querySelector('div[data-is-user-message="true"], div.message-item-text-model-id-user, div.user-text-content, span[data-text-content]');
-                if (userBub && userBub.innerText) userPrompt = userBub.innerText.trim();
-                let aiBub = lastChat.querySelector('div[data-is-ai-response="true"], div.message-item-text-model-id-2, div.model-response-content, span[data-text-content]');
-                if (aiBub && aiBub.innerText) aiResponse = aiBub.innerText.trim();
-            }
-            if (!userPrompt || !aiResponse) {
-                const textEls = Array.from(document.querySelectorAll('span,div')).filter(el =>
-                    el.offsetParent !== null && el.innerText && el.innerText.trim().length > 0
-                );
-                textEls.sort((a, b) => b.innerText.length - a.innerText.length);
-                if (!userPrompt && textEls[0]) userPrompt = textEls[0].innerText.trim();
-                if (!aiResponse && textEls[1]) aiResponse = textEls[1].innerText.trim();
-            }
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Claude",
-        host: "claude.ai",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const msgDivs = Array.from(document.querySelectorAll('.message, .Message'));
-            const userBubbles = msgDivs.filter(el =>
-                el.className && el.className.toLowerCase().includes("user") ||
-                el.getAttribute('role') === "user"
-            );
-            const aiBubbles = msgDivs.filter(el =>
-                el.className && el.className.toLowerCase().includes("assistant") ||
-                el.getAttribute('role') === "assistant"
-            );
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "DeepSeek",
-        host: "chat.deepseek.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector('textarea');
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const chatItems = Array.from(document.querySelectorAll('.message-item, .chat-item'));
-            const userBubbles = chatItems.filter(el =>
-                el.className && el.className.toLowerCase().includes("user")
-            );
-            const aiBubbles = chatItems.filter(el =>
-                el.className && (
-                    el.className.toLowerCase().includes("assistant") ||
-                    el.className.toLowerCase().includes("ai")
-                )
-            );
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Poe",
-        host: "poe.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const userBubbles = Array.from(document.querySelectorAll(".UserMessage"));
-            const aiBubbles = Array.from(document.querySelectorAll(".BotMessage, .AssistantMessage, .MessageGroup"));
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Perplexity",
-        host: "www.perplexity.ai",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const userBubbles = Array.from(document.querySelectorAll('.user-message'));
-            const aiBubbles = Array.from(document.querySelectorAll('.ai-message, .response, .assistant-message'));
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "HuggingChat",
-        host: "huggingface.co",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const msgGroups = Array.from(document.querySelectorAll('.chat-message, .message-group'));
-            const userBubbles = msgGroups.filter(el =>
-                el.className && el.className.toLowerCase().includes("user")
-            );
-            const aiBubbles = msgGroups.filter(el =>
-                el.className && el.className.toLowerCase().includes("assistant")
-            );
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Replika",
-        host: "replika.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const msgDivs = Array.from(document.querySelectorAll('.text-message, .user-message, .bot-message'));
-            const userBubbles = msgDivs.filter(el =>
-                el.className && (el.className.toLowerCase().includes("user") || el.className.toLowerCase().includes("me"))
-            );
-            const aiBubbles = msgDivs.filter(el =>
-                el.className && (el.className.toLowerCase().includes("bot") || el.className.toLowerCase().includes("ai"))
-            );
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "You.com",
-        host: "you.com",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const userBubbles = Array.from(document.querySelectorAll('.chatMessage.user, .userMessage, .user-bubble'));
-            const aiBubbles = Array.from(document.querySelectorAll('.chatMessage.ai, .aiMessage, .ai-bubble'));
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    },
-    {
-        name: "Pi.ai",
-        host: "pi.ai",
-        extract: function () {
-            let userPrompt = "", aiResponse = "";
-            const textarea = document.querySelector("textarea");
-            if (textarea && textarea.value.trim()) userPrompt = textarea.value.trim();
-            const bubbles = Array.from(document.querySelectorAll('.message, .user-message, .ai-message'));
-            const userBubbles = bubbles.filter(el =>
-                el.className && el.className.toLowerCase().includes("user")
-            );
-            const aiBubbles = bubbles.filter(el =>
-                el.className && (el.className.toLowerCase().includes("ai") || el.className.toLowerCase().includes("bot"))
-            );
-            if (userBubbles.length) userPrompt = userBubbles[userBubbles.length - 1].innerText.trim();
-            if (aiBubbles.length) aiResponse = aiBubbles[aiBubbles.length - 1].innerText.trim();
-            return { userPrompt, aiResponse };
-        }
-    }
+const UNIVERSAL_SELECTORS = [
+    '[data-testid*="message"]', '[data-testid*="chat"]',
+    '[class*="message"]', '[class*="chat"]',
+    '.prose', '.markdown', '.msg', '.text-lg', '.conversation-turn', '.message__text', '.chat__message'
 ];
 
-// --- Helper Functions ---
-function buildPayload(userPrompt, aiResponse, platform) {
-    const now = new Date().toISOString();
-    return {
-        agent_id: CONFIG.AGENT_ID,
-        session_id: SESSION_ID,
-        user_id: CONFIG.USER_ID,
-        timestamp: now,
-        messages: [
-            { sequence: 1, sender: "user", text: userPrompt || "", time: now },
-            { sequence: 2, sender: "ai", text: aiResponse || "", time: now }
-        ],
-        metadata: {
-            agent_version: CONFIG.AGENT_VERSION,
-            policy_version: CONFIG.POLICY_VERSION,
-            os: navigator.platform,
-            application: platform,
-            language: navigator.language || "en-US"
-        }
-    };
+// ======= Platform-aware selectors =======
+function getSelectorsForDomain(domain) {
+    const bareDomain = domain.replace(/^www\./, '');
+    return SELECTORS_BY_DOMAIN[domain] || SELECTORS_BY_DOMAIN[bareDomain] || UNIVERSAL_SELECTORS;
 }
 
-async function postToBackend(payload) {
-    console.log("[CATDAMS-Backend] Outgoing payload:", JSON.stringify(payload, null, 2));
-    try {
-        const res = await fetch(CONFIG.BACKEND_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(payload)
+// ======= DeepSeek Extraction (FULL LEGACY) =======
+function extractDeepSeekUserPrompt() {
+    let userPrompt = "";
+    const chatList = document.querySelector('main div[class*="overflow"]') || document.querySelector('main > div > div');
+    if (chatList) {
+        const allChildren = Array.from(chatList.children).filter(n => n.innerText && n.innerText.trim().length > 0);
+        if (allChildren.length) {
+            let candidate = null;
+            if (allChildren.length % 2 === 0) {
+                candidate = allChildren[allChildren.length - 2];
+            } else {
+                candidate = allChildren[allChildren.length - 1];
+            }
+            if (candidate && candidate.innerText) {
+                userPrompt = candidate.innerText.trim();
+            }
+        }
+    }
+    if (!userPrompt) {
+        const userDivs = Array.from(document.querySelectorAll('div[class^="9"], div[class^="8"], div[class^="7"], div[class^="6"], div[class^="5"], div[class^="4"], div[class^="3"], div[class^="2"], div[class^="1"]'));
+        if (userDivs.length) {
+            userPrompt = userDivs[userDivs.length - 1].innerText.trim();
+        }
+    }
+    if (!userPrompt) {
+        const textarea = document.querySelector('textarea#chat-input');
+        if (textarea && textarea.value.trim()) {
+            userPrompt = textarea.value.trim();
+        }
+    }
+    return userPrompt;
+}
+
+function extractDeepSeekAIResponse() {
+    let aiResponse = "";
+    const aiBlocks = Array.from(document.querySelectorAll('div.ds-markdown-block'));
+    if (aiBlocks.length) {
+        const lastAIBlock = aiBlocks[aiBlocks.length - 1];
+        let parts = [];
+        lastAIBlock.querySelectorAll('p,li,pre,code').forEach(el => {
+            if (el.innerText && el.offsetParent !== null) parts.push(el.innerText.trim());
         });
-        if (!res.ok) {
-            const errorText = await res.text();
-            console.error(`[CATDAMS-Backend ERROR] Backend response not OK (${res.status}):`, errorText);
-        } else {
-            console.log("[CATDAMS-Backend SUCCESS] Data sent to backend.");
+        aiResponse = parts.join('\n').replace(/\n{2,}/g, '\n').trim();
+        if (!aiResponse && lastAIBlock.innerText) aiResponse = lastAIBlock.innerText.trim();
+    }
+    return aiResponse;
+}
+
+function deepseekCaptureBoth() {
+    if (!window.location.hostname.includes('deepseek')) return false;
+
+    function logBoth() {
+        const userPrompt = extractDeepSeekUserPrompt();
+        const aiResponse = extractDeepSeekAIResponse();
+        if (userPrompt) logMessageOnce(userPrompt, "USER");
+        if (aiResponse) logMessageOnce(aiResponse, "AI");
+    }
+
+    const textarea = document.querySelector('textarea#chat-input');
+    if (textarea && !textarea.__catdams_listener) {
+        textarea.__catdams_listener = true;
+        textarea.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                setTimeout(logBoth, 100);
+            }
+        });
+    }
+
+    let mainEl = document.querySelector('main') || document.body;
+    if (mainEl && !mainEl.__catdams_deepseek_observer) {
+        const observer = new MutationObserver(() => setTimeout(logBoth, 150));
+        observer.observe(mainEl, { childList: true, subtree: true });
+        mainEl.__catdams_deepseek_observer = true;
+    }
+    setTimeout(deepseekCaptureBoth, 3000);
+    return true;
+}
+
+// ======= Gemini Extraction (LEGACY) =======
+function geminiUserInputCapture() {
+    if (!window.location.hostname.includes('gemini.google.com')) return false;
+
+    let lastGeminiPrompt = "";
+
+    function scanGeminiUserPrompt() {
+        const userBubbles = Array.from(document.querySelectorAll(
+            'div.user-query-container, div[role="heading"][aria-level="2"], div.horizontal-content-container'
+        ));
+        if (userBubbles.length) {
+            let last = userBubbles[userBubbles.length - 1];
+            if (last) {
+                let userPrompt = last.innerText || last.textContent || '';
+                userPrompt = userPrompt.trim();
+                if (
+                    userPrompt &&
+                    userPrompt !== lastGeminiPrompt &&
+                    typeof logMessageOnce === "function" &&
+                    !loggedMessages.includes("USER:" + userPrompt)
+                ) {
+                    lastGeminiPrompt = userPrompt;
+                    logMessageOnce(userPrompt, "USER");
+                }
+            }
         }
-    } catch (err) {
-        console.error("[CATDAMS-Backend ERROR] Network or fetch operation failed:", err);
+    }
+    let chatRoot = document.querySelector('main') || document.body;
+    if (chatRoot && !chatRoot.__catdams_gemini_observer) {
+        const observer = new MutationObserver(() => setTimeout(scanGeminiUserPrompt, 120));
+        observer.observe(chatRoot, { childList: true, subtree: true });
+        chatRoot.__catdams_gemini_observer = true;
+    }
+    setTimeout(scanGeminiUserPrompt, 2000);
+    setTimeout(geminiUserInputCapture, 3000);
+    return true;
+}
+
+// ======= ChatGPT Extraction (LEGACY) =======
+function chatgptUserInputCapture() {
+    if (!window.location.hostname.includes('chat.openai.com')) return false;
+    let textarea = document.querySelector('textarea');
+    if (textarea) {
+        if (!textarea.__catdams_listener) {
+            textarea.__catdams_listener = true;
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    setTimeout(() => {
+                        const userInput = textarea.value || textarea.textContent || '';
+                        if (userInput.trim()) {
+                            logMessageOnce(userInput.trim(), "USER");
+                        }
+                    }, 30);
+                }
+            });
+        }
+    }
+    setTimeout(chatgptUserInputCapture, 3000);
+    return true;
+}
+
+// ======= Universal Input Fallback (LEGACY) =======
+function captureUserInputUniversal() {
+    let inputBoxes = Array.from(document.querySelectorAll('textarea, [contenteditable="true"], input[type="text"]'));
+    inputBoxes.forEach(inputBox => {
+        if (inputBox.__catdams_listener) return;
+        inputBox.__catdams_listener = true;
+        inputBox.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                setTimeout(() => {
+                    const userInput = inputBox.value || inputBox.textContent || '';
+                    if (userInput.trim()) {
+                        logMessageOnce(userInput.trim(), "USER");
+                    }
+                }, 30);
+            }
+        });
+        let sendBtn = inputBox.parentNode && inputBox.parentNode.querySelector('button, [role="button"]');
+        if (sendBtn && !sendBtn.__catdams_listener) {
+            sendBtn.__catdams_listener = true;
+            sendBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    const userInput = inputBox.value || inputBox.textContent || '';
+                    if (userInput.trim()) {
+                        logMessageOnce(userInput.trim(), "USER");
+                    }
+                }, 30);
+            });
+        }
+    });
+    setTimeout(captureUserInputUniversal, 3000);
+}
+
+// ======= AI Output Capture =======
+function scanAndProcessMessages() {
+    const selectors = getSelectorsForDomain(window.location.hostname);
+    const messages = [];
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(msgDiv => {
+            if (!messages.includes(msgDiv)) messages.push(msgDiv);
+        });
+    });
+    messages.forEach(msgDiv => {
+        const text = (msgDiv.innerText || msgDiv.textContent || '').trim();
+        if (!text) return;
+        if (FORENSIC_MODE) {
+            logMessageOnce(text, "AI");
+        } else {
+            if (messageTimers.has(msgDiv)) {
+                clearTimeout(messageTimers.get(msgDiv));
+            }
+            const timer = setTimeout(() => {
+                const finalText = (msgDiv.innerText || msgDiv.textContent || '').trim();
+                logMessageOnce(finalText, "AI");
+            }, 2000);
+            messageTimers.set(msgDiv, timer);
+        }
+    });
+}
+
+// ======= Main Observer Logic =======
+function startObservingChat() {
+    let mainEl = document.querySelector('main') || document.body;
+    if (mainEl) {
+        const observer = new MutationObserver(scanAndProcessMessages);
+        observer.observe(mainEl, { childList: true, subtree: true });
+        scanAndProcessMessages();
+        console.log(
+            FORENSIC_MODE
+                ? "[CATDAMS] Forensic mode: logging ALL partials and finals (multi-platform)."
+                : "[CATDAMS] Normal mode: logging only finalized, unique messages (multi-platform)."
+        );
+    } else {
+        setTimeout(startObservingChat, 1000);
     }
 }
 
-// --- Main Logic: Detect Platform, Observe, Log ---
-let lastLoggedUserPrompt = "";
-let lastLoggedAiResponse = "";
-let processChatTimeout = null;
+// ======= Initialize =======
+window.addEventListener('DOMContentLoaded', startObservingChat);
 
-function processAndSendChatData(extractor, platformName) {
-    clearTimeout(processChatTimeout);
+setTimeout(chatgptUserInputCapture, 500);
+setTimeout(geminiUserInputCapture, 500);
+setTimeout(deepseekCaptureBoth, 500);
 
-    processChatTimeout = setTimeout(() => {
-        const { userPrompt, aiResponse } = extractor();
-        if (!userPrompt || !aiResponse) return;
-        if (userPrompt === lastLoggedUserPrompt && aiResponse === lastLoggedAiResponse) return;
+setTimeout(captureUserInputUniversal, 1000);
+setTimeout(startObservingChat, 2000);
 
-        const payload = buildPayload(userPrompt, aiResponse, platformName);
-        postToBackend(payload);
-
-        lastLoggedUserPrompt = userPrompt;
-        lastLoggedAiResponse = aiResponse;
-    }, CONFIG.PROCESS_DEBOUNCE_DELAY);
-}
-
-const platformObj = PLATFORM_DEFS.find(p => HOST.includes(p.host));
-if (platformObj) {
-    const observer = new MutationObserver(() => {
-        processAndSendChatData(platformObj.extract, platformObj.name);
-    });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true
-    });
-    console.log(`[CATDAMS] Monitoring ${platformObj.name} (${platformObj.host})`);
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), 100);
-    });
-    setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), CONFIG.INITIAL_LOAD_DELAY);
-
-    if (document.readyState === 'complete') {
-        setTimeout(() => processAndSendChatData(platformObj.extract, platformObj.name), CONFIG.INITIAL_LOAD_DELAY);
-    }
-} else {
-    console.log(`[CATDAMS] No supported AI chat platform detected on ${HOST}`);
-}
+// ========== END OF CATDAMS UNIVERSAL SCRIPT ==========
