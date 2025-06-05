@@ -1,131 +1,346 @@
 import os
 import json
+import requests
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify
+from collections import Counter, defaultdict
+from statistics import mean
+
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import desc
-from flask_cors import CORS
+from flask_cors import CORS  # <- Import CORS
+from jsonschema import validate, ValidationError
 
-# Azure SQL connection string - make sure your secrets are secure!
-DATABASE_URI = (
-    "mssql+pyodbc://catdamsadmin:Chloe310$$@catdamsadmin.database.windows.net:1433/"
-    "catdamsadmin?driver=ODBC+Driver+18+for+SQL+Server"
-)
+# If your detection_engine import fails, comment it out temporarily for debug
+try:
+    from detection_engine import combined_detection
+except ImportError:
+    def combined_detection(x): return {"rules_based": {}, "openai_based": {}}
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for API & dashboard
+db = SQLAlchemy()
 
-# SQLAlchemy config
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+class Telemetry(db.Model):
+    __tablename__ = "telemetry"
+    id          = db.Column(db.Integer, primary_key=True)
+    timestamp   = db.Column(db.String,  nullable=False)
+    data        = db.Column(db.JSON,    nullable=False)
+    enrichments = db.Column(db.JSON,    nullable=True)
 
-### =======================
-###   DATABASE MODELS
-### =======================
-
-class ThreatEvent(db.Model):
-    __tablename__ = 'threat_events'
-    id        = db.Column(db.Integer, primary_key=True)
-    time      = db.Column(db.String, nullable=False)
-    type      = db.Column(db.String, nullable=False)
-    severity  = db.Column(db.String, nullable=False)
-    source    = db.Column(db.String, nullable=False)
-    country   = db.Column(db.String, nullable=False)
-    message   = db.Column(db.String, nullable=False)
-    lat       = db.Column(db.Float, nullable=True)
-    lon       = db.Column(db.Float, nullable=True)
-
-    def as_dict(self):
-        return {
-            "id": self.id,
-            "time": self.time,
-            "type": self.type,
-            "severity": self.severity,
-            "source": self.source,
-            "country": self.country,
-            "message": self.message,
-            "lat": self.lat,
-            "lon": self.lon
-        }
-
-### =======================
-###   ROUTES & API ENDPOINTS
-### =======================
-
-@app.route("/")
-def index():
-    return "<h2>CATDAMS API is running. Go to /dashboard for the dashboard.</h2>"
-
-@app.route("/dashboard")
-def dashboard():
-    # Only pass simple context; all live data is loaded by JS over WebSocket/API.
-    return render_template("dashboard.html")
-
-@app.route("/api/threats/recent", methods=["GET"])
-def get_recent_threats():
-    # Return the most recent 50 threats for dashboard initialization
-    events = ThreatEvent.query.order_by(desc(ThreatEvent.id)).limit(50).all()
-    return jsonify([e.as_dict() for e in reversed(events)])  # oldest first
-
-@app.route("/api/threats/summary", methods=["GET"])
-def get_threat_summary():
-    # Compute stats: total, prevalent, top country, type/severity/country counts
-    all_events = ThreatEvent.query.all()
-    total = len(all_events)
-    type_counts = {}
-    severity_counts = {}
-    country_counts = {}
-    for e in all_events:
-        type_counts[e.type] = type_counts.get(e.type, 0) + 1
-        severity_counts[e.severity] = severity_counts.get(e.severity, 0) + 1
-        country_counts[e.country] = country_counts.get(e.country, 0) + 1
-    prevalent = max(type_counts, key=type_counts.get) if type_counts else None
-    top_country = max(country_counts, key=country_counts.get) if country_counts else None
-    return jsonify({
-        "total": total,
-        "prevalent": prevalent,
-        "top_country": top_country,
-        "type_counts": type_counts,
-        "severity_counts": severity_counts,
-        "country_counts": country_counts
-    })
-
-@app.route("/ingest", methods=["POST"])
-def ingest_threat():
-    # Endpoint for Sentinel agent or WebSocket server to POST new events
+def get_country_from_ip(ip):
     try:
-        data = request.get_json(force=True)
-        required_fields = ["time", "type", "severity", "source", "country", "message"]
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"Missing field: {field}"}), 400
-        event = ThreatEvent(
-            time = data.get("time", datetime.utcnow().isoformat()),
-            type = data["type"],
-            severity = data["severity"],
-            source = data["source"],
-            country = data["country"],
-            message = data["message"],
-            lat = float(data.get("lat", 0)) if data.get("lat") else None,
-            lon = float(data.get("lon", 0)) if data.get("lon") else None
-        )
-        db.session.add(event)
-        db.session.commit()
-        # Optionally, broadcast to WebSocket (see companion ws_server)
-        return jsonify({"status": "ok"}), 201
-    except Exception as ex:
-        print(f"[ERROR] /ingest: {ex}")
-        return jsonify({"error": str(ex)}), 500
+        if ip == "127.0.0.1" or ip.startswith("192.168.") or ip.startswith("10."):
+            return "Local Network"
+        url = f"https://ipapi.co/{ip}/country_name/"
+        response = requests.get(url, timeout=2)
+        if response.status_code == 200:
+            return response.text.strip()
+        else:
+            return "Unknown"
+    except Exception:
+        return "Unknown"
 
-### =======================
-###   INITIALIZATION
-### =======================
+def create_app(test_config=None):
+    app = Flask(__name__)
+    CORS(app, resources={r"/*": {"origins": "*"}})  # <- Enable CORS for all routes (dev mode)
+    app.secret_key = os.environ.get("FLASK_SECRET_KEY", "fallback-secret")
+    app.config.from_mapping(
+        SQLALCHEMY_DATABASE_URI=(
+            "mssql+pyodbc://catdamsadmin:Chloe310$$@catdamsadmin.database.windows.net:1433/"
+            "catdamsadmin?driver=ODBC+Driver+18+for+SQL+Server"
+        ),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    )
 
-def setup_database():
+    if test_config:
+        app.config.update(test_config)
+
+    db.init_app(app)
     with app.app_context():
         db.create_all()
 
+    # Load schema
+    schema_path = os.path.join(app.root_path, "ingest_schema.json")
+    try:
+        with open(schema_path) as f:
+            ingest_schema = json.load(f)
+    except Exception as e:
+        print(f"[FATAL] Could not load ingest_schema.json: {e}")
+        ingest_schema = {}
+
+    def enrich_messages(messages):
+        enrichments = []
+        for m in messages:
+            msg_text = m.get("text", "")
+            detection = combined_detection(msg_text)
+            ai_result = detection["openai_based"]
+            try:
+                if ai_result:
+                    ai_result_clean = ai_result.replace("```json", "").replace("```", "").strip()
+                    ai_result_json = json.loads(ai_result_clean)
+                else:
+                    ai_result_json = {}
+            except Exception:
+                ai_result_json = {"error": "Failed to parse OpenAI result"}
+            enrichments.append({
+                "sequence": m.get("sequence"),
+                "rules_based": detection["rules_based"],
+                "openai_based": ai_result_json
+            })
+        return enrichments
+
+    def _flatten_rules(rules):
+        flat = []
+        if isinstance(rules, str):
+            flat.append(rules)
+        elif isinstance(rules, dict):
+            flat.append(str(rules))
+        elif isinstance(rules, list):
+            for item in rules:
+                flat.extend(_flatten_rules(item))
+        elif rules is not None:
+            flat.append(str(rules))
+        return flat
+
+    @app.route("/")
+    def home():
+        return "Hello, CATDAMS!"
+
+    @app.route("/health", methods=["GET"])
+    def health():
+        return "OK", 200
+
+    @app.route("/ingest", methods=["POST"])
+    def ingest():
+        try:
+            payload = request.get_json(force=True)
+        except Exception as e:
+            print(f"[ERROR] Invalid JSON: {e}")
+            import traceback
+            traceback.print_exc()
+            return {"error": f"Invalid JSON: {e}"}, 400
+
+        requester_ip = request.remote_addr
+        payload["ip_address"] = requester_ip
+
+        # Lookup country from IP and add to payload
+        country = get_country_from_ip(requester_ip)
+        payload["country"] = country
+
+        print("\n[INGEST] New event received at /ingest")
+        print("IP:", requester_ip)
+        print("Payload:", json.dumps(payload, indent=2))
+
+        # Validate schema if loaded
+        if ingest_schema:
+            try:
+                validate(instance=payload, schema=ingest_schema)
+            except ValidationError as e:
+                print(f"[ERROR] JSONSchema validation failed: {e}")
+                import traceback
+                traceback.print_exc()
+                return {"error": e.message}, 400
+
+        messages = payload.get("messages", [])
+        try:
+            enrichment_results = enrich_messages(messages)
+        except Exception as e:
+            print(f"[ERROR] During enrichment: {e}")
+            import traceback
+            traceback.print_exc()
+            enrichment_results = []
+
+        ts = datetime.utcnow().isoformat() + "Z"
+        try:
+            entry = Telemetry(timestamp=ts, data=payload, enrichments=enrichment_results)
+            db.session.add(entry)
+            db.session.commit()
+            print("[SUCCESS] Telemetry entry saved to DB.")
+        except Exception as db_err:
+            print(f"[DB ERROR] {db_err}")
+            import traceback
+            traceback.print_exc()
+
+        print("[INGEST] Done.\n")
+        return {
+            "status": "accepted",
+            "enrichment_results": enrichment_results
+        }, 202
+
+    @app.route("/query", methods=["GET"])
+    def query():
+        entries = Telemetry.query.all()
+        return jsonify([
+            {
+                "timestamp": e.timestamp,
+                "data": e.data,
+                "enrichments": e.enrichments
+            }
+            for e in entries
+        ]), 200
+
+    @app.route("/dashboard")
+    def dashboard():
+        user_id = request.args.get('user_id', '').strip()
+        min_risk = request.args.get('min_risk', type=float)
+        selected_vector = request.args.get('threat_vector', '').strip()
+        limit = 100
+
+        entries = Telemetry.query.order_by(Telemetry.timestamp.desc()).limit(limit).all()
+
+        THREAT_VECTORS = [
+            "Elicitation",
+            "Manipulation",
+            "Influence Operation",
+            "PII/PHI",
+            "Credential Harvesting",
+            "Cognitive Intrusion",
+            "Insider Threat",
+            "Misinformation/Disinformation",
+            "Emotion Exploitation"
+        ]
+
+        user_counts = Counter()
+        agent_counts = Counter()
+        alerts_by_type = Counter()
+        alerts_by_day = defaultdict(int)
+        threat_vector_counts = Counter()
+        risk_scores = []
+        severe_alerts = 0
+        alert_count = 0
+        table_data = []
+        geo_points = []
+        country_counts = Counter()
+
+        for e in entries:
+            enrichments = e.enrichments or []
+            data = e.data or {}
+            detected_vectors = []
+            risk_level = 0
+            is_alert = False
+
+            for enrich in enrichments:
+                rules = enrich.get("rules_based", "")
+                openai_data = enrich.get("openai_based", {})
+                score = openai_data.get("risk_score") or openai_data.get("severity") or 0
+                try:
+                    score = float(score)
+                except Exception:
+                    score = 0
+                risk_level = max(risk_level, score)
+
+                threat_vector = openai_data.get("risk_type") or openai_data.get("threat_type")
+                if isinstance(threat_vector, list):
+                    detected_vectors.extend(threat_vector)
+                elif threat_vector:
+                    detected_vectors.append(threat_vector)
+
+                if rules:
+                    flat_rules = _flatten_rules(rules)
+                    for rule in flat_rules:
+                        detected_vectors.append(str(rule))
+
+                if score and score >= 7:
+                    is_alert = True
+                    severe_alerts += 1
+
+            # ---- FILTERING LOGIC ----
+            if user_id and user_id.lower() not in (data.get("user_id", "") or "").lower():
+                continue
+            if min_risk is not None and risk_level < min_risk:
+                continue
+            if selected_vector and selected_vector not in detected_vectors:
+                continue
+
+            for tag in detected_vectors:
+                if tag in THREAT_VECTORS:
+                    threat_vector_counts[tag] += 1
+                    alerts_by_type[tag] += 1
+
+            geo = None
+            for enrich in enrichments:
+                geo_enrich = enrich.get("geo")
+                if geo_enrich and isinstance(geo_enrich, dict):
+                    geo = geo_enrich
+                    break
+            if not geo:
+                geo = data.get("geo")
+            if geo and isinstance(geo, dict) and "lat" in geo and "lon" in geo:
+                geo_points.append({
+                    "lat": float(geo["lat"]),
+                    "lon": float(geo["lon"]),
+                    "label": data.get("user_id", "Entity")
+                })
+
+            # ---- COUNTRY AGGREGATION LOGIC ----
+            country = data.get("country")
+            if country:
+                country_counts[country] += 1
+
+            if is_alert:
+                alert_count += 1
+                day = e.timestamp[:10]
+                alerts_by_day[day] += 1
+
+            if risk_level:
+                risk_scores.append(risk_level)
+            if data.get("user_id"):
+                user_counts[data["user_id"]] += 1
+            if data.get("agent_id"):
+                agent_counts[data["agent_id"]] += 1
+
+            table_data.append({
+                "timestamp": e.timestamp,
+                "user_id": data.get("user_id"),
+                "session_id": data.get("session_id"),
+                "agent_id": data.get("agent_id"),
+                "messages": data.get("messages"),
+                "threat_vectors": detected_vectors,  # now named for UI clarity
+                "risk_level": risk_level,
+                "alert": is_alert,
+                "enrichments": enrichments,
+            })
+
+        total_records = len(entries)
+        unique_users = len(user_counts)
+        top_users = user_counts.most_common(3)
+        top_agent = agent_counts.most_common(1)[0][0] if agent_counts else "N/A"
+        avg_risk = round(mean(risk_scores), 2) if risk_scores else 0
+
+        chart_alerts_data = {
+            "labels": list(alerts_by_day.keys()),
+            "values": list(alerts_by_day.values())
+        }
+        chart_threat_vector_data = {tag: threat_vector_counts.get(tag, 0) for tag in THREAT_VECTORS}
+
+        # ---- TOP THREAT COUNTRIES LOGIC ----
+        top_countries = country_counts.most_common(5)
+        country_labels = [item[0] for item in top_countries]
+        country_values = [item[1] for item in top_countries]
+
+        return render_template(
+            "dashboard.html",
+            table_data=table_data,
+            total_records=total_records,
+            unique_users=unique_users,
+            alert_count=alert_count,
+            severe_alerts=severe_alerts,
+            avg_risk=avg_risk,
+            top_users=top_users,
+            top_agent=top_agent,
+            chart_alerts_data=chart_alerts_data,
+            chart_threat_vector_data=chart_threat_vector_data,
+            geo_points=geo_points,
+            geo_labels=country_labels,    # now for countries!
+            geo_values=country_values,    # now for countries!
+            threat_vectors=THREAT_VECTORS,
+            selected_vector=selected_vector,
+            request=request
+        )
+
+    return app
+
+app = create_app()
+
 if __name__ == "__main__":
-    setup_database()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    print("Starting Flask app...")
+    app = create_app()
+    app.run(debug=True, host="0.0.0.0", port=8000)

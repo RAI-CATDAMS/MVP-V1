@@ -6,7 +6,7 @@ console.log("CATDAMS AI Chat Detector: Universal monitoring loaded on", window.l
 // === CONFIGURATION ===
 const FORENSIC_MODE = false; // true = log every update, false = only final
 const LOG_HISTORY_SIZE = 100;
-const BACKEND_ENDPOINT = "http://localhost:8081/event"; // <-- Local CATDAMS live dashboard backend
+const BACKEND_ENDPOINT = "http://localhost:8000/event";
 
 // ======= Deduplication =======
 const messageTimers = new WeakMap();
@@ -21,37 +21,31 @@ function logMessageOnce(text, source = "AI") {
     postMessageToBackend(text, source);
 }
 
-// ======= POST TO BACKEND =======
+// ======= POST TO BACKEND (VIA BACKGROUND SCRIPT) =======
 function postMessageToBackend(text, sender) {
-    // Compose standardized payload for CATDAMS dashboard ingestion
     const now = new Date().toISOString();
     const payload = {
         time: now,
-        type: "Chat Interaction",
+        type: "Chat Interaction",      // Fill this in with actual type if you have it!
         severity: sender === "AI" ? "Medium" : "Low",
         source: window.location.hostname,
-        country: "US",
+        country: "US",                 // Optionally geolocate for real country
         message: text,
         sender: sender
     };
-    fetch(BACKEND_ENDPOINT, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(r => {
-        if (r.ok) {
-            console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
-        } else {
-            console.error("[CATDAMS Backend] POST fail", r.status);
-        }
-    })
-    .catch(e => {
-        console.error("[CATDAMS Backend] POST error", e);
-    });
+chrome.runtime.sendMessage({
+    type: "catdams_log",
+    payload: payload
+}, (response) => {
+    console.log("DEBUG FULL RESPONSE:", response);
+    if (response && response.status && response.status >= 200 && response.status < 300) {
+        console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
+    } else if (response && response.status) {
+        console.error("[CATDAMS Backend] POST fail", response.status);
+    } else if (response && response.error) {
+        console.error("[CATDAMS Backend] POST error", response.error);
+    }
+});
 }
 
 // ======= SELECTORS (Old Code, Preserved) =======

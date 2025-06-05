@@ -8,13 +8,11 @@ import logging
 from datetime import datetime, UTC
 from pystray import Icon, MenuItem as item, Menu
 from PIL import Image
-import websocket  # For local WebSocket relay
-import json       # For JSON payloads
+import json
 from keywords import AI_KEYWORDS
 
 # === Configuration ===
-CATDAMS_HTTP_ENDPOINT = "https://catdams-app-mv-d5fgg9fhc6g5hwg7.eastus-01.azurewebsites.net/ingest"
-WS_SERVER = "ws://localhost:8080"  # Local WebSocket relay for MVP
+BACKEND_EVENT_ENDPOINT = "http://localhost:8000/event"  # Unified backend!
 ICON_PATH = os.path.join(os.path.dirname(__file__), "icons", "catdams.ico")
 LOG_INTERVAL_SECONDS = 3
 
@@ -26,38 +24,25 @@ logging.basicConfig(level=logging.INFO, filename="catdams_agent.log", filemode="
 monitoring = False
 key_buffer = []
 
+# === AI Window/App Detection (NEW - Improved Filtering) ===
+def is_ai_window(title):
+    """Returns True if current window title matches any AI site/app/keyword."""
+    return any(kw.lower() in (title or "").lower() for kw in AI_KEYWORDS)
+
 # === Keyword Detection ===
 def detect_keywords(text):
     return [kw for kw in AI_KEYWORDS if kw in text.lower()]
 
 # === Backend Communication ===
-def send_http(payload):
-    try:
-        headers = {'Content-Type': 'application/json'}
-        r = requests.post(CATDAMS_HTTP_ENDPOINT, headers=headers, json=payload)
-        logging.info(f"HTTP sent payload. Status: {r.status_code}")
-    except Exception as e:
-        logging.error(f"HTTP error: {e}")
-
-def send_ws_local(payload):
-    try:
-        ws = websocket.WebSocket()
-        ws.connect(WS_SERVER)
-        ws.send(json.dumps(payload))
-        logging.info("WebSocket sent payload to local server.")
-        # Optional: receive acknowledgment
-        try:
-            response = ws.recv()
-            logging.info(f"WebSocket server response: {response}")
-        except Exception:
-            pass
-        ws.close()
-    except Exception as e:
-        logging.error(f"WebSocket (local) error: {e}")
-        send_http(payload)  # fallback
-
 def send_payload(payload):
-    send_ws_local(payload)
+    try:
+        r = requests.post(BACKEND_EVENT_ENDPOINT, json=payload, timeout=5)
+        if r.status_code in [201, 202]:
+            logging.info(f"Sent payload to backend, status {r.status_code}")
+        else:
+            logging.error(f"Backend responded with status {r.status_code}: {r.text}")
+    except Exception as e:
+        logging.error(f"Failed to POST payload: {e}")
 
 # === Keyboard Monitoring ===
 def monitor_keyboard():
@@ -76,6 +61,11 @@ def monitor_loop():
             typed = ''.join(key_buffer).strip()
             key_buffer.clear()
 
+            # --- Only run detection if this is an AI app/site window ---
+            if not is_ai_window(title):
+                time.sleep(LOG_INTERVAL_SECONDS)
+                continue
+
             combined = f"{title} {typed}"
             hits = detect_keywords(combined)
 
@@ -83,24 +73,15 @@ def monitor_loop():
                 print(f"[DETECTED] {hits}")
                 logging.info(f"Detected keywords: {hits}")
                 # === Build CATDAMS-compatible payload ===
-                now = datetime.now(UTC).isoformat()  # <--- Timezone-aware datetime, warning-free
+                now = datetime.now(UTC).isoformat()  # Timezone-aware datetime
                 payload = {
-                    "agent_id": "catdams-desktop-agent",
-                    "session_id": f"sess-{int(time.time())}",
-                    "user_id": "desktop-user-001",
-                    "timestamp": now,
-                    "messages": [
-                        {"sequence": 1, "sender": "user", "text": f"{typed}", "time": now}
-                    ],
-                    "metadata": {
-                        "agent_version": "v1.0.0",
-                        "policy_version": "2024-05",
-                        "os": os.name,
-                        "application": title,
-                        "language": "en-US"
-                    },
-                    "window_title": title,
-                    "detected_keywords": hits
+                    "time": now,
+                    "type": "Chat Interaction",
+                    "severity": "Low",
+                    "source": title or "Desktop Agent",
+                    "country": "US",
+                    "message": f"{typed} | Keywords: {', '.join(hits)}",
+                    "sender": "desktop"
                 }
                 send_payload(payload)
         except Exception as e:

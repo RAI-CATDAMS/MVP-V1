@@ -30,11 +30,25 @@ wss.on('connection', function connection(ws) {
             const data = JSON.parse(msgStr);
             console.log('Received from client (JSON):', data);
 
-            // POST to Azure backend
+            // ===== MAP INCOMING AGENT DATA TO FLASK /ingest FIELDS =====
+            // Use the first message if available
+            const msg = (data.messages && data.messages.length > 0) ? data.messages[0] : {};
+
+            const payload = {
+                time: msg.time || data.timestamp || new Date().toISOString(),
+                type: "Chat Interaction",
+                severity: "Low", // Change logic as needed
+                source: data.agent_id || "unknown",
+                country: "US",   // Update if you collect actual country info
+                message: msg.text || "",
+                sender: msg.sender || ""
+            };
+
+            // ---- POST to Azure backend ----
             fetch(BACKEND_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(payload)
             })
             .then(response => {
                 if (!response.ok) {

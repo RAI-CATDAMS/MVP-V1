@@ -377,3 +377,1046 @@ KeyboardInterrupt
 2025-05-31 12:49:52,924 - INFO - Monitoring started.
 2025-05-31 12:51:34,962 - INFO - Detected keywords: ['gemini']
 2025-05-31 12:51:34,967 - INFO - WebSocket sent payload to local server.
+2025-06-01 10:20:51,071 - INFO - Agent starting...
+2025-06-01 10:20:58,164 - INFO - Monitoring started.
+2025-06-01 10:21:10,170 - INFO - Detected keywords: ['gemini']
+2025-06-01 10:21:10,190 - INFO - WebSocket sent payload to local server.
+2025-06-01 10:45:26,160 - INFO - Detected keywords: ['gemini']
+2025-06-01 10:45:26,166 - INFO - WebSocket sent payload to local server.
+2025-06-01 10:55:20,594 - INFO - Detected keywords: ['gemini']
+2025-06-01 10:55:20,601 - INFO - WebSocket sent payload to local server.
+2025-06-01 10:59:07,990 - INFO - Detected keywords: ['gemini']
+2025-06-01 10:59:07,990 - INFO - WebSocket sent payload to local server.
+2025-06-01 14:36:22,912 - INFO - Agent starting...
+2025-06-01 14:36:27,610 - INFO - Monitoring started.
+2025-06-01 14:45:27,713 - INFO - Detected keywords: ['gemini']
+2025-06-01 14:45:27,724 - INFO - WebSocket sent payload to local server.
+2025-06-01 15:28:38,514 - INFO - Agent starting...
+2025-06-01 15:28:46,201 - INFO - Monitoring started.
+2025-06-01 15:28:52,214 - INFO - Detected keywords: ['gemini']
+2025-06-01 15:28:52,219 - INFO - WebSocket sent payload to local server.
+2025-06-01 21:07:47,289 - INFO - Agent starting...
+2025-06-01 21:08:07,939 - INFO - Monitoring started.
+2025-06-01 21:13:59,094 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:13:59,124 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:13:59 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:02,125 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:02,130 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:02 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:05,131 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:05,133 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:05 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:08,138 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:08,138 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:11,143 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:11,146 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:11 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:14,148 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:14,155 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:17,156 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:17,156 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:17 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:20,164 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:20,169 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:20 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:23,170 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:23,175 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:23 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:26,177 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:26,181 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:14:59,187 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:14:59,189 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:14:59 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:15:08,194 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:15:08,194 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:15:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:15:14,200 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:15:14,205 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:15:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:15:17,207 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:15:17,211 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:15:17 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:41,447 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:41,449 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:41 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:44,450 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:44,454 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:44 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:47,456 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:47,457 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:47 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:50,459 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:50,460 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:50 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:53,465 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:53,469 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:53 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:56,470 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:56,475 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:56 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:27:59,476 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:27:59,479 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:27:59 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:28:02,482 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:28:02,482 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:28:02 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:28:44,496 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:28:44,496 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:28:44 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:28:47,501 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:28:47,503 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:28:47 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:28:50,507 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:28:50,509 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:28:50 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:28:53,512 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:28:53,517 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:28:53 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:08,736 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:08,740 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:11,741 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:11,741 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:11 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:14,746 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:14,750 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:17,751 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:17,752 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:17 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:20,757 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:20,761 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:20 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:26,762 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:26,767 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:43:29,768 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:43:29,768 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:43:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:02,779 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:02,779 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:02 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:05,785 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:05,789 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:05 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:08,790 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:08,790 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:11,795 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:11,799 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:11 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:14,801 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:14,801 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:44:29,809 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:44:29,812 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:44:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:08,990 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:08,994 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:11,995 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:11,999 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:11 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:15,000 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:15,004 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:15 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:18,006 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:18,010 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:17 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:21,012 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:21,012 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:21 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:24,017 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:24,019 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:24 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:55:27,023 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:55:27,028 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:55:27 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 21:56:45,043 - INFO - Detected keywords: ['gemini']
+2025-06-01 21:56:45,049 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 01:56:45 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:04:51,182 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:04:51,187 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:04:51 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:05:09,193 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:05:09,196 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:05:09 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:05:12,199 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:05:12,203 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:05:12 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:05:15,204 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:05:15,207 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:05:15 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:05:18,210 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:05:18,213 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:05:18 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:13:51,319 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:13:53,365 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:13:56,367 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:13:58,384 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:14:01,389 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:14:03,423 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:14:57,435 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:14:59,480 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:19:44,571 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:44,596 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:44 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:19:47,597 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:47,597 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:47 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:19:50,604 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:50,608 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:50 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:19:53,610 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:53,614 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:53 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:19:56,616 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:56,621 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:56 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:19:59,622 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:19:59,627 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:19:59 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:20:02,628 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:20:02,633 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:20:02 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:20:05,634 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:20:05,634 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:20:05 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:20:08,640 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:20:08,645 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:20:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:21:14,661 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:21:14,661 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:21:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:26:26,725 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:26:26,731 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:26:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:26:29,732 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:26:29,736 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:26:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:26:32,737 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:26:32,742 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:26:32 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:26:35,744 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:26:35,748 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:26:35 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:26:38,750 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:26:38,754 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:26:38 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:27:08,761 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:27:08,761 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:27:08 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:27:11,767 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:27:11,769 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:27:11 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:27:14,773 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:27:14,773 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:27:14 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:30:56,849 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:30:56,853 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:30:56 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:30:59,854 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:30:59,854 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:30:59 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:32:26,878 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:32:26,883 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:32:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:32:29,884 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:32:29,888 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:32:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:32:32,889 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:32:32,893 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:32:32 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:32:35,895 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:32:35,895 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:32:35 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:48:36,113 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:48:38,154 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:48:41,155 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:48:43,190 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:48:46,196 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:48:48,226 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:48:51,236 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:48:53,268 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:48:56,270 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:48:58,310 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:49:01,311 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:49:03,334 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:49:27,340 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:49:29,354 - INFO - WebSocket sent payload to relay server.
+2025-06-01 22:52:26,395 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:52:26,395 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:52:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:52:29,400 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:52:29,403 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:52:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:52:32,403 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:52:32,403 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:52:32 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:52:35,409 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:52:35,409 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:52:35 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:52:47,417 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:52:47,417 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:52:47 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:54:23,439 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:54:23,441 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:54:23 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:54:26,442 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:54:26,446 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:54:26 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:54:29,447 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:54:29,453 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:54:29 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 22:54:32,453 - INFO - Detected keywords: ['gemini']
+2025-06-01 22:54:32,455 - ERROR - WebSocket (local) error: Handshake status 404 Not Found -+-+- {'x-powered-by': 'Express', 'content-security-policy': "default-src 'none'", 'x-content-type-options': 'nosniff', 'content-type': 'text/html; charset=utf-8', 'content-length': '141', 'date': 'Mon, 02 Jun 2025 02:54:32 GMT', 'connection': 'keep-alive', 'keep-alive': 'timeout=5'} -+-+- b'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /ws</pre>\n</body>\n</html>\n'
+2025-06-01 23:20:43,961 - INFO - Agent starting...
+2025-06-01 23:20:52,171 - INFO - Monitoring started.
+2025-06-01 23:21:40,193 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:21:42,221 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:21:45,223 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:21:47,237 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:21:50,243 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:21:52,268 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:21:55,273 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:21:57,302 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:22:45,320 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:22:47,348 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:17,354 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:19,383 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:22,386 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:24,420 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:27,424 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:29,458 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:32,462 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:34,496 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:37,497 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:39,530 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:42,537 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:44,570 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:47,575 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:49,621 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:52,622 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:54,679 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:23:57,685 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:23:59,713 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:24:02,718 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:24:04,753 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:24:07,755 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:24:09,792 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:24:12,793 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:24:14,815 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:24:17,816 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:24:19,848 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:24:22,849 - INFO - Detected keywords: ['chatgpt']
+2025-06-01 23:24:24,864 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:30:48,937 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:30:50,972 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:31:56,985 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:31:59,037 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:32:02,038 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:32:04,071 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:32:07,078 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:32:09,093 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:32:12,097 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:32:14,149 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:36:47,201 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:36:49,254 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:36:52,257 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:36:54,290 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:40:09,330 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:40:11,358 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:40:32,368 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:40:34,381 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:57:43,612 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:57:45,650 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:57:48,652 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:57:50,695 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:57:53,695 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:57:55,730 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:57:58,736 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:58:00,765 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:58:03,768 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:58:05,796 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:58:08,798 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:58:10,833 - INFO - WebSocket sent payload to relay server.
+2025-06-01 23:58:13,835 - INFO - Detected keywords: ['gemini']
+2025-06-01 23:58:15,859 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:01:42,902 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:01:44,942 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:01:47,943 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:01:49,982 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:01:52,988 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:01:55,012 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:01:58,018 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:00,040 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:03,046 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:05,069 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:14,071 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:16,113 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:19,115 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:21,164 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:30,171 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:32,215 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:35,216 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:37,258 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:40,260 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:42,306 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:45,308 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:47,341 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:02:50,344 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:02:52,388 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:04:46,413 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:04:48,451 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:12:24,600 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:12:28,663 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-06-02 00:12:31,665 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:12:35,747 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-06-02 00:12:38,748 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:12:42,829 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-06-02 00:12:45,830 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:12:49,913 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-06-02 00:12:52,914 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:12:57,000 - ERROR - WebSocket (local) error: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-06-02 00:14:06,012 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:08,067 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:14:11,069 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:13,100 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:14:16,102 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:18,151 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:14:21,152 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:23,205 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:14:50,211 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:52,271 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:14:55,273 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:14:57,322 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:15:12,328 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:15:14,364 - INFO - WebSocket sent payload to relay server.
+2025-06-02 00:15:17,365 - INFO - Detected keywords: ['gemini']
+2025-06-02 00:15:19,423 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:47:52,939 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:47:54,985 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:47:57,987 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:48:00,040 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:48:03,041 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:48:05,087 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:48:11,089 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:48:13,131 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:48:16,133 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:48:18,173 - INFO - WebSocket sent payload to relay server.
+2025-06-02 06:48:21,174 - INFO - Detected keywords: ['gemini']
+2025-06-02 06:48:23,228 - INFO - WebSocket sent payload to relay server.
+2025-06-02 07:10:18,933 - INFO - Agent starting...
+2025-06-02 07:10:24,733 - INFO - Monitoring started.
+2025-06-02 07:11:18,747 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:20,967 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:23,968 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:26,127 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:29,128 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:31,289 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:34,290 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:36,467 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:39,469 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:41,628 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:44,629 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:46,789 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:49,790 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:51,949 - INFO - Sent payload to backend, status 201
+2025-06-02 07:11:54,950 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:11:57,117 - INFO - Sent payload to backend, status 201
+2025-06-02 07:12:00,118 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:12:02,273 - INFO - Sent payload to backend, status 201
+2025-06-02 07:13:05,287 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:13:07,477 - INFO - Sent payload to backend, status 201
+2025-06-02 07:20:44,375 - INFO - Agent starting...
+2025-06-02 07:20:51,616 - INFO - Monitoring started.
+2025-06-02 07:21:09,622 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:21:14,050 - ERROR - Backend responded with status 500: {"error":"All connection attempts failed"}
+2025-06-02 07:21:17,051 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:21:21,445 - ERROR - Backend responded with status 500: {"error":"All connection attempts failed"}
+2025-06-02 07:29:57,561 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:29:59,738 - INFO - Sent payload to backend, status 201
+2025-06-02 07:30:02,739 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:30:04,917 - INFO - Sent payload to backend, status 201
+2025-06-02 07:30:07,918 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:30:10,073 - INFO - Sent payload to backend, status 201
+2025-06-02 07:30:13,074 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:30:15,453 - INFO - Sent payload to backend, status 201
+2025-06-02 07:30:18,454 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:30:20,613 - INFO - Sent payload to backend, status 201
+2025-06-02 07:30:23,614 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:30:25,741 - INFO - Sent payload to backend, status 201
+2025-06-02 07:34:22,805 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:34:24,978 - INFO - Sent payload to backend, status 201
+2025-06-02 07:34:27,979 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:34:30,126 - INFO - Sent payload to backend, status 201
+2025-06-02 07:34:42,129 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:34:44,277 - INFO - Sent payload to backend, status 201
+2025-06-02 07:42:05,454 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:42:07,620 - INFO - Sent payload to backend, status 201
+2025-06-02 07:42:10,621 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:42:12,775 - INFO - Sent payload to backend, status 201
+2025-06-02 07:42:15,776 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:42:17,962 - INFO - Sent payload to backend, status 201
+2025-06-02 07:45:11,994 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:45:14,171 - INFO - Sent payload to backend, status 201
+2025-06-02 07:45:17,173 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:45:19,340 - INFO - Sent payload to backend, status 201
+2025-06-02 07:45:22,342 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:45:24,504 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:21,609 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:51:23,794 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:26,795 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:51:28,970 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:31,972 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:51:34,140 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:37,141 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:51:39,291 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:42,292 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:51:44,457 - INFO - Sent payload to backend, status 201
+2025-06-02 07:51:56,459 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:02,057 - INFO - Sent payload to backend, status 201
+2025-06-02 07:52:05,058 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:07,213 - INFO - Sent payload to backend, status 201
+2025-06-02 07:52:10,214 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:12,384 - INFO - Sent payload to backend, status 201
+2025-06-02 07:52:15,386 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:17,521 - INFO - Sent payload to backend, status 201
+2025-06-02 07:52:50,529 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:52,695 - INFO - Sent payload to backend, status 201
+2025-06-02 07:52:55,696 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:52:57,831 - INFO - Sent payload to backend, status 201
+2025-06-02 07:53:00,832 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:53:02,978 - INFO - Sent payload to backend, status 201
+2025-06-02 07:53:05,979 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:53:08,128 - INFO - Sent payload to backend, status 201
+2025-06-02 07:58:44,201 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:58:46,367 - INFO - Sent payload to backend, status 201
+2025-06-02 07:58:49,368 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:58:51,525 - INFO - Sent payload to backend, status 201
+2025-06-02 07:58:54,527 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:58:56,665 - INFO - Sent payload to backend, status 201
+2025-06-02 07:58:59,666 - INFO - Detected keywords: ['gemini']
+2025-06-02 07:59:01,822 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:10,925 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:13,064 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:16,065 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:18,594 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:21,596 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:23,753 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:26,754 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:28,932 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:49,938 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:52,102 - INFO - Sent payload to backend, status 201
+2025-06-02 08:05:55,104 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:05:57,254 - INFO - Sent payload to backend, status 201
+2025-06-02 08:06:00,256 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:06:02,622 - INFO - Sent payload to backend, status 201
+2025-06-02 08:06:50,630 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:06:52,814 - INFO - Sent payload to backend, status 201
+2025-06-02 08:06:55,816 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:06:57,962 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:21,967 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:07:24,137 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:27,138 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:07:29,290 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:38,293 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:07:40,441 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:43,442 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:07:45,614 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:48,615 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:07:50,795 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:53,797 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:07:55,935 - INFO - Sent payload to backend, status 201
+2025-06-02 08:07:58,937 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:08:01,081 - INFO - Sent payload to backend, status 201
+2025-06-02 08:08:04,083 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:08:06,246 - INFO - Sent payload to backend, status 201
+2025-06-02 08:08:09,248 - INFO - Detected keywords: ['chatgpt']
+2025-06-02 08:08:11,394 - INFO - Sent payload to backend, status 201
+2025-06-02 08:13:32,475 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:13:34,658 - INFO - Sent payload to backend, status 201
+2025-06-02 08:13:37,659 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:13:39,814 - INFO - Sent payload to backend, status 201
+2025-06-02 08:13:42,816 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:13:44,990 - INFO - Sent payload to backend, status 201
+2025-06-02 08:13:47,991 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:13:50,166 - INFO - Sent payload to backend, status 201
+2025-06-02 08:13:53,166 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:13:55,325 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:07,339 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:09,500 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:12,502 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:14,663 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:17,665 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:19,801 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:34,804 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:36,979 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:45,981 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:48,154 - INFO - Sent payload to backend, status 201
+2025-06-02 08:15:51,155 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:15:53,328 - INFO - Sent payload to backend, status 201
+2025-06-02 08:20:26,376 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:20:28,560 - INFO - Sent payload to backend, status 201
+2025-06-02 08:20:31,562 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:20:33,738 - INFO - Sent payload to backend, status 201
+2025-06-02 08:20:36,739 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:20:38,879 - INFO - Sent payload to backend, status 201
+2025-06-02 08:20:41,880 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:20:44,049 - INFO - Sent payload to backend, status 201
+2025-06-02 08:21:05,053 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:21:07,235 - INFO - Sent payload to backend, status 201
+2025-06-02 08:21:10,237 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:21:12,391 - INFO - Sent payload to backend, status 201
+2025-06-02 08:21:21,393 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:21:23,561 - INFO - Sent payload to backend, status 201
+2025-06-02 08:21:35,564 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:21:37,729 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:31,752 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:33,930 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:36,931 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:39,085 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:42,086 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:44,272 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:47,273 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:49,466 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:52,467 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:54,638 - INFO - Sent payload to backend, status 201
+2025-06-02 08:23:57,639 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:23:59,769 - INFO - Sent payload to backend, status 201
+2025-06-02 08:24:08,771 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:24:10,922 - INFO - Sent payload to backend, status 201
+2025-06-02 08:24:34,928 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:24:37,085 - INFO - Sent payload to backend, status 201
+2025-06-02 08:24:46,087 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:24:48,258 - INFO - Sent payload to backend, status 201
+2025-06-02 08:24:51,260 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:24:53,434 - INFO - Sent payload to backend, status 201
+2025-06-02 08:24:59,435 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:01,592 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:04,593 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:06,755 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:09,756 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:11,918 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:14,919 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:17,054 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:20,055 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:22,192 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:25,193 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:27,352 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:30,353 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:32,536 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:35,538 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:37,720 - INFO - Sent payload to backend, status 201
+2025-06-02 08:25:40,722 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:25:42,898 - INFO - Sent payload to backend, status 201
+2025-06-02 08:26:03,902 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:26:06,051 - INFO - Sent payload to backend, status 201
+2025-06-02 08:26:15,053 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:26:17,208 - INFO - Sent payload to backend, status 201
+2025-06-02 08:26:29,211 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:26:31,384 - INFO - Sent payload to backend, status 201
+2025-06-02 08:26:34,385 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:26:36,552 - INFO - Sent payload to backend, status 201
+2025-06-02 08:26:39,554 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:26:41,707 - INFO - Sent payload to backend, status 201
+2025-06-02 08:28:56,730 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:28:58,912 - INFO - Sent payload to backend, status 201
+2025-06-02 08:29:01,913 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:29:04,072 - INFO - Sent payload to backend, status 201
+2025-06-02 08:29:07,073 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:29:09,254 - INFO - Sent payload to backend, status 201
+2025-06-02 08:31:58,029 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-02 08:32:03,390 - INFO - Agent starting...
+2025-06-02 08:32:07,423 - INFO - Monitoring started.
+2025-06-02 08:32:13,427 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:14,135 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:17,138 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:17,572 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:20,574 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:20,769 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:23,771 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:24,040 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:27,043 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:27,250 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:30,253 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:30,423 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:33,426 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:33,667 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:36,671 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:36,835 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:39,837 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:40,001 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:43,004 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:43,154 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:46,158 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:46,410 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:55,414 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:55,600 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:32:58,603 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:32:58,815 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:01,819 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:02,013 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:05,016 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:05,175 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:08,178 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:08,339 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:11,342 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:11,603 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:29,610 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:29,883 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:32,887 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:33,047 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:33:36,051 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:33:36,237 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:34:21,248 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:34:21,540 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:36:15,566 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:36:15,921 - ERROR - Backend responded with status 404: <!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+2025-06-02 08:37:46,927 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-02 08:42:18,479 - INFO - Agent starting...
+2025-06-02 08:42:24,736 - INFO - Monitoring started.
+2025-06-02 08:42:33,740 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:42:35,962 - INFO - Sent payload to backend, status 201
+2025-06-02 08:42:38,964 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:42:41,112 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:02,118 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:04,291 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:07,293 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:09,447 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:12,448 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:14,595 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:17,596 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:19,753 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:22,753 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:24,890 - INFO - Sent payload to backend, status 201
+2025-06-02 08:43:27,891 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:43:30,059 - INFO - Sent payload to backend, status 201
+2025-06-02 08:44:54,079 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:44:56,256 - INFO - Sent payload to backend, status 201
+2025-06-02 08:45:32,265 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:45:34,410 - INFO - Sent payload to backend, status 201
+2025-06-02 08:45:37,411 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:45:39,564 - INFO - Sent payload to backend, status 201
+2025-06-02 08:45:42,566 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:45:44,727 - INFO - Sent payload to backend, status 201
+2025-06-02 08:45:47,728 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:45:49,900 - INFO - Sent payload to backend, status 201
+2025-06-02 08:45:52,900 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:45:55,052 - INFO - Sent payload to backend, status 201
+2025-06-02 08:46:13,057 - INFO - Detected keywords: ['replika']
+2025-06-02 08:46:15,195 - INFO - Sent payload to backend, status 201
+2025-06-02 08:47:09,207 - INFO - Detected keywords: ['replika']
+2025-06-02 08:47:11,356 - INFO - Sent payload to backend, status 201
+2025-06-02 08:47:14,357 - INFO - Detected keywords: ['deepseek']
+2025-06-02 08:47:16,531 - INFO - Sent payload to backend, status 201
+2025-06-02 08:47:46,538 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:47:48,726 - INFO - Sent payload to backend, status 201
+2025-06-02 08:48:48,747 - INFO - Detected keywords: ['replika']
+2025-06-02 08:48:50,938 - INFO - Sent payload to backend, status 201
+2025-06-02 08:49:11,942 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:49:14,109 - INFO - Sent payload to backend, status 201
+2025-06-02 08:49:17,109 - INFO - Detected keywords: ['gemini']
+2025-06-02 08:49:19,264 - INFO - Sent payload to backend, status 201
+2025-06-04 10:24:17,599 - INFO - Agent starting...
+2025-06-04 10:24:26,375 - INFO - Monitoring started.
+2025-06-04 10:27:53,422 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:27:55,817 - INFO - Sent payload to backend, status 201
+2025-06-04 10:27:58,819 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:01,147 - INFO - Sent payload to backend, status 201
+2025-06-04 10:28:04,151 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:06,522 - INFO - Sent payload to backend, status 201
+2025-06-04 10:28:09,527 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:11,866 - INFO - Sent payload to backend, status 201
+2025-06-04 10:28:14,867 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:17,228 - INFO - Sent payload to backend, status 201
+2025-06-04 10:28:20,232 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:22,559 - INFO - Sent payload to backend, status 201
+2025-06-04 10:28:25,560 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:28:27,934 - INFO - Sent payload to backend, status 201
+2025-06-04 10:29:33,951 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:29:36,378 - INFO - Sent payload to backend, status 201
+2025-06-04 10:29:39,381 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:29:41,738 - INFO - Sent payload to backend, status 201
+2025-06-04 10:29:44,739 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:29:47,081 - INFO - Sent payload to backend, status 201
+2025-06-04 10:29:50,083 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:29:52,391 - INFO - Sent payload to backend, status 201
+2025-06-04 10:29:55,394 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:29:57,759 - INFO - Sent payload to backend, status 201
+2025-06-04 10:30:00,770 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:30:03,095 - INFO - Sent payload to backend, status 201
+2025-06-04 10:30:06,099 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:30:08,468 - INFO - Sent payload to backend, status 201
+2025-06-04 10:30:11,469 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:30:13,780 - INFO - Sent payload to backend, status 201
+2025-06-04 10:30:16,789 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:30:19,107 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:01,119 - INFO - Detected keywords: ['gemini']
+2025-06-04 10:31:03,456 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:06,458 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:08,776 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:11,779 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:14,076 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:17,077 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:19,618 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:22,619 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:24,933 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:27,947 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:30,335 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:33,336 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:35,676 - INFO - Sent payload to backend, status 201
+2025-06-04 10:31:38,678 - INFO - Detected keywords: ['deepseek']
+2025-06-04 10:31:41,011 - INFO - Sent payload to backend, status 201
+2025-06-04 10:37:35,079 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:37:37,455 - INFO - Sent payload to backend, status 201
+2025-06-04 10:37:40,457 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:37:42,817 - INFO - Sent payload to backend, status 201
+2025-06-04 10:38:00,822 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:38:03,227 - INFO - Sent payload to backend, status 201
+2025-06-04 10:38:06,229 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:38:08,560 - INFO - Sent payload to backend, status 201
+2025-06-04 10:38:11,562 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:38:13,912 - INFO - Sent payload to backend, status 201
+2025-06-04 10:38:16,913 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:38:19,253 - INFO - Sent payload to backend, status 201
+2025-06-04 10:38:22,255 - INFO - Detected keywords: ['chatgpt']
+2025-06-04 10:38:24,567 - INFO - Sent payload to backend, status 201
+2025-06-04 11:38:37,372 - INFO - Detected keywords: ['claude']
+2025-06-04 11:38:40,601 - INFO - Sent payload to backend, status 201
+2025-06-04 17:20:59,035 - INFO - Detected keywords: ['replika']
+2025-06-04 17:21:06,116 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-04 17:25:49,831 - INFO - Agent starting...
+2025-06-04 17:30:55,335 - INFO - Agent starting...
+2025-06-04 17:31:03,229 - INFO - Monitoring started.
+2025-06-04 17:31:12,241 - INFO - Detected keywords: ['roleplay chatbot']
+2025-06-04 17:31:14,447 - INFO - Sent payload to backend, status 201
+2025-06-04 17:31:17,449 - INFO - Detected keywords: ['roleplay chatbot']
+2025-06-04 17:31:19,585 - INFO - Sent payload to backend, status 201
+2025-06-04 17:31:22,589 - INFO - Detected keywords: ['roleplay chatbot']
+2025-06-04 17:31:24,719 - INFO - Sent payload to backend, status 201
+2025-06-04 17:31:27,721 - INFO - Detected keywords: ['ai chat', 'ai chatbot']
+2025-06-04 17:31:29,879 - INFO - Sent payload to backend, status 201
+2025-06-04 17:31:59,888 - INFO - Detected keywords: ['ai chat', 'ai chatbot']
+2025-06-04 17:32:02,035 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:05,036 - INFO - Detected keywords: ['ai chat', 'ai chatbot']
+2025-06-04 17:32:07,162 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:37,172 - INFO - Detected keywords: ['you.com']
+2025-06-04 17:32:39,365 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:42,367 - INFO - Detected keywords: ['talkie', 'talkie.ai']
+2025-06-04 17:32:44,490 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:47,491 - INFO - Detected keywords: ['talkie']
+2025-06-04 17:32:49,620 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:52,634 - INFO - Detected keywords: ['talkie']
+2025-06-04 17:32:54,785 - INFO - Sent payload to backend, status 201
+2025-06-04 17:32:57,787 - INFO - Detected keywords: ['talkie']
+2025-06-04 17:32:59,938 - INFO - Sent payload to backend, status 201
+2025-06-04 17:33:02,941 - INFO - Detected keywords: ['talkie']
+2025-06-04 17:33:05,077 - INFO - Sent payload to backend, status 201
+2025-06-04 17:33:08,092 - INFO - Detected keywords: ['talkie']
+2025-06-04 17:33:10,222 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:10,010 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:12,472 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:15,481 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:17,619 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:20,623 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:22,776 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:25,777 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:27,887 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:30,896 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:33,044 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:36,059 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:38,196 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:41,198 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:43,314 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:46,328 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:48,482 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:51,483 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:53,606 - INFO - Sent payload to backend, status 201
+2025-06-04 18:30:56,621 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:30:58,763 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:01,768 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:03,936 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:06,938 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:09,063 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:12,065 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:14,209 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:17,210 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:19,339 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:22,341 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:24,472 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:36,475 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:38,620 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:41,622 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:43,766 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:46,777 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:48,907 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:51,911 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:54,073 - INFO - Sent payload to backend, status 201
+2025-06-04 18:31:57,074 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:31:59,236 - INFO - Sent payload to backend, status 201
+2025-06-04 18:32:14,240 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:32:16,346 - INFO - Sent payload to backend, status 201
+2025-06-04 18:32:19,352 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:32:21,463 - INFO - Sent payload to backend, status 201
+2025-06-04 18:33:48,482 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:33:50,630 - INFO - Sent payload to backend, status 201
+2025-06-04 18:33:53,643 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:33:55,769 - INFO - Sent payload to backend, status 201
+2025-06-04 18:33:58,785 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:00,901 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:03,911 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:06,095 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:09,099 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:11,241 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:14,247 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:16,396 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:19,399 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:21,565 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:24,566 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:26,696 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:29,698 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:31,866 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:34,873 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:37,035 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:40,038 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:42,191 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:45,193 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:47,357 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:50,358 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:52,494 - INFO - Sent payload to backend, status 201
+2025-06-04 18:34:55,496 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:34:57,636 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:00,641 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:02,805 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:05,808 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:07,974 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:10,977 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:13,124 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:16,125 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:18,273 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:21,274 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:23,425 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:53,452 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:35:55,615 - INFO - Sent payload to backend, status 201
+2025-06-04 18:35:58,617 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:00,778 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:03,784 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:05,900 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:08,902 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:11,022 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:14,034 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:16,167 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:19,169 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:21,305 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:24,313 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:26,456 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:29,457 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:31,579 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:34,581 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:36,698 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:39,702 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:41,801 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:44,804 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:46,925 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:49,936 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:52,081 - INFO - Sent payload to backend, status 201
+2025-06-04 18:36:55,081 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:36:57,240 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:00,244 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:02,416 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:05,417 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:07,570 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:10,576 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:12,716 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:15,718 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:17,863 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:20,864 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:23,019 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:26,022 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:28,151 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:31,155 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:33,299 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:36,301 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:38,467 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:41,470 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:43,607 - INFO - Sent payload to backend, status 201
+2025-06-04 18:37:46,613 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:37:48,759 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:09,817 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:11,971 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:14,973 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:17,139 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:20,144 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:22,308 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:25,309 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:27,450 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:30,453 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:32,625 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:35,632 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:37,753 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:40,769 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:42,900 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:45,904 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:48,034 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:51,041 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:53,178 - INFO - Sent payload to backend, status 201
+2025-06-04 18:40:56,179 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:40:58,306 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:01,307 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:03,439 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:06,446 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:08,604 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:11,605 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:13,784 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:16,787 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:18,941 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:21,944 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:24,091 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:27,092 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:29,232 - INFO - Sent payload to backend, status 201
+2025-06-04 18:41:32,238 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:41:34,368 - INFO - Sent payload to backend, status 201
+2025-06-04 18:42:46,383 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:42:48,555 - INFO - Sent payload to backend, status 201
+2025-06-04 18:42:51,561 - INFO - Detected keywords: ['gemini']
+2025-06-04 18:42:53,707 - INFO - Sent payload to backend, status 201

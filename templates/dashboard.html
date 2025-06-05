@@ -286,29 +286,29 @@
         logActivity(`[${threat.time}] [${threat.severity}] ${threat.type} from ${threat.country} (${threat.source})`);
     }
 
-    // === WebSocket for live data ===
-    function setupWebSocket() {
-        // Change ws:// URL if your server runs elsewhere
-        const ws = new WebSocket('ws://localhost:8081/ws');
-        ws.onopen = () => {
-            logActivity("WebSocket connected to CATDAMS server.");
-        };
-        ws.onclose = () => {
-            logActivity("WebSocket disconnected.");
-        };
-        ws.onerror = (e) => {
-            logActivity("WebSocket error: " + e.message);
-        };
-        ws.onmessage = function(event) {
-            try {
-                let data = JSON.parse(event.data);
-                // Expected data: {time, type, severity, source, country, message, lat, lon, ...}
-                processThreat(data);
-            } catch (err) {
-                logActivity("Invalid data received: " + event.data);
-            }
-        };
-    }
+// === WebSocket for live data ===
+function setupWebSocket() {
+    // Now connects to unified backend (port 8000)
+    const ws = new WebSocket('ws://localhost:8000/ws');
+    ws.onopen = () => {
+        logActivity("WebSocket connected to CATDAMS server.");
+    };
+    ws.onclose = () => {
+        logActivity("WebSocket disconnected.");
+    };
+    ws.onerror = (e) => {
+        logActivity("WebSocket error: " + e.message);
+    };
+    ws.onmessage = function(event) {
+        try {
+            let data = JSON.parse(event.data);
+            // Expected data: {time, type, severity, source, country, message, lat, lon, ...}
+            processThreat(data);
+        } catch (err) {
+            logActivity("Invalid data received: " + event.data);
+        }
+    };
+}
 
     // === Initialization on page load ===
     window.onload = function() {
