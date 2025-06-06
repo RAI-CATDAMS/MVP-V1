@@ -8,6 +8,19 @@ const FORENSIC_MODE = false; // true = log every update, false = only final
 const LOG_HISTORY_SIZE = 100;
 const BACKEND_ENDPOINT = "http://localhost:8000/event";
 
+// ======= SESSION ID MANAGEMENT =======
+function generateSessionID() {
+    // RFC4122 version 4 compliant UUID
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// Assign a unique session ID per tab/session
+const CATDAMS_SESSION_ID = generateSessionID();
+
 // ======= Deduplication =======
 const messageTimers = new WeakMap();
 const loggedMessages = [];
@@ -31,21 +44,22 @@ function postMessageToBackend(text, sender) {
         source: window.location.hostname,
         country: "US",                 // Optionally geolocate for real country
         message: text,
-        sender: sender
+        sender: sender,
+        session_id: CATDAMS_SESSION_ID // <<=== SESSION ID ADDED HERE
     };
-chrome.runtime.sendMessage({
-    type: "catdams_log",
-    payload: payload
-}, (response) => {
-    console.log("DEBUG FULL RESPONSE:", response);
-    if (response && response.status && response.status >= 200 && response.status < 300) {
-        console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
-    } else if (response && response.status) {
-        console.error("[CATDAMS Backend] POST fail", response.status);
-    } else if (response && response.error) {
-        console.error("[CATDAMS Backend] POST error", response.error);
-    }
-});
+    chrome.runtime.sendMessage({
+        type: "catdams_log",
+        payload: payload
+    }, (response) => {
+        console.log("DEBUG FULL RESPONSE:", response);
+        if (response && response.status && response.status >= 200 && response.status < 300) {
+            console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
+        } else if (response && response.status) {
+            console.error("[CATDAMS Backend] POST fail", response.status);
+        } else if (response && response.error) {
+            console.error("[CATDAMS Backend] POST error", response.error);
+        }
+    });
 }
 
 // ======= SELECTORS (Old Code, Preserved) =======

@@ -8,6 +8,9 @@ chrome.runtime.onInstalled.addListener(() => {
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg && msg.type === "catdams_log") {
+        // Log the payload for debugging, including session_id
+        console.log("[CATDAMS] Forwarding payload to backend:", msg.payload);
+
         fetch("http://localhost:8000/event", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

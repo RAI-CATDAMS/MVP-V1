@@ -426,5 +426,33 @@ async def dashboard(
     finally:
         session.close()
 
+# ----- NEW: Unified session stitching endpoint -----
+@app.get("/session/{session_id}/events")
+async def get_events_by_session(session_id: str):
+    """
+    Return all chat events for a given session_id, sorted by timestamp.
+    """
+    session = SessionLocal()
+    try:
+        # Query all Telemetry rows where session_id matches (inside JSON 'data')
+        results = (
+            session.query(Telemetry)
+            .filter(Telemetry.data["session_id"].as_string() == session_id)
+            .order_by(Telemetry.timestamp)
+            .all()
+        )
+        events = []
+        for row in results:
+            event = dict(row.data) if isinstance(row.data, dict) else json.loads(row.data)
+            event["id"] = row.id
+            event["timestamp"] = row.timestamp
+            # Optionally include enrichments, if present
+            if row.enrichments:
+                event["enrichments"] = row.enrichments
+            events.append(event)
+        return JSONResponse(content={"session_id": session_id, "events": events})
+    finally:
+        session.close()
+
 # To run:
 # uvicorn main:app --reload --host 0.0.0.0 --port 8000

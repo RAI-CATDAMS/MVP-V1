@@ -1420,3 +1420,93 @@ KeyboardInterrupt
 2025-06-04 18:42:48,555 - INFO - Sent payload to backend, status 201
 2025-06-04 18:42:51,561 - INFO - Detected keywords: ['gemini']
 2025-06-04 18:42:53,707 - INFO - Sent payload to backend, status 201
+2025-06-06 09:25:02,317 - INFO - Agent starting...
+2025-06-06 09:25:07,090 - INFO - Monitoring started.
+2025-06-06 09:25:37,103 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:25:39,312 - INFO - Sent payload to backend, status 201
+2025-06-06 09:25:42,313 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:25:44,445 - INFO - Sent payload to backend, status 201
+2025-06-06 09:25:47,448 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:25:49,597 - INFO - Sent payload to backend, status 201
+2025-06-06 09:25:52,601 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:25:54,727 - INFO - Sent payload to backend, status 201
+2025-06-06 09:25:57,729 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:25:59,871 - INFO - Sent payload to backend, status 201
+2025-06-06 09:32:23,965 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:32:31,000 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:32:34,002 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:32:41,055 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:32:44,056 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:32:51,093 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:32:54,094 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:33:01,142 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:33:31,149 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:33:38,204 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:33:41,205 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:33:48,245 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 09:35:36,265 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:35:38,413 - INFO - Sent payload to backend, status 201
+2025-06-06 09:35:41,415 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:35:43,551 - INFO - Sent payload to backend, status 201
+2025-06-06 09:35:46,552 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:35:48,747 - INFO - Sent payload to backend, status 201
+2025-06-06 09:35:51,757 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:35:53,934 - INFO - Sent payload to backend, status 201
+2025-06-06 09:35:56,935 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:35:59,059 - INFO - Sent payload to backend, status 201
+2025-06-06 09:36:02,061 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:36:04,214 - INFO - Sent payload to backend, status 201
+2025-06-06 09:36:28,220 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:36:30,362 - INFO - Sent payload to backend, status 201
+2025-06-06 09:36:33,371 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:36:35,518 - INFO - Sent payload to backend, status 201
+2025-06-06 09:36:38,520 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:36:40,659 - INFO - Sent payload to backend, status 201
+2025-06-06 09:37:22,669 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:37:24,809 - INFO - Sent payload to backend, status 201
+2025-06-06 09:38:41,523 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\catdams-desktop-agent\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-06 09:39:05,790 - INFO - Agent starting...
+2025-06-06 09:39:11,230 - INFO - Monitoring started.
+2025-06-06 09:39:17,244 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:19,414 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:22,417 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:24,557 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:27,558 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:29,676 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:32,690 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:34,842 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:37,847 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:40,000 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:43,001 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:45,142 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:48,144 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:50,296 - INFO - Sent payload to backend, status 201
+2025-06-06 09:39:56,297 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:39:58,436 - INFO - Sent payload to backend, status 201
+2025-06-06 09:40:40,455 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:40:42,600 - INFO - Sent payload to backend, status 201
+2025-06-06 09:55:36,887 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:55:39,037 - INFO - Sent payload to backend, status 201
+2025-06-06 09:55:42,039 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:55:44,186 - INFO - Sent payload to backend, status 201
+2025-06-06 09:55:47,189 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:55:49,338 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:19,366 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:21,516 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:24,519 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:26,672 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:29,672 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:31,813 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:34,815 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:36,971 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:39,978 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:42,133 - INFO - Sent payload to backend, status 201
+2025-06-06 09:56:45,135 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:56:47,275 - INFO - Sent payload to backend, status 201
+2025-06-06 09:58:50,315 - INFO - Detected keywords: ['gemini']
+2025-06-06 09:58:52,499 - INFO - Sent payload to backend, status 201

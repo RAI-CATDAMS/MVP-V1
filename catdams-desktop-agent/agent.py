@@ -10,11 +10,15 @@ from pystray import Icon, MenuItem as item, Menu
 from PIL import Image
 import json
 from keywords import AI_KEYWORDS
+import uuid  # <-- Added for UUID session
 
 # === Configuration ===
 BACKEND_EVENT_ENDPOINT = "http://localhost:8000/event"  # Unified backend!
 ICON_PATH = os.path.join(os.path.dirname(__file__), "icons", "catdams.ico")
 LOG_INTERVAL_SECONDS = 3
+
+# === SESSION ID MANAGEMENT ===
+CATDAMS_SESSION_ID = str(uuid.uuid4())
 
 # === Logging ===
 logging.basicConfig(level=logging.INFO, filename="catdams_agent.log", filemode="a",
@@ -35,6 +39,8 @@ def detect_keywords(text):
 
 # === Backend Communication ===
 def send_payload(payload):
+    # Add session_id to every payload
+    payload["session_id"] = CATDAMS_SESSION_ID
     try:
         r = requests.post(BACKEND_EVENT_ENDPOINT, json=payload, timeout=5)
         if r.status_code in [201, 202]:
