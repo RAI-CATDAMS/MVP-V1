@@ -1510,3 +1510,5 @@ KeyboardInterrupt
 2025-06-06 09:56:47,275 - INFO - Sent payload to backend, status 201
 2025-06-06 09:58:50,315 - INFO - Detected keywords: ['gemini']
 2025-06-06 09:58:52,499 - INFO - Sent payload to backend, status 201
+2025-06-06 10:02:01,663 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:02:08,685 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
