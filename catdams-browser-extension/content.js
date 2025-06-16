@@ -8,18 +8,23 @@ const FORENSIC_MODE = false; // true = log every update, false = only final
 const LOG_HISTORY_SIZE = 100;
 const BACKEND_ENDPOINT = "http://localhost:8000/event";
 
-// ======= SESSION ID MANAGEMENT =======
-function generateSessionID() {
-    // RFC4122 version 4 compliant UUID
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
+// ======= SESSION ID MANAGEMENT (BRIDGE FETCH) =======
+let CATDAMS_SESSION_ID = "unknown-session";
 
-// Assign a unique session ID per tab/session
-const CATDAMS_SESSION_ID = generateSessionID();
+async function fetchSessionId() {
+    try {
+        const response = await fetch("http://localhost:3009/session-id");
+        if (response.ok) {
+            CATDAMS_SESSION_ID = (await response.text()).trim();
+            console.log("[CATDAMS] Shared session ID fetched:", CATDAMS_SESSION_ID);
+        } else {
+            console.warn("[CATDAMS] Session ID fetch failed, status:", response.status);
+        }
+    } catch (err) {
+        console.error("[CATDAMS] Error fetching session ID from bridge:", err);
+    }
+}
+fetchSessionId();
 
 // ======= Deduplication =======
 const messageTimers = new WeakMap();
@@ -39,13 +44,13 @@ function postMessageToBackend(text, sender) {
     const now = new Date().toISOString();
     const payload = {
         time: now,
-        type: "Chat Interaction",      // Fill this in with actual type if you have it!
+        type: "Chat Interaction",
         severity: sender === "AI" ? "Medium" : "Low",
         source: window.location.hostname,
-        country: "US",                 // Optionally geolocate for real country
+        country: "US",
         message: text,
         sender: sender,
-        session_id: CATDAMS_SESSION_ID // <<=== SESSION ID ADDED HERE
+        session_id: CATDAMS_SESSION_ID
     };
     chrome.runtime.sendMessage({
         type: "catdams_log",
@@ -62,7 +67,7 @@ function postMessageToBackend(text, sender) {
     });
 }
 
-// ======= SELECTORS (Old Code, Preserved) =======
+// ======= SELECTORS BY DOMAIN =======
 const SELECTORS_BY_DOMAIN = {
     "chat.openai.com": [
         '.flex.flex-col.items-center > div',
@@ -110,7 +115,7 @@ function getSelectorsForDomain(domain) {
     return SELECTORS_BY_DOMAIN[domain] || SELECTORS_BY_DOMAIN[bareDomain] || UNIVERSAL_SELECTORS;
 }
 
-// ======= DeepSeek Extraction (FULL LEGACY) =======
+// ======= DeepSeek Extraction =======
 function extractDeepSeekUserPrompt() {
     let userPrompt = "";
     const chatList = document.querySelector('main div[class*="overflow"]') || document.querySelector('main > div > div');
@@ -188,7 +193,7 @@ function deepseekCaptureBoth() {
     return true;
 }
 
-// ======= Gemini Extraction (LEGACY) =======
+// ======= Gemini Extraction =======
 function geminiUserInputCapture() {
     if (!window.location.hostname.includes('gemini.google.com')) return false;
 
@@ -226,7 +231,7 @@ function geminiUserInputCapture() {
     return true;
 }
 
-// ======= ChatGPT Extraction (LEGACY) =======
+// ======= ChatGPT Extraction =======
 function chatgptUserInputCapture() {
     if (!window.location.hostname.includes('chat.openai.com')) return false;
     let textarea = document.querySelector('textarea');
@@ -249,7 +254,7 @@ function chatgptUserInputCapture() {
     return true;
 }
 
-// ======= Universal Input Fallback (LEGACY) =======
+// ======= Universal Fallback =======
 function captureUserInputUniversal() {
     let inputBoxes = Array.from(document.querySelectorAll('textarea, [contenteditable="true"], input[type="text"]'));
     inputBoxes.forEach(inputBox => {
@@ -281,7 +286,7 @@ function captureUserInputUniversal() {
     setTimeout(captureUserInputUniversal, 3000);
 }
 
-// ======= AI Output Capture =======
+// ======= AI Output Processing =======
 function scanAndProcessMessages() {
     const selectors = getSelectorsForDomain(window.location.hostname);
     const messages = [];
@@ -308,7 +313,7 @@ function scanAndProcessMessages() {
     });
 }
 
-// ======= Main Observer Logic =======
+// ======= Init Observers =======
 function startObservingChat() {
     let mainEl = document.querySelector('main') || document.body;
     if (mainEl) {
@@ -325,13 +330,11 @@ function startObservingChat() {
     }
 }
 
-// ======= Initialize =======
+// ======= Initialization =======
 window.addEventListener('DOMContentLoaded', startObservingChat);
-
 setTimeout(chatgptUserInputCapture, 500);
 setTimeout(geminiUserInputCapture, 500);
 setTimeout(deepseekCaptureBoth, 500);
-
 setTimeout(captureUserInputUniversal, 1000);
 setTimeout(startObservingChat, 2000);
 

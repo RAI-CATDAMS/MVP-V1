@@ -1524,3 +1524,367 @@ KeyboardInterrupt
 2025-06-06 10:06:19,838 - INFO - Sent payload to backend, status 201
 2025-06-06 10:06:49,868 - INFO - Detected keywords: ['gemini']
 2025-06-06 10:06:52,063 - INFO - Sent payload to backend, status 201
+2025-06-06 10:09:49,361 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:09:51,678 - INFO - Sent payload to backend, status 201
+2025-06-06 10:10:51,809 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:10:53,957 - INFO - Sent payload to backend, status 201
+2025-06-06 10:11:45,053 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:11:47,266 - INFO - Sent payload to backend, status 201
+2025-06-06 10:16:26,600 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:16:28,830 - INFO - Sent payload to backend, status 201
+2025-06-06 10:16:34,832 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:16:36,982 - INFO - Sent payload to backend, status 201
+2025-06-06 10:16:39,983 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:16:42,126 - INFO - Sent payload to backend, status 201
+2025-06-06 10:16:45,127 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:16:47,266 - INFO - Sent payload to backend, status 201
+2025-06-06 10:17:08,280 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:17:10,427 - INFO - Sent payload to backend, status 201
+2025-06-06 10:17:13,436 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:17:15,559 - INFO - Sent payload to backend, status 201
+2025-06-06 10:17:18,565 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:17:20,709 - INFO - Sent payload to backend, status 201
+2025-06-06 10:18:44,762 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:18:46,955 - INFO - Sent payload to backend, status 201
+2025-06-06 10:18:49,958 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:18:52,148 - INFO - Sent payload to backend, status 201
+2025-06-06 10:18:55,161 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:18:57,308 - INFO - Sent payload to backend, status 201
+2025-06-06 10:19:00,309 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:19:02,450 - INFO - Sent payload to backend, status 201
+2025-06-06 10:23:29,569 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:23:31,740 - INFO - Sent payload to backend, status 201
+2025-06-06 10:23:34,742 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:23:36,889 - INFO - Sent payload to backend, status 201
+2025-06-06 10:23:39,891 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:23:42,041 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:24,170 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:25:26,316 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:29,333 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:25:31,482 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:43,492 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:25:45,629 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:48,631 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:25:50,786 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:53,788 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:25:55,930 - INFO - Sent payload to backend, status 201
+2025-06-06 10:25:58,931 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:26:01,084 - INFO - Sent payload to backend, status 201
+2025-06-06 10:26:16,172 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:26:18,331 - INFO - Sent payload to backend, status 201
+2025-06-06 10:26:21,335 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:26:23,468 - INFO - Sent payload to backend, status 201
+2025-06-06 10:26:26,482 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:26:28,637 - INFO - Sent payload to backend, status 201
+2025-06-06 10:26:31,718 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:26:33,888 - INFO - Sent payload to backend, status 201
+2025-06-06 10:27:57,992 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:00,136 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:03,140 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:05,299 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:08,300 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:10,436 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:13,446 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:15,623 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:18,625 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:20,753 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:23,754 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:25,890 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:28,902 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:31,081 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:34,083 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:36,210 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:39,220 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:41,390 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:44,392 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:46,540 - INFO - Sent payload to backend, status 201
+2025-06-06 10:28:49,542 - INFO - Detected keywords: ['gemini']
+2025-06-06 10:28:51,671 - INFO - Sent payload to backend, status 201
+2025-06-06 10:36:25,285 - INFO - Detected keywords: ['chatgpt']
+2025-06-06 10:36:27,440 - INFO - Sent payload to backend, status 201
+2025-06-06 10:57:20,989 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\catdams-desktop-agent\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-06 10:57:36,621 - INFO - Agent starting...
+2025-06-06 10:57:41,212 - INFO - Monitoring started.
+2025-06-06 14:19:18,852 - INFO - Agent starting...
+2025-06-06 14:19:28,308 - INFO - Monitoring started.
+2025-06-06 14:20:22,322 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:20:24,583 - INFO - Sent payload to backend, status 201
+2025-06-06 14:20:30,585 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:20:32,766 - INFO - Sent payload to backend, status 201
+2025-06-06 14:20:35,767 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:20:37,919 - INFO - Sent payload to backend, status 201
+2025-06-06 14:20:40,920 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:20:47,968 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:20:56,971 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:21:04,027 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:21:28,032 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:21:35,071 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:21:53,075 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:22:00,119 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:22:03,120 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:22:10,183 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:22:16,185 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:22:23,226 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)
+2025-06-06 14:23:32,243 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:23:34,434 - INFO - Sent payload to backend, status 201
+2025-06-06 14:23:37,435 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:23:39,587 - INFO - Sent payload to backend, status 201
+2025-06-06 14:23:48,591 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:23:50,736 - INFO - Sent payload to backend, status 201
+2025-06-06 14:23:53,737 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:23:55,873 - INFO - Sent payload to backend, status 201
+2025-06-06 14:23:58,876 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:24:01,000 - INFO - Sent payload to backend, status 201
+2025-06-06 14:24:13,005 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:24:15,182 - INFO - Sent payload to backend, status 201
+2025-06-06 14:24:30,187 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:24:32,323 - INFO - Sent payload to backend, status 201
+2025-06-06 14:25:14,338 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:25:16,490 - INFO - Sent payload to backend, status 201
+2025-06-06 14:25:25,494 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:25:27,621 - INFO - Sent payload to backend, status 201
+2025-06-06 14:26:15,630 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:26:17,750 - INFO - Sent payload to backend, status 201
+2025-06-06 14:26:23,754 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:26:25,924 - INFO - Sent payload to backend, status 201
+2025-06-06 14:32:31,991 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:32:34,148 - INFO - Sent payload to backend, status 201
+2025-06-06 14:32:40,159 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:32:42,284 - INFO - Sent payload to backend, status 201
+2025-06-06 14:32:45,286 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:32:47,402 - INFO - Sent payload to backend, status 201
+2025-06-06 14:32:50,405 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:32:52,537 - INFO - Sent payload to backend, status 201
+2025-06-06 14:56:48,239 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\catdams-desktop-agent\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-06 14:57:00,223 - INFO - Agent starting...
+2025-06-06 14:57:05,434 - INFO - Monitoring started.
+2025-06-06 14:59:20,479 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:59:22,720 - INFO - Sent payload to backend, status 201
+2025-06-06 14:59:25,721 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:59:27,838 - INFO - Sent payload to backend, status 201
+2025-06-06 14:59:30,839 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:59:33,129 - INFO - Sent payload to backend, status 201
+2025-06-06 14:59:36,130 - INFO - Detected keywords: ['gemini']
+2025-06-06 14:59:38,263 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:05,285 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:07,463 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:13,464 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:15,622 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:18,624 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:20,774 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:23,777 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:25,896 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:31,908 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:34,022 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:37,024 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:39,135 - INFO - Sent payload to backend, status 201
+2025-06-06 15:01:42,141 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:01:44,269 - INFO - Sent payload to backend, status 201
+2025-06-06 15:02:17,287 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:02:19,460 - INFO - Sent payload to backend, status 201
+2025-06-06 15:02:22,462 - INFO - Detected keywords: ['mistral']
+2025-06-06 15:02:24,584 - INFO - Sent payload to backend, status 201
+2025-06-06 15:37:43,038 - INFO - Detected keywords: ['mistral']
+2025-06-06 15:37:45,532 - INFO - Sent payload to backend, status 201
+2025-06-06 15:37:48,545 - INFO - Detected keywords: ['mistral']
+2025-06-06 15:37:50,694 - INFO - Sent payload to backend, status 201
+2025-06-06 15:37:53,697 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:37:55,862 - INFO - Sent payload to backend, status 201
+2025-06-06 15:43:13,937 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:43:16,123 - INFO - Sent payload to backend, status 201
+2025-06-06 15:43:58,135 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:44:00,267 - INFO - Sent payload to backend, status 201
+2025-06-06 15:44:06,268 - INFO - Detected keywords: ['mistral']
+2025-06-06 15:44:08,410 - INFO - Sent payload to backend, status 201
+2025-06-06 15:44:23,416 - INFO - Detected keywords: ['deepseek']
+2025-06-06 15:44:25,565 - INFO - Sent payload to backend, status 201
+2025-06-06 15:44:28,567 - INFO - Detected keywords: ['deepseek']
+2025-06-06 15:44:30,689 - INFO - Sent payload to backend, status 201
+2025-06-06 15:44:33,689 - INFO - Detected keywords: ['gemini']
+2025-06-06 15:44:35,827 - INFO - Sent payload to backend, status 201
+2025-06-15 21:34:58,043 - INFO - Agent starting...
+2025-06-15 21:35:09,776 - INFO - Monitoring started.
+2025-06-15 21:37:00,806 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:37:04,913 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001E57898EC90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:37:07,913 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:37:11,999 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001E57896A6D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:37:15,001 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:37:19,070 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001E578995C90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:37:22,072 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:37:26,122 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001E578999C50>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:37:29,123 - INFO - Detected keywords: ['claude', 'gemini', 'chatgpt']
+2025-06-15 21:37:33,202 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001E57C5EFD10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:43:48,571 - INFO - Agent starting...
+2025-06-15 21:44:21,680 - INFO - Monitoring started.
+2025-06-15 21:45:24,705 - INFO - Detected keywords: ['deepseek']
+2025-06-15 21:45:28,804 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002306ABCC0D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:45:31,806 - INFO - Detected keywords: ['deepseek']
+2025-06-15 21:45:35,871 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002306B58B310>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:45:38,872 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:45:42,955 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002306B5A9290>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:45:51,957 - INFO - Detected keywords: ['chatgpt']
+2025-06-15 21:45:56,055 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002306B5A3ED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:46:20,062 - INFO - Detected keywords: ['chatgpt']
+2025-06-15 21:46:24,160 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002306F1B29D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 21:49:48,656 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-15 21:50:14,012 - INFO - Agent starting...
+2025-06-15 21:50:18,238 - INFO - Monitoring started.
+2025-06-15 21:50:27,244 - INFO - Detected keywords: ['gemini']
+2025-06-15 21:50:31,318 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000013B2AC51950>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:20:01,207 - INFO - Agent starting...
+2025-06-15 22:20:05,781 - INFO - Monitoring started.
+2025-06-15 22:21:11,803 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:15,907 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B52B010>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:21:18,908 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:23,004 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B539F50>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:21:26,004 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:30,076 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B526ED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:21:33,077 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:37,159 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B53B010>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:21:40,161 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:44,239 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B535B90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:21:47,240 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:21:51,327 - ERROR - Failed to POST payload: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /event (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F07B53E5D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-06-15 22:31:56,395 - ERROR - An error occurred in the main loop
+Traceback (most recent call last):
+  File "C:\Users\micha\Documents\MVP-V1\catdams-desktop-agent\venv\Lib\site-packages\pystray\_win32.py", line 147, in _mainloop
+    r = win32.GetMessage(lpmsg, None, 0, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-06-15 22:32:11,838 - INFO - Agent starting...
+2025-06-15 22:32:16,479 - INFO - Monitoring started.
+2025-06-15 22:32:28,487 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:32:30,855 - INFO - Sent payload to backend, status 201
+2025-06-15 22:32:33,857 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:32:36,185 - INFO - Sent payload to backend, status 201
+2025-06-15 22:32:39,187 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:32:41,514 - INFO - Sent payload to backend, status 201
+2025-06-15 22:32:44,525 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:32:46,879 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:16,903 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:19,228 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:22,229 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:24,568 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:27,578 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:29,907 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:32,909 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:35,370 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:41,382 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:43,787 - INFO - Sent payload to backend, status 201
+2025-06-15 22:34:55,790 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:34:58,249 - INFO - Sent payload to backend, status 201
+2025-06-15 22:35:01,250 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:35:03,604 - INFO - Sent payload to backend, status 201
+2025-06-15 22:35:06,608 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:35:08,981 - INFO - Sent payload to backend, status 201
+2025-06-15 22:35:11,985 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:35:14,302 - INFO - Sent payload to backend, status 201
+2025-06-15 22:36:44,326 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:36:46,651 - INFO - Sent payload to backend, status 201
+2025-06-15 22:36:49,666 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:36:52,068 - INFO - Sent payload to backend, status 201
+2025-06-15 22:36:55,070 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:36:57,389 - INFO - Sent payload to backend, status 201
+2025-06-15 22:37:00,393 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:37:02,710 - INFO - Sent payload to backend, status 201
+2025-06-15 22:37:32,719 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:37:35,066 - INFO - Sent payload to backend, status 201
+2025-06-15 22:40:32,104 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:40:34,462 - INFO - Sent payload to backend, status 201
+2025-06-15 22:40:37,469 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:40:39,808 - INFO - Sent payload to backend, status 201
+2025-06-15 22:40:51,822 - INFO - Detected keywords: ['gemini']
+2025-06-15 22:40:54,155 - INFO - Sent payload to backend, status 201
+2025-06-16 15:20:56,595 - INFO - Agent starting...
+2025-06-16 15:21:04,276 - INFO - Monitoring started.
+2025-06-16 15:21:37,291 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:21:39,488 - INFO - Sent payload to backend, status 201
+2025-06-16 15:21:42,491 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:21:44,631 - INFO - Sent payload to backend, status 201
+2025-06-16 15:21:47,636 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:21:49,792 - INFO - Sent payload to backend, status 201
+2025-06-16 15:26:49,860 - INFO - Detected keywords: ['deepseek']
+2025-06-16 15:26:52,032 - INFO - Sent payload to backend, status 201
+2025-06-16 15:26:55,033 - INFO - Detected keywords: ['deepseek', 'gemini', 'candy ai']
+2025-06-16 15:26:57,174 - INFO - Sent payload to backend, status 201
+2025-06-16 15:27:30,183 - INFO - Detected keywords: ['deepseek', 'gemini', 'candy ai']
+2025-06-16 15:27:32,306 - INFO - Sent payload to backend, status 201
+2025-06-16 15:27:35,313 - INFO - Detected keywords: ['deepseek', 'gemini', 'candy ai']
+2025-06-16 15:27:37,442 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:25,455 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:27,600 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:30,601 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:32,794 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:35,804 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:37,965 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:40,966 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:43,114 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:46,117 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:48,300 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:51,307 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:53,529 - INFO - Sent payload to backend, status 201
+2025-06-16 15:28:56,533 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:28:58,663 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:01,664 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:03,985 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:07,001 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:09,154 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:12,157 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:14,302 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:17,316 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:19,724 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:22,726 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:24,875 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:27,878 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:30,084 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:33,091 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:35,231 - INFO - Sent payload to backend, status 201
+2025-06-16 15:29:56,244 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:29:58,698 - INFO - Sent payload to backend, status 201
+2025-06-16 15:30:01,700 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:30:03,809 - INFO - Sent payload to backend, status 201
+2025-06-16 15:30:06,816 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:30:08,957 - INFO - Sent payload to backend, status 201
+2025-06-16 15:30:11,968 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:30:14,142 - INFO - Sent payload to backend, status 201
+2025-06-16 15:32:23,177 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:32:25,347 - INFO - Sent payload to backend, status 201
+2025-06-16 15:32:28,351 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:32:30,503 - INFO - Sent payload to backend, status 201
+2025-06-16 15:32:33,514 - INFO - Detected keywords: ['deepseek', 'gemini', 'candy ai']
+2025-06-16 15:32:35,655 - INFO - Sent payload to backend, status 201
+2025-06-16 15:33:44,703 - INFO - Detected keywords: ['deepseek', 'gemini', 'candy ai']
+2025-06-16 15:33:46,837 - INFO - Sent payload to backend, status 201
+2025-06-16 15:35:28,885 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:35:31,047 - INFO - Sent payload to backend, status 201
+2025-06-16 15:35:34,048 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:35:36,196 - INFO - Sent payload to backend, status 201
+2025-06-16 15:35:39,197 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:35:41,461 - INFO - Sent payload to backend, status 201
+2025-06-16 15:35:56,464 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:35:58,627 - INFO - Sent payload to backend, status 201
+2025-06-16 15:36:01,628 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:36:04,077 - INFO - Sent payload to backend, status 201
+2025-06-16 15:36:07,078 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:36:09,293 - INFO - Sent payload to backend, status 201
+2025-06-16 15:36:12,294 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:36:14,444 - INFO - Sent payload to backend, status 201
+2025-06-16 15:36:32,450 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:36:34,610 - INFO - Sent payload to backend, status 201
+2025-06-16 15:36:37,612 - INFO - Detected keywords: ['gemini']
+2025-06-16 15:36:39,772 - INFO - Sent payload to backend, status 201

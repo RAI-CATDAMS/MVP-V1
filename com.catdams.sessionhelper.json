@@ -1,0 +1,10 @@
+{
+  "name": "com.catdams.sessionhelper",
+  "description": "CATDAMS session ID file writer",
+  "path": "C:\\Windows\\py.exe",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://fooahaiagohfanfogoniapcmknniolcc/"
+  ],
+  "args": ["C:\\Users\\micha\\Documents\\MVP-V1\\catdams_helper.py"]
+}

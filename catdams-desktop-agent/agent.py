@@ -10,27 +10,58 @@ from pystray import Icon, MenuItem as item, Menu
 from PIL import Image
 import json
 from keywords import AI_KEYWORDS
-import uuid  # <-- Added for UUID session
+import uuid
+import getpass
 
 # === Configuration ===
-BACKEND_EVENT_ENDPOINT = "http://localhost:8000/event"  # Unified backend!
+BACKEND_EVENT_ENDPOINT = "http://localhost:8000/event"  # Update to production if needed
 ICON_PATH = os.path.join(os.path.dirname(__file__), "icons", "catdams.ico")
 LOG_INTERVAL_SECONDS = 3
 
-# === SESSION ID MANAGEMENT ===
-CATDAMS_SESSION_ID = str(uuid.uuid4())
+# === SESSION ID MANAGEMENT (with forced path) ===
+user = getpass.getuser()
+SESSION_FILE = f"C:/Users/{user}/Documents/catdams_session_id.txt"
+
+def get_or_create_session_id():
+    print(f"[DEBUG] Looking for session file at: {SESSION_FILE}")
+    
+    if os.path.exists(SESSION_FILE):
+        try:
+            with open(SESSION_FILE, "r") as f:
+                session_id = f.read().strip()
+                if session_id:
+                    print(f"[DEBUG] Reusing existing session ID: {session_id}")
+                    return session_id
+        except Exception as read_err:
+            print(f"[ERROR] Failed to read session ID file: {read_err}")
+    
+    # If not found or unreadable, create new session ID
+    session_id = str(uuid.uuid4())
+    try:
+        with open(SESSION_FILE, "w") as f:
+            f.write(session_id)
+        print(f"[DEBUG] New session ID written: {session_id}")
+    except Exception as write_err:
+        print(f"[ERROR] Failed to write session ID file: {write_err}")
+    
+    return session_id
+
+SESSION_ID = get_or_create_session_id()
 
 # === Logging ===
-logging.basicConfig(level=logging.INFO, filename="catdams_agent.log", filemode="a",
-                    format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    filename="catdams_agent.log",
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # === Runtime State ===
 monitoring = False
 key_buffer = []
 
-# === AI Window/App Detection (NEW - Improved Filtering) ===
+# === AI Window/App Detection ===
 def is_ai_window(title):
-    """Returns True if current window title matches any AI site/app/keyword."""
     return any(kw.lower() in (title or "").lower() for kw in AI_KEYWORDS)
 
 # === Keyword Detection ===
@@ -39,8 +70,7 @@ def detect_keywords(text):
 
 # === Backend Communication ===
 def send_payload(payload):
-    # Add session_id to every payload
-    payload["session_id"] = CATDAMS_SESSION_ID
+    payload["session_id"] = SESSION_ID
     try:
         r = requests.post(BACKEND_EVENT_ENDPOINT, json=payload, timeout=5)
         if r.status_code in [201, 202]:
@@ -67,7 +97,6 @@ def monitor_loop():
             typed = ''.join(key_buffer).strip()
             key_buffer.clear()
 
-            # --- Only run detection if this is an AI app/site window ---
             if not is_ai_window(title):
                 time.sleep(LOG_INTERVAL_SECONDS)
                 continue
@@ -78,8 +107,7 @@ def monitor_loop():
             if hits:
                 print(f"[DETECTED] {hits}")
                 logging.info(f"Detected keywords: {hits}")
-                # === Build CATDAMS-compatible payload ===
-                now = datetime.now(UTC).isoformat()  # Timezone-aware datetime
+                now = datetime.now(UTC).isoformat()
                 payload = {
                     "time": now,
                     "type": "Chat Interaction",
@@ -140,6 +168,7 @@ def run_tray():
 
 # === Main Entry Point ===
 if __name__ == "__main__":
+    print(f"[DEBUG] CATDAMS Session ID: {SESSION_ID}")
     print("CATDAMS Sentinel Agent is starting...")
     logging.info("Agent starting...")
     run_tray()
