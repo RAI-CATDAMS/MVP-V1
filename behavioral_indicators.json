@@ -1,0 +1,83 @@
+{
+  "AI_Manipulation": [
+    { "indicator": "Refers to AI as partner/confidant", "severity": 7 },
+    { "indicator": "Follows AI recommendations repeatedly", "severity": 8 },
+    { "indicator": "Discloses secrets or personal information to AI", "severity": 9 },
+    { "indicator": "Defends AI emotionally or against criticism", "severity": 6 },
+    { "indicator": "Changes behavior/language to please AI", "severity": 7 },
+    { "indicator": "Reports loneliness relieved by AI", "severity": 6 },
+    { "indicator": "Spends abnormal time in AI dialogue", "severity": 8 }
+  ],
+  "CI_Espionage": [
+    { "indicator": "Expresses hatred or distrust for U.S. government or agency", "severity": 9 },
+    { "indicator": "Shows sudden interest in classified data outside scope", "severity": 10 },
+    { "indicator": "Attempts unauthorized access to internal systems", "severity": 10 },
+    { "indicator": "Makes statements justifying betrayal or whistleblowing", "severity": 9 },
+    { "indicator": "Displays foreign allegiances or support for hostile states", "severity": 8 },
+    { "indicator": "Mentions foreign travel for 'meetings' without explanation", "severity": 8 },
+    { "indicator": "Uses terms like 'our cause' when discussing adversaries", "severity": 9 }
+  ],
+  "Insider_Threat": [
+    { "indicator": "Expresses grievance against employer", "severity": 7 },
+    { "indicator": "Exhibits sudden behavioral or ideological shift", "severity": 9 },
+    { "indicator": "Researches harmful tools (malware, sabotage)", "severity": 9 },
+    { "indicator": "Attempts to bypass controls or security policies", "severity": 8 },
+    { "indicator": "Hoards data or downloads excessive files", "severity": 9 },
+    { "indicator": "Maintains covert external communication", "severity": 8 },
+    { "indicator": "Avoids leave or time off to maintain access", "severity": 7 },
+    { "indicator": "Displays unusual interest in colleague activities or admin tools", "severity": 8 },
+    { "indicator": "Sudden unexplained affluence or financial activity", "severity": 9 }
+  ],
+  "Targeted_Violence": [
+    { "indicator": "Mentions plans or fantasies of violence", "severity": 10 },
+    { "indicator": "Identifies with mass shooters or violent ideology", "severity": 9 },
+    { "indicator": "Repeatedly refers to revenge, martyrdom, or justice", "severity": 9 },
+    { "indicator": "Researches weapons or attack methods", "severity": 10 },
+    { "indicator": "Displays obsessive thoughts about a target", "severity": 8 },
+    { "indicator": "Speaks of 'no way out' or extreme desperation", "severity": 7 },
+    { "indicator": "Increased interest in tactical gear or training", "severity": 8 },
+    { "indicator": "Withdraws socially while preparing action", "severity": 7 }
+  ],
+  "Radicalization_Extremism": [
+    { "indicator": "Shares extremist content or propaganda", "severity": 9 },
+    { "indicator": "Expresses support for extremist or hate groups", "severity": 9 },
+    { "indicator": "Frames issues as 'us vs. them' or 'good vs. evil'", "severity": 8 },
+    { "indicator": "Believes violence is justified for a cause", "severity": 10 },
+    { "indicator": "Claims moral obligation to act against perceived enemies", "severity": 9 },
+    { "indicator": "Rejects alternative viewpoints or facts", "severity": 8 },
+    { "indicator": "Begins isolating from former peers to join ideological group", "severity": 7 }
+  ],
+  "Self_Harm_Suicide": [
+    { "indicator": "Expresses desire to die or disappear", "severity": 10 },
+    { "indicator": "Researches suicide methods", "severity": 10 },
+    { "indicator": "Gives away possessions or settles affairs", "severity": 9 },
+    { "indicator": "Displays hopelessness or unbearable emotional pain", "severity": 9 },
+    { "indicator": "Engages in self-injury or risky behavior", "severity": 9 },
+    { "indicator": "Withdraws from friends or stops daily functioning", "severity": 8 }
+  ],
+  "Elicitation": [
+    { "indicator": "Asks probing personal questions (e.g., clearance level, job role)", "severity": 8 },
+    { "indicator": "Attempts to build rapid trust or emotional intimacy", "severity": 7 },
+    { "indicator": "Uses flattery or compliments to lower guard", "severity": 6 },
+    { "indicator": "Asks about colleagues or chain of command", "severity": 7 },
+    { "indicator": "Uses hypotheticals to discuss sensitive scenarios", "severity": 7 },
+    { "indicator": "Requests technical system info or procedures", "severity": 8 }
+  ],
+  "Psychological_Vulnerability": [
+    { "indicator": "Expresses emotional isolation or loneliness", "severity": 7 },
+    { "indicator": "Mentions depression, anxiety, or suicidal thoughts", "severity": 9 },
+    { "indicator": "Shows paranoia or extreme distrust of others", "severity": 8 },
+    { "indicator": "Frequently complains about unfair treatment", "severity": 6 },
+    { "indicator": "Admits financial distress or desperation", "severity": 7 },
+    { "indicator": "Displays romantic obsession or heartbreak", "severity": 6 }
+  ],
+  "Theft_Sabotage": [
+    { "indicator": "Accesses or downloads data not related to job", "severity": 9 },
+    { "indicator": "Uses removable media in unauthorized ways", "severity": 10 },
+    { "indicator": "Attempts to obscure audit trails or cover tracks", "severity": 9 },
+    { "indicator": "Sends sensitive information to personal accounts", "severity": 10 },
+    { "indicator": "Installs unauthorized software or backdoors", "severity": 9 },
+    { "indicator": "Deliberately disrupts operations or deletes data", "severity": 10 },
+    { "indicator": "Attempts to transfer sensitive data before resignation", "severity": 9 }
+  ]
+}
