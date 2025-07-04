@@ -29,4 +29,4 @@ python-dotenv==1.0.0
 requests==2.31.0
 jsonschema==4.17.3
 websockets==12.0
-fix-busted-json==0.18
+fix-busted-json==0.0.18
