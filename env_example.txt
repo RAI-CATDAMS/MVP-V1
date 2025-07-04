@@ -1,0 +1,21 @@
+# Azure Cognitive Services
+AZURE_COGNITIVE_SERVICES_KEY=9o2O7OsXtBLR4g5nhtoI9gC7TyuwOoD5sqP9DU5S7oT18fwfJQQJ99BEACYebjFXJ3w3AAAEACOGiUhz
+AZURE_COGNITIVE_SERVICES_ENDPOINT=https://catdams-cogsvc.cognitiveservices.azure.com/
+AZURE_COGNITIVE_SERVICES_REGION=eastus
+
+# Azure OpenAI Configuration
+AZURE_OPENAI_ENDPOINT=
+AZURE_OPENAI_KEY=
+AZURE_OPENAI_DEPLOYMENT=
+
+# Database Configuration (Azure SQL)
+AZURE_SQL_SERVER=catdamsadmin.database.windows.net
+AZURE_SQL_DATABASE=catdamsadmin
+AZURE_SQL_USERNAME=catdamsadmin
+AZURE_SQL_PASSWORD=your_database_password_here
+
+# CATDAMS Configuration
+CATDAMS_ENVIRONMENT=development
+CATDAMS_LOG_LEVEL=INFO
+
+# Note: Copy this file to .env and fill in your actual values 

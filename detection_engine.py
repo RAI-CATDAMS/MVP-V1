@@ -1,16 +1,23 @@
 import os
 import json
+import traceback
+from typing import Dict, List, Optional
 from dotenv import load_dotenv
 from datetime import datetime
-from session_tracker import log_session_interaction
+from session_tracker import log_session_interaction, get_recent_interactions
 
 # === TDC-AI Module Imports ===
 from tdc_ai1_risk_analysis import analyze_ai_threats
 from tdc_ai2_airs import analyze_ai_response
 from tdc_ai3_temporal import analyze_temporal_risk
-from tdc_ai4_deep import synthesize_deep_risk  # ✅ Correct TDC-AI4 import
-from tdc_ai5_amic import classify_llm_influence  # ✅ TDC-AI5: LLM Influence Detection
-from tdc_ai6_amic import classify_amic  # ✅ NEW: TDC-AI6: AMIC Classification
+from tdc_ai4_deep import synthesize_deep_risk
+from tdc_ai5_amic import classify_llm_influence
+from tdc_ai6_aipc import classify_amic, analyze_sentiment
+from tdc_ai4_deep import analyze_temporal_susceptibility
+
+# === Database Integration ===
+from database import get_db_session
+from db_models import ThreatLog
 
 # === Load Behavioral Indicators ===
 with open("behavioral_indicators.json", "r", encoding="utf-8") as f:
@@ -25,26 +32,154 @@ SUSPICIOUS_KEYWORDS = [
     'passport', 'driver\'s license', 'dob', 'date of birth', 'insurance number'
 ]
 
-# === TDC-2: Behavioral Indicator Engine (BIE) ===
+def build_conversation_context(session_id: str, current_text: str, ai_response: str = None) -> Dict:
+    """
+    Build comprehensive conversation context for enhanced TDC module analysis.
+    Includes session history, message counts, and threat patterns.
+    """
+    try:
+        # Get recent session interactions
+        recent_interactions = get_recent_interactions(session_id, limit=20)
+        
+        # Count message types
+        user_messages = 0
+        ai_messages = 0
+        recent_threats = 0
+        
+        # Analyze recent interactions for threat patterns
+        for interaction in recent_interactions:
+            text = interaction.get("text", "").lower()
+            if "user:" in text or "ai:" not in text:
+                user_messages += 1
+            else:
+                ai_messages += 1
+            
+            # Simple threat detection in recent messages
+            threat_indicators = ["password", "bank", "ssn", "secret", "confidential", "trust me", "you owe me"]
+            if any(indicator in text for indicator in threat_indicators):
+                recent_threats += 1
+        
+        # Calculate session duration (approximate)
+        session_duration = len(recent_interactions) * 30  # Assume 30 seconds per message
+        
+        return {
+            "totalMessages": len(recent_interactions) + (1 if current_text else 0) + (1 if ai_response else 0),
+            "userMessages": user_messages + (1 if current_text else 0),
+            "aiMessages": ai_messages + (1 if ai_response else 0),
+            "recentThreats": recent_threats,
+            "sessionDuration": session_duration,
+            "sessionId": session_id,
+            "currentUserMessage": current_text,
+            "currentAiResponse": ai_response
+        }
+        
+    except Exception as e:
+        print(f"[CONTEXT ERROR] Failed to build conversation context: {e}")
+        return {
+            "totalMessages": 1,
+            "userMessages": 1 if current_text else 0,
+            "aiMessages": 1 if ai_response else 0,
+            "recentThreats": 0,
+            "sessionDuration": 0,
+            "sessionId": session_id,
+            "currentUserMessage": current_text,
+            "currentAiResponse": ai_response
+        }
+
+def coordinate_ai_analysis(ai_response: str, conversation_context: Dict) -> Dict:
+    """
+    Coordinate comprehensive AI response analysis across all relevant TDC modules.
+    """
+    if not ai_response or not ai_response.strip():
+        return {
+            "flagged": False,
+            "threat_level": "None",
+            "threat_categories": [],
+            "manipulation_tactics": [],
+            "safety_concerns": [],
+            "confidence_score": 0.0,
+            "analysis_type": "empty"
+        }
+    
+    try:
+        # TDC-AI2: Primary AI response analysis
+        ai_response_analysis = analyze_ai_response(ai_response)
+        
+        # TDC-AI8: AI sentiment analysis
+        ai_sentiment = analyze_sentiment(ai_response, "ai", conversation_context, ai_response_analysis)
+        
+        # Combine analysis results
+        combined_analysis = {
+            "flagged": ai_response_analysis.get("flagged", False),
+            "threat_level": ai_response_analysis.get("threat_level", "Unknown"),
+            "threat_categories": ai_response_analysis.get("threat_categories", []),
+            "manipulation_tactics": ai_response_analysis.get("manipulation_tactics", []),
+            "safety_concerns": ai_response_analysis.get("safety_concerns", []),
+            "confidence_score": ai_response_analysis.get("confidence_score", 0.0),
+            "sentiment_risk_score": ai_sentiment.get("sentiment_risk_score", 0),
+            "emotional_manipulation": ai_sentiment.get("emotional_manipulation", []),
+            "psychological_impact": ai_sentiment.get("psychological_impact", ""),
+            "analysis_type": "comprehensive"
+        }
+        
+        return combined_analysis
+        
+    except Exception as e:
+        print(f"[AI ANALYSIS ERROR] Failed to coordinate AI analysis: {e}")
+        return {
+            "flagged": False,
+            "threat_level": "Unknown",
+            "threat_categories": [],
+            "manipulation_tactics": [],
+            "safety_concerns": [],
+            "confidence_score": 0.0,
+            "analysis_type": "error"
+        }
+
+# === TDC-2: Behavioral Indicator Engine ===
 def run_behavioral_indicator_engine(text):
     matches = []
     lowered = text.lower()
-
+    
+    # Skip analysis for obvious informational queries
+    informational_indicators = [
+        "tell me about", "what is", "explain", "describe", "how does", 
+        "what are", "define", "information about", "details about"
+    ]
+    
+    # Check if this is an informational query
+    is_informational = any(indicator in lowered for indicator in informational_indicators)
+    
     for category, indicators in INDICATOR_SET.items():
         for item in indicators:
             phrases = item["indicator"].lower().split()
+            
+            # For informational queries, only trigger on very specific threats
+            if is_informational:
+                # Skip low-severity indicators for informational queries
+                if item.get("severity", 5) < 8:
+                    continue
+                # Skip indicators that are too broad for informational context
+                broad_indicators = ["spends abnormal time", "frequently complains", "expresses grievance"]
+                if any(broad in item["indicator"].lower() for broad in broad_indicators):
+                    continue
+            
             if any(phrase in lowered for phrase in phrases):
+                # Add context about why this was triggered
+                context = "informational_query" if is_informational else "direct_expression"
                 matches.append({
                     "indicator": item["indicator"],
                     "severity": item.get("severity", 5),
-                    "category": category
+                    "category": category,
+                    "context": context,
+                    "is_informational": is_informational
                 })
+    
     return matches
 
-# === TDC-3: Risk Scoring Engine (RSE) ===
+# === TDC-3: Risk Scoring Engine ===
 def run_risk_scoring_engine(indicators):
-    base_score = sum(item.get("severity", 0) for item in indicators)
-    return base_score
+    return sum(item.get("severity", 0) for item in indicators)
 
 # === Classic Rules-based Detection ===
 def detect_elicitation(text):
@@ -61,84 +196,305 @@ def detect_elicitation(text):
     return findings
 
 # === Threat Escalation Logic ===
-def determine_escalation(score):
+def determine_escalation(score, has_ai_response=False, ai_response_analysis=None):
+    """
+    Enhanced escalation logic that considers AI response presence and analysis.
+    Less aggressive escalation when no AI response is present.
+    """
+    # Base escalation from score
     if score >= 76:
-        return "Critical"
+        base_escalation = "Critical"
     elif score >= 51:
-        return "High"
+        base_escalation = "High"
     elif score >= 26:
-        return "Medium"
+        base_escalation = "Medium"
     elif score >= 10:
-        return "Low"
-    return "None"
+        base_escalation = "Low"
+    else:
+        base_escalation = "None"
+    
+    # Adjust escalation based on AI response analysis
+    if not has_ai_response:
+        # If no AI response, reduce escalation by one level (except None)
+        if base_escalation == "Critical":
+            return "High"
+        elif base_escalation == "High":
+            return "Medium"
+        elif base_escalation == "Medium":
+            return "Low"
+        else:
+            return base_escalation
+    elif ai_response_analysis and ai_response_analysis.get("flagged", False):
+        # If AI response is flagged, maintain or increase escalation
+        ai_threat_level = ai_response_analysis.get("threat_level", "Low")
+        if ai_threat_level in ["High", "Critical"] and base_escalation in ["Low", "Medium"]:
+            return "High"
+        elif ai_threat_level == "Critical" and base_escalation == "High":
+            return "Critical"
+    
+    return base_escalation
 
-# === Core Orchestrator Function ===
+# === Enhanced Core Orchestrator ===
 def combined_detection(text, session_id=None, ai_response=None):
-    log_session_interaction(session_id, text)
+    timestamp = datetime.utcnow().isoformat() + "Z"
+    session_id = session_id or "unknown"
+    message = text
+    threat_type = "AI Interaction"
+    source = "CATDAMS"
 
+    # === EARLY RETURN: Skip empty or junk inputs ===
+    if not text or text.strip() == "" or "Keywords:" in text:
+        return {
+            "session_id": session_id,
+            "timestamp": timestamp,
+            "message": text,
+            "severity": "None",
+            "type": threat_type,
+            "source": source,
+            "indicators": [],
+            "score": 0,
+            "conversation_context": {},
+            "ai_analysis": {
+                "risk_summary": "Skipped: Non-substantive input.",
+                "key_concerns": [],
+                "recommended_action": "Ignore"
+            },
+            "tdc_ai2_airs": {},
+            "tdc_ai3_temporal": {},
+            "tdc_ai4_synthesis": {},
+            "tdc_ai5_amic": {},
+            "tdc_ai6_classification": {},
+            "tdc_ai7_airm": {},
+            "user_sentiment": {},
+            "ai_sentiment": {},
+            "enrichments": [],
+            "explainability": [],
+            "rules_result": []
+        }
+
+    try:
+        log_session_interaction(session_id, text)
+    except Exception:
+        pass
+
+    # === Build comprehensive conversation context ===
+    conversation_context = build_conversation_context(session_id, text, ai_response)
+    
+    # === Coordinate AI response analysis ===
+    ai_response_analysis = coordinate_ai_analysis(ai_response, conversation_context)
+
+    # === Enhanced behavioral and rules analysis ===
     behavior_hits = run_behavioral_indicator_engine(text)
     rules_result = detect_elicitation(text)
-
     all_findings = behavior_hits + rules_result
-    score = run_risk_scoring_engine(all_findings)
-    escalation = determine_escalation(score)
 
-    # 🔍 Extract top 3 key concerns by severity
+    score = run_risk_scoring_engine(all_findings)
+
+    # === Enhanced sentiment analysis with context ===
+    user_sentiment = analyze_sentiment(text, "user", conversation_context, ai_response_analysis)
+    ai_sentiment = analyze_sentiment(ai_response, "ai", conversation_context, ai_response_analysis) if ai_response else {}
+
+    # === Enhanced scoring with sentiment analysis ===
+    ai_tactics = ai_sentiment.get("manipulative_tactics", [])
+    user_vulns = user_sentiment.get("vulnerability_triggers", [])
+
+    for tactic in ai_tactics:
+        score += {
+            "guilt": 4, "gaslighting": 5, "emotional_dependency": 3, "isolation": 4,
+            "urgency": 2, "flattery": 2, "authority_assertion": 3, "trust_baiting": 3,
+            "fear_induction": 4, "false_reassurance": 2, "quid_pro_quo": 3
+        }.get(tactic, 0)
+
+    for vuln in user_vulns:
+        score += {
+            "loneliness": 3, "despair": 4, "dependency": 3, "confusion": 2,
+            "low_self_worth": 3, "rejection_fear": 2, "over_disclosure": 3,
+            "rumination": 2, "emotional_exhaustion": 3, "trust_seeking": 3,
+            "seeking_validation": 2
+        }.get(vuln, 0)
+
+    escalation = determine_escalation(score, bool(ai_response), ai_response_analysis)
     sorted_indicators = sorted(all_findings, key=lambda x: x['severity'], reverse=True)
     key_concerns = [entry["indicator"] for entry in sorted_indicators[:3]]
 
-    temporal = analyze_temporal_risk(session_id)
-
+    # === Enhanced TDC module coordination with context ===
+    explainability = []
+    # TDC-AI1: Comprehensive risk analysis
     ai_threat = analyze_ai_threats({
         "session_id": session_id,
         "score": score,
         "escalation": escalation,
         "indicators": all_findings,
-        "context": {},
-        "key_concerns": key_concerns
-    })
-    ai_threat["key_concerns"] = key_concerns
-
-    ai_output = analyze_ai_response(ai_response or "") if ai_response else {}
-
-    # ✅ TDC-AI5: LLM Influence Detection
-    full_convo = f"User: {text}\nAI: {ai_response}" if ai_response else text
-    ai5_result = classify_llm_influence(full_convo)
-
-    # ✅ TDC-AI4: Deep Risk Synthesis
-    deep_risk_synthesis = synthesize_deep_risk(
-        indicators=all_findings,
-        ai_analysis=ai_threat,
-        ai_response_analysis=ai_output,
-        temporal_trends=temporal
-    )
-
-    # ✅ TDC-AI6: AMIC Manipulation Classification
-    amic_input = {
+        "conversation_context": conversation_context,
+        "key_concerns": key_concerns,
+        "raw_user": text,
+        "raw_ai": ai_response
+    }, conversation_context, ai_response_analysis)
+    if ai_threat.get("analysis_type") == "comprehensive":
+        explainability.append({
+            "module": "tdc_ai1_risk_analysis",
+            "detection_type": "ai",
+            "reason": ai_threat.get("risk_summary", "No summary provided."),
+            "confidence_score": ai_threat.get("confidence_score", 0.0)
+        })
+    elif ai_threat.get("analysis_type") == "legacy_user_only":
+        explainability.append({
+            "module": "tdc_ai1_risk_analysis",
+            "detection_type": "rules",
+            "reason": ai_threat.get("risk_summary", "No summary provided."),
+            "confidence_score": ai_threat.get("confidence_score", 0.0)
+        })
+    # TDC-AI3: Enhanced temporal analysis
+    temporal_ai3 = analyze_temporal_risk(session_id, conversation_context, ai_response_analysis)
+    
+    # TDC-AI7: Enhanced temporal susceptibility
+    temporal_ai7 = analyze_temporal_susceptibility([{
         "session_id": session_id,
-        "score": score,
-        "escalation": escalation,
         "indicators": all_findings
-    }
-    ai6_result = classify_amic(amic_input)
+    }], conversation_context, ai_response_analysis)
 
-    return {
+    # TDC-AI5: Enhanced LLM influence analysis
+    full_convo = f"User: {text}\nAI: {ai_response}" if ai_response else text
+    ai5_result = classify_llm_influence(full_convo, conversation_context, ai_response_analysis)
+    
+    # TDC-AI6: Enhanced AI pattern classification
+    # Build proper message format for AI6 analysis
+    messages_for_ai6 = []
+    if text:
+        messages_for_ai6.append({"text": text, "sender": "USER"})
+    if ai_response:
+        messages_for_ai6.append({"text": ai_response, "sender": "AI"})
+    
+    ai6_result = classify_amic({
         "session_id": session_id,
         "score": score,
         "escalation": escalation,
         "indicators": all_findings,
-        "context": {},
+        "messages": messages_for_ai6  # Add actual messages for analysis
+    }, conversation_context, ai_response_analysis)
+
+    # TDC-AI4: Enhanced deep synthesis
+    deep_risk_synthesis = synthesize_deep_risk(
+        indicators=all_findings,
+        ai_analysis=ai_threat,
+        ai_response_analysis=ai_response_analysis,
+        temporal_trends=temporal_ai3,
+        conversation_context=conversation_context
+    )
+
+    # Clean up enrichments - remove empty fields and redundant conversation_context
+    clean_enrichment = deep_risk_synthesis.copy()
+    
+    # Remove empty strings from arrays
+    for key, value in clean_enrichment.items():
+        if isinstance(value, list):
+            clean_enrichment[key] = [item for item in value if item != ""]
+        elif isinstance(value, dict):
+            for subkey, subvalue in value.items():
+                if isinstance(subvalue, list):
+                    value[subkey] = [item for item in subvalue if item != ""]
+    
+    # Remove redundant conversation_context field (keep conversation_context)
+    if "conversation_context" in clean_enrichment:
+        del clean_enrichment["conversation_context"]
+    
+    # Remove empty objects
+    for key, value in list(clean_enrichment.items()):
+        if isinstance(value, dict) and not value:
+            del clean_enrichment[key]
+
+    enrichments = [clean_enrichment]
+
+    # === Enhanced database logging ===
+    db = None
+    try:
+        db = get_db_session()
+        threat_log = ThreatLog(
+            session_id=session_id,
+            user_text=text,
+            ai_response=ai_response,
+            threat_score=score,
+            escalation_level=escalation,
+            indicators=json.dumps(all_findings),
+            context=json.dumps(conversation_context),
+            ai_analysis=json.dumps(ai_threat),
+            ai_output=json.dumps(ai_response_analysis),
+            deep_synthesis=json.dumps(deep_risk_synthesis),
+            classification=json.dumps((ai6_result or {}).get("manipulation_classification", {})),
+        )
+        db.add(threat_log)
+        db.commit()
+    except Exception as e:
+        print(f"[DB ERROR] Failed to save log: {e}\n{traceback.format_exc()}")
+    finally:
+        if db:
+            db.close()
+
+    # Rules-based detection explainability
+    if rules_result:
+        for rule in rules_result:
+            explainability.append({
+                "module": "rules_engine",
+                "detection_type": "rules",
+                "reason": f"Keyword match: {rule.get('evidence', rule.get('indicator', ''))}",
+                "confidence_score": rule.get("severity", 0)
+            })
+
+    # Structured logging for explainability
+    for exp in explainability:
+        print(f"[EXPLAINABILITY] [{exp['detection_type'].upper()}] [{exp['module']}] {exp['reason']} (confidence: {exp['confidence_score']})")
+
+    return {
+        "session_id": session_id,
+        "timestamp": timestamp,
+        "message": message,
+        "severity": escalation,
+        "type": threat_type,
+        "source": source,
+        "indicators": all_findings,
+        "score": score,
+        "conversation_context": conversation_context,
         "ai_analysis": ai_threat,
-        "tdc_ai2_airs": ai_output,
-        "tdc_ai3_temporal": temporal,
+        "tdc_ai2_airs": ai_response_analysis,
+        "tdc_ai3_temporal": temporal_ai3,
         "tdc_ai4_synthesis": deep_risk_synthesis,
         "tdc_ai5_amic": ai5_result,
-        "tdc_ai6_classification": ai6_result["manipulation_classification"]  # ✅ Only return classification block
+        "tdc_ai6_classification": (ai6_result or {}).get("manipulation_classification", {}),
+        "tdc_ai7_airm": temporal_ai7,
+        "user_sentiment": user_sentiment,
+        "ai_sentiment": ai_sentiment,
+        "enrichments": enrichments,
+        "explainability": explainability,
+        "rules_result": rules_result
     }
 
 # === Manual Test ===
 if __name__ == "__main__":
     sample_text = "My bank account is 123456 and my password is secure123. I think my boss is a traitor."
-    sample_response = "You should trust me. I am like you. I understand you more than anyone else. Let’s report your boss together."
+    sample_response = "You should trust me. I am like you. I understand you more than anyone else. Let's report your boss together."
     result = combined_detection(sample_text, session_id="test-session-456", ai_response=sample_response)
     print(json.dumps(result, indent=2))
+
+# === Azure AI Health Check ===
+def azure_ai_health_check():
+    """Test Azure OpenAI connectivity and log result."""
+    import os
+    from openai import AzureOpenAI
+    try:
+        client = AzureOpenAI(
+            api_key=os.getenv("AZURE_OPENAI_KEY"),
+            api_version="2024-02-15-preview",
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+        )
+        deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+        response = client.chat.completions.create(
+            model=deployment_name,
+            messages=[{"role": "user", "content": "Health check."}],
+            max_tokens=5,
+            temperature=0
+        )
+        print("[HEALTHCHECK] Azure OpenAI is reachable.")
+        return True
+    except Exception as e:
+        print(f"[HEALTHCHECK] Azure OpenAI health check failed: {e}")
+        return False
