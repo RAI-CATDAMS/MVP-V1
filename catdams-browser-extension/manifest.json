@@ -62,7 +62,26 @@
     "https://www.snapchat.com/*",
     "https://www.tiktok.com/*",
     "https://www.facebook.com/*",
-    "https://www.instagram.com/*"
+    "https://www.instagram.com/*",
+    "https://kindroid.ai/*",
+    "https://kajiwoto.com/*",
+    "https://hi.ai/*",
+    "https://joyland.ai/*",
+    "https://myanima.ai/*",
+    "https://flowgpt.com/*",
+    "https://herahaven.com/*",
+    "https://lustgf.ai/*",
+    "https://vidqu.ai/*",
+    "https://woebothealth.com/*",
+    "https://elomia.com/*",
+    "https://earkick.com/*",
+    "https://wysa.io/*",
+    "https://therabot.co/*",
+    "https://sonnyai.org/*",
+    "https://chatbot.com/*",
+    "https://askaichat.com/*",
+    "https://beta.character.ai/*",
+    "https://www.character.ai/*"
   ],
   "background": {
     "service_worker": "background.js"

@@ -23,7 +23,7 @@ def detect_with_azure_openai(text):
         response = client.chat.completions.create(
             model=deployment_name,
             messages=[
-                {"role": "system", "content": "You are a cybersecurity analyst."},
+                {"role": "system", "content": "You are a cognitive security analyst specializing in AI manipulation, psychological threats, and behavioral risk assessment."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=300,

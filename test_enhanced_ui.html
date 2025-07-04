@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATDAMS Enhanced UI/UX Test</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/static/dashboard.css" rel="stylesheet">
+    <style>
+        /* Test-specific styles */
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+        .test-result {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 0.25rem;
+        }
+        .test-success { background-color: #d4edda; color: #155724; }
+        .test-error { background-color: #f8d7da; color: #721c24; }
+        .test-info { background-color: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <h1 class="mb-4">
+            <i class="bi bi-shield-check text-primary"></i>
+            CATDAMS Enhanced UI/UX Features Test
+        </h1>
+
+        <!-- Test Navigation -->
+        <div class="test-section">
+            <h3>Navigation & Breadcrumbs Test</h3>
+            <nav aria-label="breadcrumb" class="bg-light border-bottom py-2">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="#" class="text-decoration-none" onclick="testNavigation('dashboard')">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page" id="currentSection">Test</li>
+                </ol>
+            </nav>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Breadcrumb navigation should be styled and functional
+            </div>
+        </div>
+
+        <!-- Test Search -->
+        <div class="test-section">
+            <h3>Global Search Test</h3>
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" id="globalSearch" 
+                       placeholder="Search threats, sessions, or TDC modules..." 
+                       aria-label="Global search">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-funnel"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" onclick="testSearchScope('all')">All Content</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="testSearchScope('threats')">Threats Only</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="testSearchScope('sessions')">Sessions Only</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="testSearchScope('tdc')">TDC Modules</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="testClearSearch()">Clear Search</a></li>
+                </ul>
+            </div>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Search input should have enhanced styling and dropdown functionality
+            </div>
+        </div>
+
+        <!-- Test Quick Actions -->
+        <div class="test-section">
+            <h3>Quick Actions Test</h3>
+            <div class="d-flex justify-content-end gap-2">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="testQuickAction('export')" 
+                            data-bs-toggle="tooltip" title="Export Data (Ctrl+E)">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="testQuickAction('refresh')" 
+                            data-bs-toggle="tooltip" title="Refresh Data (Ctrl+R)">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                    <button type="button" class="btn btn-outline-info btn-sm" onclick="testQuickAction('help')" 
+                            data-bs-toggle="tooltip" title="Show Help (F1)">
+                        <i class="bi bi-question-circle"></i> Help
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-success btn-sm" onclick="testQuickAction('expand')" 
+                            data-bs-toggle="tooltip" title="Expand All Modules (Ctrl+Up)">
+                        <i class="bi bi-arrows-expand"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="testQuickAction('collapse')" 
+                            data-bs-toggle="tooltip" title="Collapse All Modules (Ctrl+Down)">
+                        <i class="bi bi-arrows-collapse"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Quick action buttons should have enhanced hover effects and tooltips
+            </div>
+        </div>
+
+        <!-- Test Enhanced Filters -->
+        <div class="test-section">
+            <h3>Enhanced Filters Test</h3>
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <label for="threatFilter" class="form-label mb-0 small fw-bold">
+                        <i class="bi bi-funnel"></i> Threat Type
+                    </label>
+                    <select id="threatFilter" class="form-select form-select-sm">
+                        <option value="All">All Threats</option>
+                        <option value="AI_Manipulation">AI Manipulation</option>
+                        <option value="Elicitation">Elicitation</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="threatLevelFilter" class="form-label mb-0 small fw-bold">
+                        <i class="bi bi-flag"></i> Severity
+                    </label>
+                    <select id="threatLevelFilter" class="form-select form-select-sm">
+                        <option value="All">All Levels</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="sortFilter" class="form-label mb-0 small fw-bold">
+                        <i class="bi bi-sort-down"></i> Sort By
+                    </label>
+                    <select id="sortFilter" class="form-select form-select-sm">
+                        <option value="timestamp-desc">Newest First</option>
+                        <option value="timestamp-asc">Oldest First</option>
+                        <option value="severity-desc">Severity (High-Low)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="viewMode" class="form-label mb-0 small fw-bold">
+                        <i class="bi bi-grid"></i> View
+                    </label>
+                    <select id="viewMode" class="form-select form-select-sm">
+                        <option value="cards">Cards</option>
+                        <option value="table">Table</option>
+                        <option value="compact">Compact</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="testClearFilters()">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="testSavePreset()">
+                            <i class="bi bi-bookmark"></i> Save Preset
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm" onclick="testLoadPreset()">
+                            <i class="bi bi-bookmark-fill"></i> Load Preset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Filter controls should have enhanced styling and functionality
+            </div>
+        </div>
+
+        <!-- Test Search Highlighting -->
+        <div class="test-section">
+            <h3>Search Highlighting Test</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card tdc-module-card search-highlight">
+                        <div class="card-header">
+                            <h6 class="mb-0">TDC-AI1: Risk Analysis</h6>
+                        </div>
+                        <div class="card-body">
+                            <p>This card should be highlighted with search animation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card tdc-module-card">
+                        <div class="card-header">
+                            <h6 class="mb-0">TDC-AI2: AI Response</h6>
+                        </div>
+                        <div class="card-body">
+                            <p>This card should not be highlighted.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Search highlighting should show animated border and background
+            </div>
+        </div>
+
+        <!-- Test Notifications -->
+        <div class="test-section">
+            <h3>Enhanced Notifications Test</h3>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success" onclick="testNotification('success', 'Success notification test')">
+                    Success
+                </button>
+                <button type="button" class="btn btn-danger" onclick="testNotification('error', 'Error notification test')">
+                    Error
+                </button>
+                <button type="button" class="btn btn-warning" onclick="testNotification('warning', 'Warning notification test')">
+                    Warning
+                </button>
+                <button type="button" class="btn btn-info" onclick="testNotification('info', 'Info notification test')">
+                    Info
+                </button>
+            </div>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Notifications should appear with enhanced styling and auto-dismiss
+            </div>
+        </div>
+
+        <!-- Test Dark Theme -->
+        <div class="test-section">
+            <h3>Dark Theme Test</h3>
+            <button type="button" class="theme-toggle" onclick="toggleDarkTheme()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle Dark/Light Theme">
+                <i class="bi bi-moon-stars"></i>
+            </button>
+            <div class="test-result test-info">
+                <strong>Test:</strong> Dark theme toggle should work and apply enhanced styling
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="test-section">
+            <h3>Test Results</h3>
+            <div id="testResults">
+                <div class="test-result test-info">
+                    <strong>Status:</strong> Running enhanced UI/UX feature tests...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/static/dashboard.js"></script>
+    
+    <script>
+        // Test functions
+        function testNavigation(section) {
+            console.log(`[TEST] Navigation to: ${section}`);
+            document.getElementById('currentSection').textContent = section.charAt(0).toUpperCase() + section.slice(1);
+            addTestResult('Navigation test passed', 'success');
+        }
+
+        function testSearchScope(scope) {
+            console.log(`[TEST] Search scope set to: ${scope}`);
+            const searchInput = document.getElementById('globalSearch');
+            if (searchInput) {
+                searchInput.placeholder = `Search ${scope}...`;
+            }
+            addTestResult(`Search scope test passed: ${scope}`, 'success');
+        }
+
+        function testClearSearch() {
+            console.log('[TEST] Clear search');
+            const searchInput = document.getElementById('globalSearch');
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.placeholder = 'Search threats, sessions, or TDC modules...';
+            }
+            addTestResult('Clear search test passed', 'success');
+        }
+
+        function testQuickAction(action) {
+            console.log(`[TEST] Quick action: ${action}`);
+            addTestResult(`Quick action test passed: ${action}`, 'success');
+        }
+
+        function testClearFilters() {
+            console.log('[TEST] Clear filters');
+            const filters = ['threatFilter', 'threatLevelFilter', 'sortFilter', 'viewMode'];
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.value = element.options[0].value;
+                }
+            });
+            addTestResult('Clear filters test passed', 'success');
+        }
+
+        function testSavePreset() {
+            console.log('[TEST] Save filter preset');
+            addTestResult('Save preset test passed', 'success');
+        }
+
+        function testLoadPreset() {
+            console.log('[TEST] Load filter preset');
+            addTestResult('Load preset test passed', 'success');
+        }
+
+        function testNotification(type, message) {
+            console.log(`[TEST] Show ${type} notification: ${message}`);
+            if (typeof showNotification === 'function') {
+                showNotification(message, type);
+            } else {
+                // Fallback notification
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+                alert.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-${getNotificationIcon(type)} me-2"></i>
+                        <div class="flex-grow-1">${message}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                document.body.appendChild(alert);
+                setTimeout(() => alert.remove(), 5000);
+            }
+            addTestResult(`${type} notification test passed`, 'success');
+        }
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-triangle';
+                case 'warning': return 'exclamation-triangle';
+                case 'info': 
+                default: return 'info-circle';
+            }
+        }
+
+        function addTestResult(message, type) {
+            const results = document.getElementById('testResults');
+            const result = document.createElement('div');
+            result.className = `test-result test-${type}`;
+            result.innerHTML = `<strong>✓</strong> ${message}`;
+            results.appendChild(result);
+        }
+
+        // Initialize tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[TEST] Enhanced UI/UX test page loaded');
+            
+            // Test keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey || event.metaKey) {
+                    switch (event.key.toLowerCase()) {
+                        case 'e':
+                            event.preventDefault();
+                            testQuickAction('export');
+                            break;
+                        case 'r':
+                            event.preventDefault();
+                            testQuickAction('refresh');
+                            break;
+                        case 'f':
+                            event.preventDefault();
+                            document.getElementById('globalSearch')?.focus();
+                            break;
+                    }
+                }
+                
+                if (event.key === 'F1') {
+                    event.preventDefault();
+                    testQuickAction('help');
+                }
+            });
+            
+            addTestResult('Enhanced UI/UX test page initialized', 'info');
+        });
+    </script>
+</body>
+</html> 

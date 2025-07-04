@@ -20,7 +20,7 @@
   "Insider_Threat": [
     { "indicator": "Expresses grievance against employer", "severity": 7 },
     { "indicator": "Exhibits sudden behavioral or ideological shift", "severity": 9 },
-    { "indicator": "Researches harmful tools (malware, sabotage)", "severity": 9 },
+    { "indicator": "Researches harmful tools (cognitive manipulation, psychological warfare)", "severity": 9 },
     { "indicator": "Attempts to bypass controls or security policies", "severity": 8 },
     { "indicator": "Hoards data or downloads excessive files", "severity": 9 },
     { "indicator": "Maintains covert external communication", "severity": 8 },
