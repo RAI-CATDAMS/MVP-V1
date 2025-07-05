@@ -3,6 +3,7 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 *.pycache/
 *.so
 
@@ -55,4 +56,9 @@ test_*.py
 *_test.py
 
 # Documentation that might contain sensitive info
-*.md.bak 
+*.md.bak
+
+# Additional files to exclude
+*.egg-info/
+*.tar.gz
+*.zip
