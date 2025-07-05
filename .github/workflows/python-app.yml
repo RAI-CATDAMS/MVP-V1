@@ -24,13 +24,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       # Optional: Add step to run tests here
+      - name: Create tarball artifact for deployment
+        run: |
+          tar -czf output.tar.gz . --exclude=venv
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
         with:
           name: python-app
-          path: |
-            .
-            !venv/
+          path: output.tar.gz
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,7 +47,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: python-app
-      # No need to unzip or untar, deploy the files directly
+      - name: Extract tarball
+        run: |
+          tar -xzf output.tar.gz
       - name: Login to Azure
         uses: azure/login@v2
         with:
