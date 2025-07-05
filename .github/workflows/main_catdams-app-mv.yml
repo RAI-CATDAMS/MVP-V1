@@ -1,10 +1,6 @@
-# Deploy CATDAMS FastAPI app to Azure App Service using GitHub Actions and OIDC
+# Deploy CATDAMS FastAPI app to Azure App Service using GitHub Actions and a Publish Profile
 
 name: Build and deploy Python app to Azure Web App - catdams-app-MV
-
-permissions:
-  id-token: write
-  contents: read
 
 on:
   push:
@@ -33,10 +29,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Optional: Run tests here
-      # - name: Run tests
-      #   run: pytest
-
       - name: Zip app for deployment
         run: zip -r release.zip . -x "venv/*"
 
@@ -62,18 +54,10 @@ jobs:
       - name: Unzip artifact
         run: unzip release.zip
 
-      - name: Login to Azure using OIDC
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CB4788810B554699965908630A445B7D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FA504F789F9F41DAAF170A638E879D1E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4719683F69154E129A611EA9FF6A0BAF }}
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure Web App using publish profile
+        uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'catdams-app-MV'
-          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: release.zip
-          deployment-method: runFromPackage
