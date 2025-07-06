@@ -42,3 +42,8 @@ jobs:
         with:
           app-name: 'catdams-app-MV'
           package: release.zip
+
+      - name: Delete large file
+        run: cd /home/site/wwwroot
+
+      
