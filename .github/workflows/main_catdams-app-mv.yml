@@ -27,8 +27,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-          - name: Zip application for deployment
-          run: zip -r release.zip . -x "venv/*" "*.git*" "__pycache__/*" "*.pyc" "*.ipynb" "*.tar.gz" "*.pt" "*.onnx" ".DS_Store"        
+      - name: Zip application for deployment
+        run: zip -r release.zip . -x "venv/*" "*.git*" "__pycache__/*" "*.pyc" "*.ipynb" "*.tar.gz" "*.pt" "*.onnx" ".DS_Store"
 
       - name: Log in to Azure using OIDC
         uses: azure/login@v2
@@ -42,7 +42,3 @@ jobs:
         with:
           app-name: 'catdams-app-MV'
           package: release.zip
-
-      - name: Delete large file
-        run: cd /home/site/wwwroot
-
