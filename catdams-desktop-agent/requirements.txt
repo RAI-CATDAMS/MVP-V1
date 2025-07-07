@@ -1,3 +1,15 @@
+# === FastAPI Web App ===
+fastapi
+uvicorn[standard]
+gunicorn
+jinja2
+aiofiles
+sqlalchemy
+openai
+jsonschema
+python-dotenv
+
+# === Desktop Agent ===
 keyboard==0.13.5
 pygetwindow==0.0.9
 pystray==0.19.4
