@@ -1,64 +1,70 @@
-# Python
-venv/
+# === PYTHON ARTIFACTS ===
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pycache/
 *.so
 
-# Environment variables
+# === ENVIRONMENT FILES ===
 .env
-.env.local
-.env.production
+.env.*
+*.env
 
-# Database files
-*.db
+# === PYTHON VENV ===
+venv/
+python-mvenv/
+
+# === DATABASE FILES (optional: allow for production .db if needed) ===
 *.sqlite
 *.sqlite3
-catdams.db
+*.bak
+*.backup
+*.db
+!catdams.db  # Un-ignore if you need to ship with production db
 
-# Logs
+# === LOG FILES ===
 *.log
 logs/
 catdams_agent.log
 analytics_api_test.log
-
-# Session logs (these can be large and contain sensitive data)
 session_logs/*.jsonl
 
-# Temporary files
+# === TEMPORARY FILES ===
 *.tmp
 *.temp
-*.bak
-*.backup
-
-# IDE files
-.vscode/
-.idea/
 *.swp
 *.swo
 
-# OS files
-.DS_Store
-Thumbs.db
+# === IDE / EDITOR CONFIG ===
+.vscode/
+.idea/
 
-# Node modules (if any)
+# === NODE / WEB BUILD ===
 node_modules/
 npm-debug.log*
 
-# Backup directories
+# === BACKUPS / ARCHIVES ===
 backup_*/
 archive/
+*.zip
+*.tar.gz
+*.egg-info/
 
-# Test files
+# === TEST FILES ===
 test_*.py
 *_test.py
 
-# Documentation that might contain sensitive info
+# === EXCLUDED DOCS ===
 *.md.bak
 
-# Additional files to exclude
-*.egg-info/
-*.tar.gz
-*.zip
+# === DO NOT IGNORE THESE CRITICAL FILES ===
+!templates/
+!templates/dashboard.html
+!static/
+!static/content.js
+!static/dashboard.js
+!static/dashboard.css
+
+# === OPTIONAL: KEEP EXAMPLES ===
+!example_payload.json
+!env_example.txt
