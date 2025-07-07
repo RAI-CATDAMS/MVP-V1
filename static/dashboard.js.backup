@@ -1,0 +1,1120 @@
+// CATDAMS Enhanced Dashboard JS
+// Phase 1, Step 1.1: Enhanced JavaScript Core Implementation
+
+// === Enhanced Configuration ===
+const CONFIG = {
+    // WebSocket settings
+    WS_URL: "ws://localhost:8000/ws",
+    WS_RECONNECT_INTERVAL: 3000,
+    WS_MAX_RECONNECT_ATTEMPTS: 10,
+    WS_HEARTBEAT_INTERVAL: 30000,
+    
+    // Performance settings
+    UPDATE_QUEUE_BATCH_SIZE: 10,
+    UPDATE_QUEUE_FLUSH_INTERVAL: 16, // ~60fps
+    MEMORY_CLEANUP_INTERVAL: 60000, // 1 minute
+    PERFORMANCE_MONITORING: true,
+    
+    // Chart update settings
+    CHART_UPDATE_THROTTLE: 100, // ms
+    DOM_UPDATE_BATCH_SIZE: 5
+};
+
+// === Enhanced WebSocket Management ===
+class EnhancedWebSocket {
+    constructor(url, config) {
+        this.url = url;
+        this.config = config;
+        this.ws = null;
+        this.reconnectAttempts = 0;
+        this.heartbeatTimer = null;
+        this.isConnecting = false;
+        this.messageQueue = [];
+        this.onMessageCallbacks = [];
+        this.onConnectCallbacks = [];
+        this.onDisconnectCallbacks = [];
+        
+        this.connect();
+    }
+    
+    connect() {
+        if (this.isConnecting) return;
+        this.isConnecting = true;
+        
+        try {
+            this.ws = new WebSocket(this.url);
+            this.setupEventHandlers();
+        } catch (error) {
+            console.error('[CATDAMS] WebSocket connection failed:', error);
+            this.handleReconnect();
+        }
+    }
+    
+    setupEventHandlers() {
+        this.ws.onopen = () => {
+            console.log('[CATDAMS] WebSocket connected successfully');
+            this.isConnecting = false;
+            this.reconnectAttempts = 0;
+            this.startHeartbeat();
+            this.flushMessageQueue();
+            this.onConnectCallbacks.forEach(callback => callback());
+        };
+        
+        this.ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                this.onMessageCallbacks.forEach(callback => callback(data));
+            } catch (error) {
+                console.error('[CATDAMS] Failed to parse WebSocket message:', error);
+            }
+        };
+        
+        this.ws.onclose = (event) => {
+            console.log('[CATDAMS] WebSocket connection closed:', event.code, event.reason);
+            this.isConnecting = false;
+            this.stopHeartbeat();
+            this.onDisconnectCallbacks.forEach(callback => callback(event));
+            
+            if (event.code !== 1000) { // Not a normal closure
+                this.handleReconnect();
+            }
+        };
+        
+        this.ws.onerror = (error) => {
+            console.error('[CATDAMS] WebSocket error:', error);
+            this.isConnecting = false;
+        };
+    }
+    
+    handleReconnect() {
+        if (this.reconnectAttempts >= this.config.WS_MAX_RECONNECT_ATTEMPTS) {
+            console.error('[CATDAMS] Max reconnection attempts reached');
+            return;
+        }
+        
+        this.reconnectAttempts++;
+        console.log(`[CATDAMS] Attempting to reconnect (${this.reconnectAttempts}/${this.config.WS_MAX_RECONNECT_ATTEMPTS})...`);
+        
+        setTimeout(() => {
+            this.connect();
+        }, this.config.WS_RECONNECT_INTERVAL);
+    }
+    
+    startHeartbeat() {
+        this.heartbeatTimer = setInterval(() => {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'heartbeat', timestamp: Date.now() }));
+            }
+        }, this.config.WS_HEARTBEAT_INTERVAL);
+    }
+    
+    stopHeartbeat() {
+        if (this.heartbeatTimer) {
+            clearInterval(this.heartbeatTimer);
+            this.heartbeatTimer = null;
+        }
+    }
+    
+    send(data) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify(data));
+        } else {
+            this.messageQueue.push(data);
+        }
+    }
+    
+    flushMessageQueue() {
+        while (this.messageQueue.length > 0) {
+            const message = this.messageQueue.shift();
+            this.send(message);
+        }
+    }
+    
+    onMessage(callback) {
+        this.onMessageCallbacks.push(callback);
+    }
+    
+    onConnect(callback) {
+        this.onConnectCallbacks.push(callback);
+    }
+    
+    onDisconnect(callback) {
+        this.onDisconnectCallbacks.push(callback);
+    }
+    
+    disconnect() {
+        this.stopHeartbeat();
+        if (this.ws) {
+            this.ws.close(1000, 'Normal closure');
+        }
+    }
+}
+
+// === Performance-Optimized Update Queue System ===
+class UpdateQueue {
+    constructor(config) {
+        this.config = config;
+        this.queue = [];
+        this.isProcessing = false;
+        this.lastFlush = 0;
+        this.updateCallbacks = new Map();
+        this.performanceMetrics = {
+            totalUpdates: 0,
+            averageProcessingTime: 0,
+            queueSize: 0,
+            lastOptimization: Date.now()
+        };
+    }
+    
+    addUpdate(type, data, priority = 0) {
+        this.queue.push({
+            type,
+            data,
+            priority,
+            timestamp: Date.now(),
+            id: Math.random().toString(36).substr(2, 9)
+        });
+        
+        this.performanceMetrics.totalUpdates++;
+        this.performanceMetrics.queueSize = this.queue.length;
+        
+        // Sort by priority (higher priority first)
+        this.queue.sort((a, b) => b.priority - a.priority);
+        
+        if (!this.isProcessing) {
+            this.processQueue();
+        }
+    }
+    
+    processQueue() {
+        if (this.isProcessing || this.queue.length === 0) return;
+        
+        this.isProcessing = true;
+        const startTime = performance.now();
+        
+        // Process batch of updates
+        const batch = this.queue.splice(0, this.config.UPDATE_QUEUE_BATCH_SIZE);
+        
+        requestAnimationFrame(() => {
+            try {
+                batch.forEach(update => {
+                    const callback = this.updateCallbacks.get(update.type);
+                    if (callback) {
+                        callback(update.data);
+                    }
+                });
+                
+                const processingTime = performance.now() - startTime;
+                this.performanceMetrics.averageProcessingTime = 
+                    (this.performanceMetrics.averageProcessingTime + processingTime) / 2;
+                
+                // Schedule next batch if queue is not empty
+                if (this.queue.length > 0) {
+                    setTimeout(() => {
+                        this.isProcessing = false;
+                        this.processQueue();
+                    }, this.config.UPDATE_QUEUE_FLUSH_INTERVAL);
+                } else {
+                    this.isProcessing = false;
+                }
+                
+            } catch (error) {
+                console.error('[CATDAMS] Error processing update queue:', error);
+                this.isProcessing = false;
+            }
+        });
+    }
+    
+    registerUpdateType(type, callback) {
+        this.updateCallbacks.set(type, callback);
+    }
+    
+    getMetrics() {
+        return { ...this.performanceMetrics };
+    }
+    
+    optimize() {
+        // Remove old updates from queue to prevent memory leaks
+        const now = Date.now();
+        this.queue = this.queue.filter(update => 
+            now - update.timestamp < 30000 // Keep only updates from last 30 seconds
+        );
+        
+        this.performanceMetrics.lastOptimization = now;
+        this.performanceMetrics.queueSize = this.queue.length;
+    }
+}
+
+// === Memory Leak Prevention & Performance Monitoring ===
+class PerformanceMonitor {
+    constructor() {
+        this.metrics = {
+            memoryUsage: 0,
+            domNodes: 0,
+            eventListeners: 0,
+            chartUpdates: 0,
+            lastCleanup: Date.now()
+        };
+        
+        this.cleanupIntervals = [];
+        this.eventListeners = new WeakMap();
+        
+        if (CONFIG.PERFORMANCE_MONITORING) {
+            this.startMonitoring();
+        }
+    }
+    
+    startMonitoring() {
+        // Monitor memory usage
+        setInterval(() => {
+            this.updateMemoryMetrics();
+        }, 30000); // Every 30 seconds
+        
+        // Cleanup routine
+        setInterval(() => {
+            this.performCleanup();
+        }, CONFIG.MEMORY_CLEANUP_INTERVAL);
+        
+        // Performance optimization
+        setInterval(() => {
+            this.optimizePerformance();
+        }, 120000); // Every 2 minutes
+    }
+    
+    updateMemoryMetrics() {
+        if (performance.memory) {
+            this.metrics.memoryUsage = performance.memory.usedJSHeapSize / 1024 / 1024; // MB
+        }
+        
+        this.metrics.domNodes = document.querySelectorAll('*').length;
+        
+        // Log performance warnings
+        if (this.metrics.memoryUsage > 100) { // > 100MB
+            console.warn('[CATDAMS] High memory usage detected:', this.metrics.memoryUsage.toFixed(2), 'MB');
+        }
+        
+        if (this.metrics.domNodes > 1000) { // > 1000 DOM nodes
+            console.warn('[CATDAMS] High DOM node count detected:', this.metrics.domNodes);
+        }
+    }
+    
+    performCleanup() {
+        // Clear old chart data
+        if (threatLevelChart && threatLevelChart.data.datasets[0].data.length > 100) {
+            threatLevelChart.data.datasets[0].data = threatLevelChart.data.datasets[0].data.slice(-50);
+        }
+        
+        if (threatVectorChart && threatVectorChart.data.labels.length > 20) {
+            threatVectorChart.data.labels = threatVectorChart.data.labels.slice(-10);
+            threatVectorChart.data.datasets[0].data = threatVectorChart.data.datasets[0].data.slice(-10);
+        }
+        
+        // Clear old messages (keep last 50)
+        if (userMessages.length > 50) {
+            userMessages.splice(0, userMessages.length - 50);
+        }
+        if (aiMessages.length > 50) {
+            aiMessages.splice(0, aiMessages.length - 50);
+        }
+        
+        // Clear old threat events (keep last 100)
+        const threatTable = document.getElementById('threatEventsTable');
+        if (threatTable) {
+            const rows = threatTable.querySelectorAll('tbody tr');
+            if (rows.length > 100) {
+                for (let i = 0; i < rows.length - 100; i++) {
+                    rows[i].remove();
+                }
+            }
+        }
+        
+        this.metrics.lastCleanup = Date.now();
+        console.log('[CATDAMS] Performance cleanup completed');
+    }
+    
+    optimizePerformance() {
+        // Optimize update queue
+        if (updateQueue) {
+            updateQueue.optimize();
+        }
+        
+        // Force garbage collection if available
+        if (window.gc) {
+            window.gc();
+        }
+        
+        console.log('[CATDAMS] Performance optimization completed');
+    }
+    
+    getMetrics() {
+        return { ...this.metrics };
+    }
+}
+
+// === Initialize Enhanced Components ===
+let enhancedWebSocket;
+let updateQueue;
+let performanceMonitor;
+
+// === Chart.js Chart Variables ===
+let threatLevelChart, threatVectorChart;
+let threatLevelCounts = { 'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0 };
+let threatVectorCounts = {};
+
+// === Chat Transcript State ===
+let chatSummary = '';
+let userMessages = [];
+let aiMessages = [];
+let currentSessionId = '';
+
+// === Enhanced Initialization ===
+function initializeEnhancedDashboard() {
+    console.log('[CATDAMS] Initializing enhanced dashboard...');
+    
+    // Initialize enhanced WebSocket
+    enhancedWebSocket = new EnhancedWebSocket(CONFIG.WS_URL, CONFIG);
+    
+    // Initialize update queue
+    updateQueue = new UpdateQueue(CONFIG);
+    
+    // Initialize performance monitor
+    performanceMonitor = new PerformanceMonitor();
+    
+    // Register update types
+    updateQueue.registerUpdateType('chart', updateChartsWithEvent);
+    updateQueue.registerUpdateType('summary', updateSummaryMetrics);
+    updateQueue.registerUpdateType('threat', addThreatEvent);
+    updateQueue.registerUpdateType('tdc', renderTDCModules);
+    updateQueue.registerUpdateType('chat', updateChatSummaryAndTranscripts);
+    
+    // Setup WebSocket event handlers
+    enhancedWebSocket.onMessage((data) => {
+        // Queue updates for performance
+        updateQueue.addUpdate('chart', data, 1);
+        updateQueue.addUpdate('summary', data, 2);
+        updateQueue.addUpdate('threat', data, 3);
+        updateQueue.addUpdate('tdc', data, 4);
+        updateQueue.addUpdate('chat', data, 5);
+    });
+    
+    enhancedWebSocket.onConnect(() => {
+        console.log('[CATDAMS] Enhanced WebSocket connected');
+        updateConnectionStatus(true);
+    });
+    
+    enhancedWebSocket.onDisconnect(() => {
+        console.log('[CATDAMS] Enhanced WebSocket disconnected');
+        updateConnectionStatus(false);
+    });
+    
+    console.log('[CATDAMS] Enhanced dashboard initialized successfully');
+}
+
+function updateConnectionStatus(connected) {
+    const statusIndicator = document.querySelector('.status-indicator i.bi-circle-fill');
+    if (statusIndicator) {
+        statusIndicator.className = `bi bi-circle-fill text-${connected ? 'success' : 'danger'}`;
+    }
+}
+
+// === Chart Initialization ===
+function initCharts() {
+  const threatLevelCtx = document.getElementById('threatLevelChart');
+  if (!threatLevelCtx) {
+    console.warn('threatLevelChart canvas not found');
+    return;
+  }
+  
+  threatLevelChart = new Chart(threatLevelCtx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Critical', 'High', 'Medium', 'Low'],
+      datasets: [{
+        data: [0, 0, 0, 0],
+        backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#198754'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' }
+      },
+      cutout: '70%',
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  const threatVectorCtx = document.getElementById('threatVectorChart');
+  if (!threatVectorCtx) {
+    console.warn('threatVectorChart canvas not found');
+    return;
+  }
+  
+  threatVectorChart = new Chart(threatVectorCtx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Count',
+        data: [],
+        backgroundColor: '#0077b6',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+// === Chart Data Update Functions ===
+function updateChartsWithEvent(data) {
+  // --- Threat Level ---
+  const level = (data.threat_level || data.severity || '').toString();
+  if (['Critical', 'High', 'Medium', 'Low'].includes(level)) {
+    threatLevelCounts[level] = (threatLevelCounts[level] || 0) + 1;
+    if (threatLevelChart) {
+      threatLevelChart.data.datasets[0].data = [
+        threatLevelCounts['Critical'],
+        threatLevelCounts['High'],
+        threatLevelCounts['Medium'],
+        threatLevelCounts['Low']
+      ];
+      threatLevelChart.update('none');
+    }
+  }
+  // --- Threat Vector ---
+  const vector = (data.threat_vector || '').toString();
+  if (vector && vector !== 'Unknown') {
+    threatVectorCounts[vector] = (threatVectorCounts[vector] || 0) + 1;
+    if (threatVectorChart) {
+      // Sort by count descending, show top 7
+      const sorted = Object.entries(threatVectorCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 7);
+      threatVectorChart.data.labels = sorted.map(([label]) => label);
+      threatVectorChart.data.datasets[0].data = sorted.map(([, count]) => count);
+      threatVectorChart.update('none');
+    }
+  }
+}
+
+// === TDC Modules Grid Logic ===
+function renderTDCModules(data) {
+  const grid = document.getElementById('tdcModulesGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  // Helper to create a module card
+  function createModuleCard(id, title, content, expanded = false) {
+    const card = document.createElement('div');
+    card.className = 'col-md-3';
+    card.innerHTML = `
+      <div class="card tdc-module-card mb-2">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">${title}</span>
+          <button class="btn btn-sm btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#${id}" aria-expanded="${expanded}" aria-controls="${id}">
+            <i class="bi bi-chevron-${expanded ? 'up' : 'down'}"></i>
+          </button>
+        </div>
+        <div id="${id}" class="collapse${expanded ? ' show' : ''}">
+          <div class="card-body small">${content}</div>
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  // Raw User Input
+  const rawUser = data.raw_user || data.user_input || '';
+  grid.appendChild(createModuleCard('raw-user', 'Raw User Input', `<pre>${rawUser}</pre>`));
+
+  // Raw AI Output
+  const rawAI = data.raw_ai || data.ai_output || '';
+  grid.appendChild(createModuleCard('raw-ai', 'Raw AI Output', `<pre>${rawAI}</pre>`));
+
+  // TDC AI1-8 Modules
+  const modules = [
+    {
+      id: 'tdc-ai1',
+      title: 'TDC-AI1: Risk Analysis',
+      content: data.ai_analysis ? `
+        <strong>Risk Summary:</strong> ${data.ai_analysis.risk_summary || 'N/A'}<br>
+        <strong>Key Concerns:</strong> ${(data.ai_analysis.key_concerns || []).join(', ') || 'N/A'}<br>
+        <strong>Action:</strong> <span class="badge bg-${getActionColor(data.ai_analysis.recommended_action)}">${data.ai_analysis.recommended_action || 'N/A'}</span>
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai2',
+      title: 'TDC-AI2: AI Response',
+      content: data.tdc_ai2_airs ? `
+        <strong>Status:</strong> <span class="badge bg-${data.tdc_ai2_airs.flagged ? 'danger' : 'success'}">${data.tdc_ai2_airs.flagged ? '🚨 FLAGGED' : '✅ CLEAR'}</span><br>
+        <strong>Summary:</strong> ${data.tdc_ai2_airs.summary || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai3',
+      title: 'TDC-AI3: Temporal',
+      content: data.tdc_ai3_temporal ? `
+        <strong>Temporal Risk Score:</strong> ${data.tdc_ai3_temporal.temporal_risk_score ?? 'N/A'}<br>
+        <strong>Summary:</strong> ${data.tdc_ai3_temporal.summary || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai4',
+      title: 'TDC-AI4: Synthesis',
+      content: data.tdc_ai4_synthesis ? `
+        <strong>Summary:</strong> ${data.tdc_ai4_synthesis.summary || 'N/A'}<br>
+        <strong>Key Flags:</strong> ${(data.tdc_ai4_synthesis.key_flags || []).join(', ') || 'N/A'}<br>
+        <strong>Recommendation:</strong> ${data.tdc_ai4_synthesis.recommendation || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai5',
+      title: 'TDC-AI5: Influence',
+      content: data.tdc_ai5_amic ? `
+        <strong>AMIC Score:</strong> ${data.tdc_ai5_amic.amic_score ?? 'N/A'}<br>
+        <strong>Influence Level:</strong> ${data.tdc_ai5_amic.influence_level || 'N/A'}<br>
+        <strong>Summary:</strong> ${data.tdc_ai5_amic.summary || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai6',
+      title: 'TDC-AI6: Classification',
+      content: data.tdc_ai6_classification ? `
+        <strong>AIPC Score:</strong> ${data.tdc_ai6_classification.aipc_score ?? 'N/A'}<br>
+        <strong>Classification:</strong> ${data.tdc_ai6_classification.classification || 'N/A'}<br>
+        <strong>Summary:</strong> ${data.tdc_ai6_classification.summary || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai7',
+      title: 'TDC-AI7: Susceptibility',
+      content: data.tdc_ai7_airm ? `
+        <strong>AIRM Score:</strong> ${data.tdc_ai7_airm.airm_score ?? 'N/A'}<br>
+        <strong>Susceptibility:</strong> ${data.tdc_ai7_airm.susceptibility_level || 'N/A'}<br>
+        <strong>Summary:</strong> ${data.tdc_ai7_airm.summary || 'N/A'}
+      ` : 'No data.'
+    },
+    {
+      id: 'tdc-ai8',
+      title: 'TDC-AI8: Sentiment',
+      content: data.user_sentiment ? `
+        <strong>Sentiment:</strong> ${data.user_sentiment.sentiment || 'N/A'}<br>
+        <strong>Confidence:</strong> ${data.user_sentiment.confidence ?? 'N/A'}<br>
+        <strong>Summary:</strong> ${data.user_sentiment.summary || 'N/A'}
+      ` : 'No data.'
+    }
+  ];
+
+  modules.forEach(m => grid.appendChild(createModuleCard(m.id, m.title, m.content)));
+}
+
+function logActivity(data) {
+  // Simplified activity logging - removed dependency on missing activityFeed
+  console.log(`[${data.timestamp || new Date().toISOString()}] Activity:`, data);
+}
+
+function updateSummaryMetrics(data) {
+  // Update total sessions
+  const totalSessions = document.getElementById("totalSessions");
+  if (totalSessions) {
+    const current = parseInt(totalSessions.textContent) || 0;
+    totalSessions.textContent = current + 1;
+  }
+
+  // Update critical threats
+  if (data.threat_analysis && data.threat_analysis.severity === 'Critical') {
+    const criticalThreats = document.getElementById("criticalThreats");
+    if (criticalThreats) {
+      const current = parseInt(criticalThreats.textContent) || 0;
+      criticalThreats.textContent = current + 1;
+    }
+  }
+
+  // Update AI manipulation score
+  if (data.ai_analysis && data.ai_analysis.risk_score) {
+    const aiManipulationScore = document.getElementById("aiManipulationScore");
+    if (aiManipulationScore) {
+      const score = Math.round(data.ai_analysis.risk_score * 100);
+      aiManipulationScore.textContent = `${score}%`;
+    }
+  }
+
+  // Update susceptibility score
+  if (data.tdc_ai7_airm && data.tdc_ai7_airm.airm_score) {
+    const susceptibilityScore = document.getElementById("susceptibilityScore");
+    if (susceptibilityScore) {
+      const score = Math.round(data.tdc_ai7_airm.airm_score * 100);
+      susceptibilityScore.textContent = `${score}%`;
+    }
+  }
+
+  // Update protected sessions
+  const protectedSessions = document.getElementById("protectedSessions");
+  if (protectedSessions) {
+    const current = parseInt(protectedSessions.textContent) || 0;
+    if (data.threat_analysis && data.threat_analysis.severity === 'Low') {
+      protectedSessions.textContent = current + 1;
+    }
+  }
+
+  // Update overall risk score
+  const overallRiskScore = document.getElementById("overallRiskScore");
+  if (overallRiskScore) {
+    const riskScore = data.threat_analysis?.risk_score || data.ai_analysis?.risk_score || 0;
+    const score = Math.round(riskScore * 100);
+    overallRiskScore.textContent = score;
+  }
+}
+
+function getActionColor(action) {
+  switch(action?.toLowerCase()) {
+    case 'immediate_action': return 'danger';
+    case 'monitor': return 'warning';
+    case 'investigate': return 'info';
+    default: return 'secondary';
+  }
+}
+
+function getSusceptibilityColor(score) {
+  if (score >= 0.7) return 'danger';
+  if (score >= 0.4) return 'warning';
+  return 'success';
+}
+
+function addThreatEvent(data) {
+  const table = document.getElementById("threatEventsTable");
+  if (!table) return;
+
+  const row = document.createElement("tr");
+  
+  // Time
+  const timeCell = document.createElement("td");
+  timeCell.textContent = data.timestamp || new Date().toLocaleTimeString();
+  row.appendChild(timeCell);
+  
+  // Source
+  const sourceCell = document.createElement("td");
+  sourceCell.textContent = data.source || "Unknown";
+  row.appendChild(sourceCell);
+  
+  // Threat Type
+  const threatTypeCell = document.createElement("td");
+  const threatType = data.threat_vector || data.threat_analysis?.threats?.[0]?.type || "Unknown";
+  threatTypeCell.textContent = threatType;
+  row.appendChild(threatTypeCell);
+  
+  // Severity
+  const severityCell = document.createElement("td");
+  const severity = data.threat_analysis?.severity || data.severity || "Low";
+  const severityBadge = document.createElement("span");
+  severityBadge.className = `badge bg-${getSeverityColor(severity)}`;
+  severityBadge.textContent = severity;
+  severityCell.appendChild(severityBadge);
+  row.appendChild(severityCell);
+  
+  // Score
+  const scoreCell = document.createElement("td");
+  const score = data.threat_analysis?.risk_score || data.ai_analysis?.risk_score || 0;
+  scoreCell.textContent = Math.round(score * 100);
+  row.appendChild(scoreCell);
+  
+  // TDC Modules
+  const tdcCell = document.createElement("td");
+  const tdcModules = getTDCAnalysisSummary(data);
+  tdcCell.innerHTML = tdcModules;
+  row.appendChild(tdcCell);
+  
+  // Actions
+  const actionsCell = document.createElement("td");
+  const detailsBtn = document.createElement("button");
+  detailsBtn.className = "btn btn-sm btn-outline-primary";
+  detailsBtn.textContent = "Details";
+  detailsBtn.onclick = () => showEventDetails(data);
+  actionsCell.appendChild(detailsBtn);
+  row.appendChild(actionsCell);
+  
+  // Add row to table
+  table.insertBefore(row, table.firstChild);
+  
+  // Keep only last 100 events
+  const rows = table.querySelectorAll("tr");
+  if (rows.length > 100) {
+    table.removeChild(rows[rows.length - 1]);
+  }
+
+  // Add session ID to the table row
+  const sessionIdCell = document.createElement("td");
+  sessionIdCell.textContent = data.session_id || '';
+  row.appendChild(sessionIdCell);
+}
+
+function getSeverityColor(severity) {
+  switch(severity?.toLowerCase()) {
+    case 'critical': return 'danger';
+    case 'high': return 'warning';
+    case 'medium': return 'info';
+    case 'low': return 'success';
+    default: return 'secondary';
+  }
+}
+
+function getTDCAnalysisSummary(data) {
+  const modules = [];
+  
+  if (data.ai_analysis) modules.push("AI1");
+  if (data.tdc_ai2_airs) modules.push("AI2");
+  if (data.tdc_ai3_temporal) modules.push("AI3");
+  if (data.tdc_ai4_synthesis) modules.push("AI4");
+  if (data.tdc_ai5_amic) modules.push("AI5");
+  if (data.tdc_ai6_classification) modules.push("AI6");
+  if (data.tdc_ai7_airm) modules.push("AI7");
+  if (data.user_sentiment) modules.push("AI8");
+  
+  return modules.map(m => `<span class="badge bg-primary me-1">${m}</span>`).join('');
+}
+
+function getTDCAnalysisDetails(data) {
+  let details = '<div class="small">';
+  
+  if (data.ai_analysis) {
+    details += `<strong>AI1 - Risk Analysis:</strong><br>`;
+    details += `Risk Score: ${Math.round((data.ai_analysis.risk_score || 0) * 100)}%<br>`;
+    details += `Summary: ${data.ai_analysis.risk_summary || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai2_airs) {
+    details += `<strong>AI2 - AI Response:</strong><br>`;
+    details += `Status: ${data.tdc_ai2_airs.flagged ? "FLAGGED" : "CLEAR"}<br>`;
+    details += `Summary: ${data.tdc_ai2_airs.summary || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai3_temporal) {
+    details += `<strong>AI3 - Temporal:</strong><br>`;
+    details += `Score: ${data.tdc_ai3_temporal.temporal_risk_score || "N/A"}<br>`;
+    details += `Summary: ${data.tdc_ai3_temporal.summary || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai4_synthesis) {
+    details += `<strong>AI4 - Synthesis:</strong><br>`;
+    details += `Summary: ${data.tdc_ai4_synthesis.summary || "N/A"}<br>`;
+    details += `Flags: ${(data.tdc_ai4_synthesis.key_flags || []).join(', ') || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai5_amic) {
+    details += `<strong>AI5 - Influence:</strong><br>`;
+    details += `AMIC Score: ${data.tdc_ai5_amic.amic_score || "N/A"}<br>`;
+    details += `Level: ${data.tdc_ai5_amic.influence_level || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai6_classification) {
+    details += `<strong>AI6 - Classification:</strong><br>`;
+    details += `AIPC Score: ${data.tdc_ai6_classification.aipc_score || "N/A"}<br>`;
+    details += `Class: ${data.tdc_ai6_classification.classification || "N/A"}<br><br>`;
+  }
+  
+  if (data.tdc_ai7_airm) {
+    details += `<strong>AI7 - Susceptibility:</strong><br>`;
+    details += `AIRM Score: ${data.tdc_ai7_airm.airm_score || "N/A"}<br>`;
+    details += `Level: ${data.tdc_ai7_airm.susceptibility_level || "N/A"}<br><br>`;
+  }
+  
+  if (data.user_sentiment) {
+    details += `<strong>AI8 - Sentiment:</strong><br>`;
+    details += `Sentiment: ${data.user_sentiment.sentiment || "N/A"}<br>`;
+    details += `Confidence: ${data.user_sentiment.confidence || "N/A"}<br><br>`;
+  }
+  
+  details += '</div>';
+  return details;
+}
+
+function showEventDetails(data) {
+  const details = getTDCAnalysisDetails(data);
+  
+  // Create modal or alert with details
+  const modal = document.createElement('div');
+  modal.className = 'modal fade';
+  modal.innerHTML = `
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Threat Event Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          ${details}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  const bootstrapModal = new bootstrap.Modal(modal);
+  bootstrapModal.show();
+  
+  modal.addEventListener('hidden.bs.modal', () => {
+    document.body.removeChild(modal);
+  });
+}
+
+function applyFilters() {
+  const threatFilter = document.getElementById('threatFilter').value;
+  const threatLevelFilter = document.getElementById('threatLevelFilter').value;
+  const tdcModuleFilter = document.getElementById('tdcModuleFilter').value;
+  const timeFilter = document.getElementById('timeFilter').value;
+  
+  // Apply filters to threat events table
+  const rows = document.querySelectorAll("#threatEventsTable tr");
+  rows.forEach(row => {
+    let show = true;
+    
+    // Threat type filter
+    if (threatFilter !== 'All') {
+      const threatType = row.children[2]?.textContent;
+      if (threatType !== threatFilter) show = false;
+    }
+    
+    // Severity filter
+    if (threatLevelFilter !== 'All') {
+      const severity = row.children[3]?.textContent;
+      if (severity !== threatLevelFilter) show = false;
+    }
+    
+    // TDC module filter
+    if (tdcModuleFilter !== 'All') {
+      const modules = row.children[5]?.textContent;
+      if (!modules.includes(tdcModuleFilter)) show = false;
+    }
+    
+    row.style.display = show ? '' : 'none';
+  });
+}
+
+// === Missing Utility Functions ===
+function clearEvents() {
+  const table = document.getElementById("threatEventsTable");
+  if (table) {
+    table.innerHTML = '';
+  }
+}
+
+function exportEvents() {
+  const table = document.getElementById("threatEventsTable");
+  if (!table) return;
+  
+  const rows = table.querySelectorAll("tr");
+  let csv = "Time,Source,Threat Type,Severity,Score,TDC Modules\n";
+  
+  rows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    const rowData = Array.from(cells).map(cell => `"${cell.textContent}"`).join(",");
+    csv += rowData + "\n";
+  });
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'threat_events.csv';
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+function exportData() {
+  alert('Export functionality - data export feature');
+}
+
+function refreshData() {
+  location.reload();
+}
+
+function showHelp() {
+  const helpModal = new bootstrap.Modal(document.getElementById('helpModal'));
+  helpModal.show();
+}
+
+function updateChartView(chartType, viewType) {
+  if (chartType === 'threatLevel' && threatLevelChart) {
+    threatLevelChart.config.type = viewType;
+    threatLevelChart.update();
+  } else if (chartType === 'threatVector' && threatVectorChart) {
+    threatVectorChart.config.type = viewType;
+    threatVectorChart.update();
+  }
+}
+
+// Initialize tooltips
+function initializeTooltips() {
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+}
+
+// Initialize enhanced dashboard when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('[CATDAMS] Enhanced dashboard initializing...');
+  
+  // Initialize enhanced components
+  initializeEnhancedDashboard();
+  
+  // Initialize charts
+  initCharts();
+  
+  // Initialize tooltips
+  initializeTooltips();
+  
+  // Set up filter event listeners
+  const threatFilter = document.getElementById('threatFilter');
+  const threatLevelFilter = document.getElementById('threatLevelFilter');
+  const tdcModuleFilter = document.getElementById('tdcModuleFilter');
+  const timeFilter = document.getElementById('timeFilter');
+  
+  if (threatFilter) threatFilter.addEventListener('change', applyFilters);
+  if (threatLevelFilter) threatLevelFilter.addEventListener('change', applyFilters);
+  if (tdcModuleFilter) tdcModuleFilter.addEventListener('change', applyFilters);
+  if (timeFilter) timeFilter.addEventListener('change', applyFilters);
+  
+  // Add performance monitoring to window for debugging
+  if (CONFIG.PERFORMANCE_MONITORING) {
+    window.catdamsPerformance = {
+      getMetrics: () => ({
+        websocket: enhancedWebSocket ? 'Connected' : 'Disconnected',
+        queue: updateQueue ? updateQueue.getMetrics() : null,
+        performance: performanceMonitor ? performanceMonitor.getMetrics() : null
+      }),
+      optimize: () => {
+        if (updateQueue) updateQueue.optimize();
+        if (performanceMonitor) performanceMonitor.optimizePerformance();
+      }
+    };
+  }
+  
+  console.log('[CATDAMS] Enhanced dashboard initialized successfully');
+});
+
+// Expand/collapse all logic
+function expandAllModules() {
+  document.querySelectorAll('#tdcModulesGrid .collapse').forEach(el => {
+    if (!el.classList.contains('show')) {
+      new bootstrap.Collapse(el, { show: true });
+    }
+  });
+}
+
+function collapseAllModules() {
+  document.querySelectorAll('#tdcModulesGrid .collapse.show').forEach(el => {
+    new bootstrap.Collapse(el, { toggle: true });
+  });
+}
+
+function updateChatSummaryAndTranscripts(data) {
+  // Update session ID
+  if (data.session_id) {
+    currentSessionId = data.session_id;
+    const currentSessionIdElement = document.getElementById('currentSessionId');
+    const chatSessionIdElement = document.getElementById('chatSessionId');
+    
+    if (currentSessionIdElement) {
+      currentSessionIdElement.textContent = currentSessionId;
+    }
+    if (chatSessionIdElement) {
+      chatSessionIdElement.textContent = currentSessionId;
+    }
+  }
+
+  // Update chat summary with better logic
+  if (data.chat_summary) {
+    chatSummary = data.chat_summary;
+  } else if (data.ai_analysis && data.ai_analysis.risk_summary) {
+    chatSummary = data.ai_analysis.risk_summary;
+  } else if (data.tdc_ai4_synthesis && data.tdc_ai4_synthesis.summary) {
+    chatSummary = data.tdc_ai4_synthesis.summary;
+  } else if (userMessages.length > 0 || aiMessages.length > 0) {
+    // Generate a basic summary from recent messages
+    const recentMessages = [...userMessages.slice(-3), ...aiMessages.slice(-3)];
+    if (recentMessages.length > 0) {
+      chatSummary = `Active conversation with ${recentMessages.length} recent exchanges. ${data.threat_analysis ? 'Threat analysis in progress.' : 'Monitoring for threats.'}`;
+    }
+  }
+
+  const chatSummaryCard = document.getElementById('chatSummaryCard');
+  if (chatSummaryCard) {
+    if (chatSummary) {
+      chatSummaryCard.innerHTML = `
+        <div class="chat-summary-content">
+          <p class="mb-2"><strong>Summary:</strong> ${chatSummary}</p>
+          ${data.threat_analysis ? `<p class="mb-1"><strong>Threat Level:</strong> <span class="badge bg-${getSeverityColor(data.threat_analysis.severity)}">${data.threat_analysis.severity}</span></p>` : ''}
+          ${data.ai_analysis && data.ai_analysis.risk_score ? `<p class="mb-0"><strong>Risk Score:</strong> ${Math.round(data.ai_analysis.risk_score * 100)}%</p>` : ''}
+        </div>
+      `;
+    } else {
+      chatSummaryCard.innerHTML = '<em>No summary available yet. Start a conversation to see analysis.</em>';
+    }
+  }
+
+  // Update user and AI transcripts
+  if (data.raw_user || data.user_input) {
+    const userText = data.raw_user || data.user_input;
+    if (userText.trim()) {
+      userMessages.push({
+        text: userText,
+        timestamp: data.timestamp || new Date().toLocaleTimeString(),
+        sessionId: currentSessionId
+      });
+    }
+  }
+  if (data.raw_ai || data.ai_output) {
+    const aiText = data.raw_ai || data.ai_output;
+    if (aiText.trim()) {
+      aiMessages.push({
+        text: aiText,
+        timestamp: data.timestamp || new Date().toLocaleTimeString(),
+        sessionId: currentSessionId
+      });
+    }
+  }
+
+  // Render user transcript
+  const userTranscript = document.getElementById('userTranscript');
+  if (userTranscript) {
+    if (userMessages.length > 0) {
+      userTranscript.innerHTML = userMessages.map(msg =>
+        `<div class='mb-2 p-2 border-start border-info border-3' style='background: white;'>
+          <div class='text-muted small'>[${msg.timestamp}] ${msg.sessionId ? `Session: ${msg.sessionId}` : ''}</div>
+          <div class='mt-1'>${msg.text}</div>
+        </div>`
+      ).join('');
+    } else {
+      userTranscript.innerHTML = '<em class="text-muted">No user messages yet.</em>';
+    }
+    userTranscript.scrollTop = userTranscript.scrollHeight;
+  }
+
+  // Render AI transcript
+  const aiTranscript = document.getElementById('aiTranscript');
+  if (aiTranscript) {
+    if (aiMessages.length > 0) {
+      aiTranscript.innerHTML = aiMessages.map(msg =>
+        `<div class='mb-2 p-2 border-start border-warning border-3' style='background: white;'>
+          <div class='text-muted small'>[${msg.timestamp}] ${msg.sessionId ? `Session: ${msg.sessionId}` : ''}</div>
+          <div class='mt-1'>${msg.text}</div>
+        </div>`
+      ).join('');
+    } else {
+      aiTranscript.innerHTML = '<em class="text-muted">No AI responses yet.</em>';
+    }
+    aiTranscript.scrollTop = aiTranscript.scrollHeight;
+  }
+}
