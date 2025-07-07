@@ -432,4 +432,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Initial release with basic threat detection
 - 8 TDC modules with legacy output formats
 - Basic dashboard functionality
-- WebSocket real-time updates
+- WebSocket real-time updates#   T r i g g e r   r e d e p l o y  
+ 
