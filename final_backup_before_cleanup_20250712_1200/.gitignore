@@ -1,0 +1,70 @@
+# === PYTHON ARTIFACTS ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# === ENVIRONMENT FILES ===
+.env
+.env.*
+*.env
+
+# === PYTHON VENV ===
+venv/
+python-mvenv/
+
+# === DATABASE FILES (optional: allow for production .db if needed) ===
+*.sqlite
+*.sqlite3
+*.bak
+*.backup
+*.db
+!catdams.db  # Un-ignore if you need to ship with production db
+
+# === LOG FILES ===
+*.log
+logs/
+catdams_agent.log
+analytics_api_test.log
+session_logs/*.jsonl
+
+# === TEMPORARY FILES ===
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# === IDE / EDITOR CONFIG ===
+.vscode/
+.idea/
+
+# === NODE / WEB BUILD ===
+node_modules/
+npm-debug.log*
+
+# === BACKUPS / ARCHIVES ===
+backup_*/
+archive/
+*.zip
+*.tar.gz
+*.egg-info/
+
+# === TEST FILES ===
+test_*.py
+*_test.py
+
+# === EXCLUDED DOCS ===
+*.md.bak
+
+# === DO NOT IGNORE THESE CRITICAL FILES ===
+!templates/
+!templates/dashboard.html
+!static/
+!static/content.js
+!static/dashboard.js
+!static/dashboard.css
+
+# === OPTIONAL: KEEP EXAMPLES ===
+!example_payload.json
+!env_example.txt

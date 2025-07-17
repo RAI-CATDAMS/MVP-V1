@@ -18,4 +18,49 @@ AZURE_SQL_PASSWORD=your_database_password_here
 CATDAMS_ENVIRONMENT=development
 CATDAMS_LOG_LEVEL=INFO
 
+# === TDC Module Configuration (11-Module Structure) ===
+# Module Status (active/pending/disabled)
+TDC_AI1_STATUS=active
+TDC_AI2_STATUS=active
+TDC_AI3_STATUS=active
+TDC_AI4_STATUS=active
+TDC_AI5_STATUS=active
+TDC_AI6_STATUS=active
+TDC_AI7_STATUS=active
+TDC_AI8_STATUS=active
+TDC_AI9_STATUS=active
+TDC_AI10_STATUS=active
+TDC_AI11_STATUS=active
+
+# === Module-Specific Configuration ===
+# Adversarial Detection (TDC-AI4) - ACTIVE
+ADVERSARIAL_DETECTION_ENABLED=true
+ADVERSARIAL_THRESHOLD=0.7
+
+# Multi-Modal Detection (TDC-AI5) - ACTIVE
+MULTIMODAL_DETECTION_ENABLED=true
+IMAGE_ANALYSIS_ENABLED=true
+AUDIO_ANALYSIS_ENABLED=true
+VIDEO_ANALYSIS_ENABLED=true
+
+# Agentic AI Detection (TDC-AI7) - ACTIVE
+AGENTIC_DETECTION_ENABLED=true
+MULTI_AGENT_ANALYSIS_ENABLED=true
+
+# Psychological Analysis (TDC-AI10) - ACTIVE
+PSYCHOLOGICAL_ANALYSIS_ENABLED=true
+COGNITIVE_BIAS_DETECTION_ENABLED=true
+SPACY_MODEL=en_core_web_sm
+
+# === Performance Configuration ===
+MAX_CONCURRENT_ANALYSES=10
+ANALYSIS_TIMEOUT_SECONDS=30
+CACHE_ENABLED=true
+CACHE_TTL_SECONDS=300
+
+# === Security Configuration ===
+ENCRYPTION_ENABLED=true
+AUDIT_LOGGING_ENABLED=true
+COMPLIANCE_MODE=strict
+
 # Note: Copy this file to .env and fill in your actual values 

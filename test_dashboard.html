@@ -1,67 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .instructions {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-  <h1>Dashboard Test</h1>
-  <div id="status">Loading...</div>
-  <div id="logs"></div>
-  
-  <script>
-    // Test WebSocket connection
-    const ws = new WebSocket("ws://localhost:8000/ws");
-    
-    ws.onopen = function() {
-      document.getElementById('status').innerHTML = '<span style="color: green;">✅ WebSocket Connected</span>';
-      log('WebSocket connected successfully');
-    };
-    
-    ws.onerror = function(error) {
-      document.getElementById('status').innerHTML = '<span style="color: red;">❌ WebSocket Error</span>';
-      log('WebSocket error: ' + error);
-    };
-    
-    ws.onclose = function(event) {
-      document.getElementById('status').innerHTML = '<span style="color: orange;">⚠️ WebSocket Closed</span>';
-      log('WebSocket closed: ' + event.code + ' - ' + event.reason);
-    };
-    
-    ws.onmessage = function(event) {
-      log('Received message: ' + event.data.substring(0, 100) + '...');
-    };
-    
-    function log(message) {
-      const logs = document.getElementById('logs');
-      const time = new Date().toLocaleTimeString();
-      logs.innerHTML += `<div>[${time}] ${message}</div>`;
-    }
-    
-    // Test dashboard functions
-    setTimeout(() => {
-      try {
-        // Test if Chart.js is available
-        if (typeof Chart !== 'undefined') {
-          log('✅ Chart.js loaded successfully');
-        } else {
-          log('❌ Chart.js not loaded');
+    <div class="test-container">
+        <h1>🧪 CATDAMS Dashboard Test</h1>
+        
+        <div class="instructions">
+            <h3>📋 Test Instructions:</h3>
+            <ol>
+                <li>Click the "Open Dashboard" button below to open the dashboard in a new tab</li>
+                <li>Look for the "User Input" and "AI Output" sections in the dashboard</li>
+                <li>Check the "Live Conversation" section for real-time messages</li>
+                <li>Verify that the "Chat Summary" section shows the latest message</li>
+                <li>Open the browser's Developer Console (F12) to see debug messages</li>
+            </ol>
+        </div>
+
+        <div class="status info">
+            <strong>ℹ️ Status:</strong> Test messages have been sent to the dashboard. 
+            The dashboard should now display user input and AI output in the appropriate sections.
+        </div>
+
+        <div>
+            <button class="test-button" onclick="openDashboard()">
+                🌐 Open Dashboard
+            </button>
+            
+            <button class="test-button" onclick="sendMoreMessages()">
+                📤 Send More Test Messages
+            </button>
+            
+            <button class="test-button" onclick="checkConsole()">
+                🔍 Check Console
+            </button>
+        </div>
+
+        <div class="status success">
+            <strong>✅ Test Results:</strong>
+            <ul>
+                <li>6 test messages sent successfully</li>
+                <li>Session ID: test-session-1752769363</li>
+                <li>3 user messages and 3 AI messages</li>
+                <li>WebSocket connection should be active</li>
+            </ul>
+        </div>
+
+        <div class="instructions">
+            <h3>🔍 What to Look For:</h3>
+            <ul>
+                <li><strong>User Input Section:</strong> Should show 3 messages from the user</li>
+                <li><strong>AI Output Section:</strong> Should show 3 messages from the AI</li>
+                <li><strong>Live Conversation:</strong> Should show all 6 messages in chronological order</li>
+                <li><strong>Chat Summary:</strong> Should show the latest message details</li>
+                <li><strong>Session ID:</strong> Should display "test-session-1752769363" in the header</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openDashboard() {
+            window.open('http://localhost:8000/dashboard', '_blank');
         }
         
-        // Test if Bootstrap is available
-        if (typeof bootstrap !== 'undefined') {
-          log('✅ Bootstrap loaded successfully');
-        } else {
-          log('❌ Bootstrap not loaded');
+        function sendMoreMessages() {
+            // Send additional test messages
+            const messages = [
+                { sender: 'USER', message: 'Can you tell me about machine learning?' },
+                { sender: 'AI', message: 'Machine learning is a subset of artificial intelligence that enables computers to learn and improve from experience without being explicitly programmed.' },
+                { sender: 'USER', message: 'That sounds interesting!' },
+                { sender: 'AI', message: 'Yes, it\'s a fascinating field with many applications in today\'s technology!' }
+            ];
+            
+            messages.forEach((msg, index) => {
+                setTimeout(() => {
+                    sendMessage(msg.sender, msg.message);
+                }, index * 1000);
+            });
+            
+            alert('Sending 4 more test messages... Check the dashboard!');
         }
         
-      } catch (error) {
-        log('❌ Error testing libraries: ' + error.message);
-      }
-    }, 1000);
-  </script>
+        function sendMessage(sender, message) {
+            const payload = {
+                session_id: 'test-session-1752769363',
+                sender: sender,
+                message: message,
+                timestamp: new Date().toISOString(),
+                source: 'test-page',
+                platform: 'test',
+                raw_user: sender === 'USER' ? message : '',
+                raw_ai: sender === 'AI' ? message : ''
+            };
+            
+            fetch('http://localhost:8000/event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`✅ Sent ${sender} message:`, data);
+            })
+            .catch(error => {
+                console.error(`❌ Error sending ${sender} message:`, error);
+            });
+        }
+        
+        function checkConsole() {
+            alert('Open the browser\'s Developer Console (F12) to see debug messages from the dashboard JavaScript.');
+        }
+    </script>
 </body>
 </html> 

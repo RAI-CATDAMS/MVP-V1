@@ -1,0 +1,17 @@
+# Use official Python 3.11 slim image
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy all project files into the image
+COPY . .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# (Optional) Expose port 8080, the Azure convention (does not affect Azure's actual binding)
+EXPOSE 8080
+
+# Run the app with Gunicorn, binding to Azure-provided $PORT, fallback to 8080 for local dev
+CMD exec gunicorn --bind=0.0.0.0:${PORT:-8080} app:app

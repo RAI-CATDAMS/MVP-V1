@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CATDAMS Phase 2 Simple Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .warning { border-color: #ffc107; background: #fff3cd; }
+    </style>
+</head>
+<body>
+    <h1>🚀 CATDAMS Phase 2 Simple Test</h1>
+    
+    <div class="test-section">
+        <h2>Phase 2 Files Check</h2>
+        <button class="test-button" onclick="checkFiles()">Check Phase 2 Files</button>
+        <div id="files-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Extension Communication Test</h2>
+        <button class="test-button" onclick="testExtension()">Test Extension</button>
+        <div id="extension-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Backend Connection Test</h2>
+        <button class="test-button" onclick="testBackend()">Test Backend</button>
+        <div id="backend-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Phase 2 Features Summary</h2>
+        <div id="features-summary" class="result">
+            <h3>✅ Phase 2 Components Implemented:</h3>
+            <ul>
+                <li><strong>Enhanced Popup UI</strong> - Modern, responsive interface with real-time stats</li>
+                <li><strong>Advanced TDC Integration</strong> - Full 11-module coordination system</li>
+                <li><strong>Performance Monitor</strong> - Real-time optimization and security checks</li>
+                <li><strong>Enhanced Background Script</strong> - Integrated all Phase 2 components</li>
+                <li><strong>Updated Manifest</strong> - All new files included with proper permissions</li>
+                <li><strong>Comprehensive Test Suite</strong> - Full testing framework created</li>
+            </ul>
+            
+            <h3>🚀 Key Features:</h3>
+            <ul>
+                <li><strong>World-Class UI/UX</strong> - Modern popup with real-time status</li>
+                <li><strong>11-Module TDC Integration</strong> - Full coordination with backend</li>
+                <li><strong>Performance Optimization</strong> - Automatic monitoring and optimization</li>
+                <li><strong>Security Hardening</strong> - Comprehensive security validation</li>
+                <li><strong>Real-Time Communication</strong> - Seamless popup-background coordination</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function logResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `result ${type}`;
+            element.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong><br>${message}`;
+        }
+
+        function checkFiles() {
+            const files = [
+                'config.js',
+                'error-handler.js',
+                'logger.js',
+                'tdc-integration.js',
+                'performance-monitor.js',
+                'background.js',
+                'popup.html',
+                'popup.js',
+                'manifest.json'
+            ];
+            
+            let results = '<h3>Phase 2 Files Status:</h3>';
+            let allFound = true;
+            
+            files.forEach(file => {
+                const script = document.createElement('script');
+                script.src = file;
+                script.onerror = () => {
+                    results += `<div style="color: red;">❌ ${file} - Not found</div>`;
+                    allFound = false;
+                };
+                script.onload = () => {
+                    results += `<div style="color: green;">✅ ${file} - Found</div>`;
+                };
+                document.head.appendChild(script);
+            });
+            
+            setTimeout(() => {
+                if (allFound) {
+                    logResult('files-result', results, 'success');
+                } else {
+                    logResult('files-result', results, 'error');
+                }
+            }, 1000);
+        }
+
+        function testExtension() {
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                logResult('extension-result', '✅ Chrome extension API available<br>✅ Extension environment detected', 'success');
+            } else {
+                logResult('extension-result', '❌ Chrome extension API not available<br>⚠️ This test should be run in the extension context', 'error');
+            }
+        }
+
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                if (response.ok) {
+                    const data = await response.text();
+                    logResult('backend-result', `✅ Backend server responding<br>Status: ${response.status}<br>Response: ${data}`, 'success');
+                } else {
+                    logResult('backend-result', `⚠️ Backend server responding but with status: ${response.status}`, 'warning');
+                }
+            } catch (error) {
+                logResult('backend-result', `❌ Backend server not reachable<br>Error: ${error.message}<br><br>Make sure the backend server is running on port 8000`, 'error');
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkFiles();
+                testExtension();
+                testBackend();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

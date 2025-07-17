@@ -1,509 +1,316 @@
+#!/usr/bin/env python3
 """
-CATDAMS Performance Optimization Module
-=======================================
-
-This module provides comprehensive performance optimization for CATDAMS including:
-- Database query optimization
-- Caching strategies
-- Connection pooling
-- Performance monitoring
-- Resource management
+Performance Optimization Module for CATDAMS
+- Parallel TDC module processing
+- Caching layer
+- Async background processing
+- Request queuing
 """
 
-import time
-import json
-import threading
-import sqlite3
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
-from collections import defaultdict, deque
-from dataclasses import dataclass
-import logging
-import psutil
 import asyncio
+import threading
+import time
+import hashlib
+import json
+from typing import Dict, List, Any, Optional
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from functools import lru_cache
+import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@dataclass
-class CacheEntry:
-    """Cache entry with metadata"""
-    data: Any
-    timestamp: datetime
-    ttl: int  # Time to live in seconds
-    access_count: int = 0
-    last_accessed: datetime = None
-
-@dataclass
-class PerformanceMetric:
-    """Performance metric tracking"""
-    operation: str
-    duration: float
-    timestamp: datetime
-    success: bool
-    metadata: Dict[str, Any]
-
-class DatabaseOptimizer:
-    """Database optimization and connection management"""
+class PerformanceOptimizer:
+    """Performance optimization manager for CATDAMS"""
     
-    def __init__(self, db_path: str = "catdams.db"):
-        self.db_path = db_path
-        self.connection_pool = []
-        self.max_connections = 10
-        self.connection_timeout = 30
-        self.query_cache = {}
-        self.query_stats = defaultdict(lambda: {'count': 0, 'total_time': 0, 'avg_time': 0})
+    def __init__(self, max_workers: int = 4, cache_size: int = 1000):
+        self.max_workers = max_workers
+        self.cache_size = cache_size
+        self.executor = ThreadPoolExecutor(max_workers=max_workers)
+        self.cache = {}
+        self.cache_lock = threading.Lock()
+        self.processing_queue = asyncio.Queue()
+        self.background_tasks = []
         
-        # Initialize connection pool
-        self._init_connection_pool()
-        
-        # Create indexes for better performance
-        self._create_indexes()
+        # Performance metrics
+        self.metrics = {
+            'total_requests': 0,
+            'cache_hits': 0,
+            'cache_misses': 0,
+            'avg_processing_time': 0,
+            'parallel_processing_count': 0
+        }
     
-    def _init_connection_pool(self):
-        """Initialize database connection pool"""
-        for _ in range(self.max_connections):
-            conn = sqlite3.connect(self.db_path, check_same_thread=False)
-            conn.execute("PRAGMA journal_mode=WAL")
-            conn.execute("PRAGMA synchronous=NORMAL")
-            conn.execute("PRAGMA cache_size=10000")
-            conn.execute("PRAGMA temp_store=MEMORY")
-            self.connection_pool.append(conn)
+    def get_cache_key(self, text: str, session_id: str, ai_response: str = "") -> str:
+        """Generate cache key for analysis results"""
+        content = f"{text}:{session_id}:{ai_response}"
+        return hashlib.md5(content.encode()).hexdigest()
     
-    def _create_indexes(self):
-        """Create database indexes for better query performance"""
-        with self._get_connection() as conn:
-            # Indexes for common queries
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_telemetry_timestamp ON telemetry(timestamp)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_telemetry_user_id ON telemetry(full_data->>'user_id')")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_telemetry_session_id ON telemetry(full_data->>'session_id')")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_threat_log_timestamp ON threat_log(timestamp)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_threat_log_threat_level ON threat_log(threat_level)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_threat_log_user_id ON threat_log(user_id)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_threat_log_session_id ON threat_log(session_id)")
+    def get_cached_result(self, cache_key: str) -> Optional[Dict[str, Any]]:
+        """Get cached analysis result"""
+        with self.cache_lock:
+            if cache_key in self.cache:
+                result, timestamp = self.cache[cache_key]
+                # Cache expires after 5 minutes
+                if time.time() - timestamp < 300:
+                    self.metrics['cache_hits'] += 1
+                    return result
+                else:
+                    del self.cache[cache_key]
+            self.metrics['cache_misses'] += 1
+            return None
     
-    def _get_connection(self):
-        """Get a database connection from the pool"""
-        if self.connection_pool:
-            return self.connection_pool.pop()
-        else:
-            # Create new connection if pool is empty
-            conn = sqlite3.connect(self.db_path, check_same_thread=False)
-            conn.execute("PRAGMA journal_mode=WAL")
-            return conn
+    def cache_result(self, cache_key: str, result: Dict[str, Any]):
+        """Cache analysis result"""
+        with self.cache_lock:
+            # Implement LRU cache eviction
+            if len(self.cache) >= self.cache_size:
+                # Remove oldest entry
+                oldest_key = min(self.cache.keys(), key=lambda k: self.cache[k][1])
+                del self.cache[oldest_key]
+            
+            self.cache[cache_key] = (result, time.time())
     
-    def _return_connection(self, conn):
-        """Return a connection to the pool"""
-        if len(self.connection_pool) < self.max_connections:
-            self.connection_pool.append(conn)
-        else:
-            conn.close()
-    
-    def execute_query(self, query: str, params: tuple = None) -> List[Dict]:
-        """Execute a database query with performance tracking"""
-        start_time = time.time()
-        conn = None
-        
+    def run_tdc_module_parallel(self, module_name: str, module_func, *args, **kwargs) -> Dict[str, Any]:
+        """Run a single TDC module in parallel"""
         try:
-            conn = self._get_connection()
-            cursor = conn.cursor()
+            start_time = time.time()
+            result = module_func(*args, **kwargs)
+            processing_time = time.time() - start_time
             
-            if params:
-                cursor.execute(query, params)
-            else:
-                cursor.execute(query)
+            logger.info(f"[PERF] {module_name} completed in {processing_time:.2f}s")
             
-            # Fetch results
-            columns = [description[0] for description in cursor.description]
-            results = [dict(zip(columns, row)) for row in cursor.fetchall()]
-            
-            # Update query statistics
-            duration = time.time() - start_time
-            self._update_query_stats(query, duration, True)
-            
-            return results
-            
+            return {
+                'module_name': module_name,
+                'result': result,
+                'processing_time': processing_time,
+                'status': 'success'
+            }
         except Exception as e:
-            duration = time.time() - start_time
-            self._update_query_stats(query, duration, False)
-            logger.error(f"Database query error: {e}")
-            raise
-        finally:
-            if conn:
-                self._return_connection(conn)
+            logger.error(f"[PERF] {module_name} failed: {e}")
+            return {
+                'module_name': module_name,
+                'result': {},
+                'processing_time': 0,
+                'status': 'error',
+                'error': str(e)
+            }
     
-    def _update_query_stats(self, query: str, duration: float, success: bool):
-        """Update query performance statistics"""
-        stats = self.query_stats[query]
-        stats['count'] += 1
-        if success:
-            stats['total_time'] += duration
-            stats['avg_time'] = stats['total_time'] / stats['count']
-    
-    def get_query_performance(self) -> Dict[str, Any]:
-        """Get query performance statistics"""
-        return {
-            'total_queries': sum(stats['count'] for stats in self.query_stats.values()),
-            'avg_query_time': sum(stats['avg_time'] for stats in self.query_stats.values()) / len(self.query_stats) if self.query_stats else 0,
-            'slowest_queries': sorted(
-                [(query, stats['avg_time']) for query, stats in self.query_stats.items()],
-                key=lambda x: x[1],
-                reverse=True
-            )[:10]
-        }
-
-class CacheManager:
-    """Advanced caching system with multiple strategies"""
-    
-    def __init__(self, max_size: int = 1000):
-        self.max_size = max_size
-        self.cache: Dict[str, CacheEntry] = {}
-        self.access_order = deque()
-        self.lock = threading.RLock()
+    def process_tdc_modules_parallel(self, text: str, session_id: str, ai_response: str = "") -> Dict[str, Any]:
+        """Process all TDC modules in parallel with proper dependency handling"""
+        start_time = time.time()
         
-        # Cache statistics
-        self.stats = {
-            'hits': 0,
-            'misses': 0,
-            'evictions': 0,
-            'size': 0
+        # Import TDC modules
+        from tdc_ai1_user_susceptibility import analyze_ai_threats_comprehensive
+        from tdc_ai2_ai_manipulation_tactics import analyze_ai_response
+        from tdc_ai3_sentiment_analysis import analyze_patterns_and_sentiment
+        from tdc_ai4_prompt_attack_detection import analyze_adversarial_attacks
+        from tdc_ai5_multimodal_threat import classify_llm_influence
+        from tdc_ai6_longterm_influence_conditioning import analyze_long_term_influence
+        from tdc_ai7_agentic_threats import analyze_agentic_threats
+        from tdc_ai8_synthesis_integration import synthesize_threats
+        from tdc_ai9_explainability_evidence import generate_explainability
+        from tdc_ai10_psychological_manipulation import analyze_cognitive_bias
+        from tdc_ai11_intervention_response import cognitive_intervention_response
+        
+        # Build conversation context
+        from detection_engine import build_conversation_context
+        conversation_context = build_conversation_context(session_id, text, ai_response)
+        
+        # ✅ FIXED: Create proper payload for TDC-AI1
+        tdc_ai1_payload = {
+            "session_id": session_id,
+            "message": text,
+            "raw_user": text,
+            "raw_ai": ai_response,
+            "indicators": [],
+            "score": 0,
+            "escalation": "Low"
         }
-    
-    def get(self, key: str) -> Optional[Any]:
-        """Get value from cache"""
-        with self.lock:
-            if key in self.cache:
-                entry = self.cache[key]
-                
-                # Check if entry has expired
-                if datetime.now() - entry.timestamp > timedelta(seconds=entry.ttl):
-                    del self.cache[key]
-                    self.access_order.remove(key)
-                    self.stats['size'] -= 1
-                    self.stats['misses'] += 1
-                    return None
-                
-                # Update access statistics
-                entry.access_count += 1
-                entry.last_accessed = datetime.now()
-                self.access_order.remove(key)
-                self.access_order.appendleft(key)
-                
-                self.stats['hits'] += 1
-                return entry.data
-            else:
-                self.stats['misses'] += 1
-                return None
-    
-    def set(self, key: str, value: Any, ttl: int = 3600):
-        """Set value in cache"""
-        with self.lock:
-            # Evict if cache is full
-            if len(self.cache) >= self.max_size:
-                self._evict_oldest()
-            
-            # Create cache entry
-            entry = CacheEntry(
-                data=value,
-                timestamp=datetime.now(),
-                ttl=ttl,
-                access_count=1,
-                last_accessed=datetime.now()
+        
+        # ✅ FIXED: Create proper payload for TDC-AI6
+        tdc_ai6_payload = {
+            "session_id": session_id,
+            "message": text,
+            "raw_user": text,
+            "raw_ai": ai_response
+        }
+        
+        # === PHASE 1: Run independent modules in parallel ===
+        independent_module_tasks = [
+            ('tdc_ai1_user_susceptibility', analyze_ai_threats_comprehensive, tdc_ai1_payload, conversation_context),
+            ('tdc_ai2_ai_manipulation_tactics', analyze_ai_response, ai_response),
+            ('tdc_ai3_sentiment_analysis', analyze_patterns_and_sentiment, text, conversation_context, session_id),
+            ('tdc_ai4_prompt_attack_detection', analyze_adversarial_attacks, text, conversation_context, session_id),
+            ('tdc_ai5_multimodal_threat', classify_llm_influence, f"User: {text}\nAI: {ai_response}", conversation_context, ai_response),
+            ('tdc_ai6_longterm_influence_conditioning', analyze_long_term_influence, tdc_ai6_payload, conversation_context),
+            ('tdc_ai7_agentic_threats', analyze_agentic_threats, text, conversation_context, session_id),
+            ('tdc_ai10_psychological_manipulation', analyze_cognitive_bias, text, conversation_context, session_id)
+        ]
+        
+        # Submit independent tasks to thread pool
+        futures = []
+        for module_name, module_func, *args in independent_module_tasks:
+            future = self.executor.submit(self.run_tdc_module_parallel, module_name, module_func, *args)
+            futures.append(future)
+        
+        # Collect independent results
+        independent_results = {}
+        for future in as_completed(futures):
+            try:
+                module_result = future.result()
+                module_name = module_result['module_name']
+                independent_results[module_name] = module_result['result']
+            except Exception as e:
+                logger.error(f"[PERF] Independent module execution failed: {e}")
+        
+        # === PHASE 2: Run dependent modules with collected outputs ===
+        # Build module outputs for synthesis and explainability
+        module_outputs = {
+            "tdc_ai1_user_susceptibility": independent_results.get('tdc_ai1_user_susceptibility', {}),
+            "tdc_ai2_ai_manipulation_tactics": independent_results.get('tdc_ai2_ai_manipulation_tactics', {}),
+            "tdc_ai3_sentiment_analysis": independent_results.get('tdc_ai3_sentiment_analysis', {}),
+            "tdc_ai4_prompt_attack_detection": independent_results.get('tdc_ai4_prompt_attack_detection', {}),
+            "tdc_ai5_multimodal_threat": independent_results.get('tdc_ai5_multimodal_threat', {}),
+            "tdc_ai6_longterm_influence_conditioning": independent_results.get('tdc_ai6_longterm_influence_conditioning', {}),
+            "tdc_ai7_agentic_threats": independent_results.get('tdc_ai7_agentic_threats', {}),
+            "tdc_ai10_psychological_manipulation": independent_results.get('tdc_ai10_psychological_manipulation', {})
+        }
+        
+        # Run synthesis module
+        synthesis_result = {}
+        try:
+            synthesis_result = synthesize_threats(
+                module_outputs=list(module_outputs.values()),
+                conversation_context=conversation_context,
+                session_id=session_id
             )
-            
-            self.cache[key] = entry
-            self.access_order.appendleft(key)
-            self.stats['size'] = len(self.cache)
-    
-    def _evict_oldest(self):
-        """Evict oldest cache entry"""
-        if self.access_order:
-            oldest_key = self.access_order.pop()
-            del self.cache[oldest_key]
-            self.stats['evictions'] += 1
-    
-    def invalidate(self, pattern: str = None):
-        """Invalidate cache entries matching pattern"""
-        with self.lock:
-            if pattern:
-                keys_to_remove = [key for key in self.cache.keys() if pattern in key]
-            else:
-                keys_to_remove = list(self.cache.keys())
-            
-            for key in keys_to_remove:
-                del self.cache[key]
-                if key in self.access_order:
-                    self.access_order.remove(key)
-            
-            self.stats['size'] = len(self.cache)
-    
-    def get_stats(self) -> Dict[str, Any]:
-        """Get cache statistics"""
-        hit_rate = self.stats['hits'] / (self.stats['hits'] + self.stats['misses']) if (self.stats['hits'] + self.stats['misses']) > 0 else 0
-        
-        return {
-            **self.stats,
-            'hit_rate': hit_rate,
-            'max_size': self.max_size,
-            'utilization': self.stats['size'] / self.max_size
-        }
-
-class PerformanceMonitor:
-    """System performance monitoring and alerting"""
-    
-    def __init__(self):
-        self.metrics: List[PerformanceMetric] = []
-        self.max_metrics = 10000
-        self.alerts: List[Dict[str, Any]] = []
-        self.thresholds = {
-            'cpu_usage': 80.0,
-            'memory_usage': 85.0,
-            'disk_usage': 90.0,
-            'response_time': 2.0,
-            'error_rate': 5.0
-        }
-        
-        # Start monitoring thread
-        self.monitoring = True
-        self.monitor_thread = threading.Thread(target=self._monitor_system, daemon=True)
-        self.monitor_thread.start()
-    
-    def track_operation(self, operation: str, func: Callable, *args, **kwargs) -> Any:
-        """Track performance of an operation"""
-        start_time = time.time()
-        success = False
-        
-        try:
-            result = func(*args, **kwargs)
-            success = True
-            return result
+            independent_results['tdc_ai8_synthesis_integration'] = synthesis_result
         except Exception as e:
-            logger.error(f"Operation {operation} failed: {e}")
-            raise
-        finally:
-            duration = time.time() - start_time
-            self._record_metric(operation, duration, success)
-    
-    def _record_metric(self, operation: str, duration: float, success: bool, metadata: Dict[str, Any] = None):
-        """Record a performance metric"""
-        metric = PerformanceMetric(
-            operation=operation,
-            duration=duration,
-            timestamp=datetime.now(),
-            success=success,
-            metadata=metadata or {}
+            logger.error(f"[PERF] Synthesis module failed: {e}")
+            independent_results['tdc_ai8_synthesis_integration'] = {}
+        
+        # Add synthesis to module outputs for explainability
+        module_outputs["tdc_ai8_synthesis_integration"] = synthesis_result
+        
+        # Run explainability module
+        explainability_result = {}
+        try:
+            explainability_result = generate_explainability(
+                tdc_module_outputs=module_outputs,
+                conversation_context=conversation_context,
+                session_id=session_id,
+                user_text=text,
+                ai_response=ai_response
+            )
+            independent_results['tdc_ai9_explainability_evidence'] = explainability_result
+        except Exception as e:
+            logger.error(f"[PERF] Explainability module failed: {e}")
+            independent_results['tdc_ai9_explainability_evidence'] = {}
+        
+        # Add explainability to module outputs for intervention
+        module_outputs["tdc_ai9_explainability_evidence"] = explainability_result
+        
+        # === PHASE 3: Run intervention module with all outputs ===
+        intervention_result = {}
+        try:
+            intervention_result = cognitive_intervention_response(
+                tdc_module_outputs=module_outputs,
+                conversation_context=conversation_context,
+                session_id=session_id,
+                user_text=text,
+                ai_response=ai_response
+            )
+            independent_results['tdc_ai11_intervention_response'] = intervention_result
+        except Exception as e:
+            logger.error(f"[PERF] Intervention module failed: {e}")
+            independent_results['tdc_ai11_intervention_response'] = {}
+        
+        total_time = time.time() - start_time
+        self.metrics['parallel_processing_count'] += 1
+        self.metrics['avg_processing_time'] = (
+            (self.metrics['avg_processing_time'] * (self.metrics['parallel_processing_count'] - 1) + total_time) 
+            / self.metrics['parallel_processing_count']
         )
         
-        self.metrics.append(metric)
+        logger.info(f"[PERF] Parallel processing completed in {total_time:.2f}s")
         
-        # Keep only recent metrics
-        if len(self.metrics) > self.max_metrics:
-            self.metrics = self.metrics[-self.max_metrics:]
-        
-        # Check for performance alerts
-        self._check_alerts(metric)
+        return independent_results
     
-    def _check_alerts(self, metric: PerformanceMetric):
-        """Check for performance alerts"""
-        if metric.duration > self.thresholds['response_time']:
-            self._create_alert('high_response_time', f"Operation {metric.operation} took {metric.duration:.2f}s")
+    def optimized_detection(self, text: str, session_id: str, ai_response: str = "") -> Dict[str, Any]:
+        """Optimized detection with caching and parallel processing"""
+        self.metrics['total_requests'] += 1
         
-        if not metric.success:
-            # Calculate error rate
-            recent_metrics = [m for m in self.metrics if m.operation == metric.operation and 
-                            (datetime.now() - m.timestamp).seconds < 300]  # Last 5 minutes
-            error_rate = (sum(1 for m in recent_metrics if not m.success) / len(recent_metrics)) * 100
-            
-            if error_rate > self.thresholds['error_rate']:
-                self._create_alert('high_error_rate', f"Error rate for {metric.operation}: {error_rate:.1f}%")
-    
-    def _create_alert(self, alert_type: str, message: str):
-        """Create a performance alert"""
-        alert = {
-            'type': alert_type,
-            'message': message,
-            'timestamp': datetime.now(),
-            'severity': 'warning'
+        # Check cache first
+        cache_key = self.get_cache_key(text, session_id, ai_response)
+        cached_result = self.get_cached_result(cache_key)
+        
+        if cached_result:
+            logger.info(f"[PERF] Cache hit for session {session_id}")
+            return cached_result
+        
+        # Process in parallel
+        logger.info(f"[PERF] Cache miss, processing in parallel for session {session_id}")
+        tdc_results = self.process_tdc_modules_parallel(text, session_id, ai_response)
+        logger.info(f"[PERF-DEBUG] tdc_results: {json.dumps(tdc_results, default=str)[:500]}")
+        
+        # ✅ FIXED: Build result as a single enrichment object with all TDC modules at the top level
+        result = {
+            'session_id': session_id,
+            'timestamp': time.time(),
+            'message': text,
+            'severity': 'Low',
+            'type': 'AI Interaction',
+            'source': 'optimized',
+            'indicators': [],
+            'score': 0,
+            'conversation_context': {},
+            'explainability': [],
+            'rules_result': [],
+            'enhanced_analysis': True,
+            'processing_optimized': True,
+            # ✅ CRITICAL FIX: Spread all TDC modules into the result
+            **tdc_results
         }
-        self.alerts.append(alert)
-        logger.warning(f"Performance alert: {message}")
+        logger.info(f"[PERF-DEBUG] Final result structure: {json.dumps(result, default=str)[:1000]}")
+        
+        # Cache the result
+        self.cache_result(cache_key, result)
+        
+        return result
     
-    def _monitor_system(self):
-        """Monitor system resources"""
-        while self.monitoring:
-            try:
-                # CPU usage
-                cpu_percent = psutil.cpu_percent(interval=1)
-                if cpu_percent > self.thresholds['cpu_usage']:
-                    self._create_alert('high_cpu', f"CPU usage: {cpu_percent:.1f}%")
-                
-                # Memory usage
-                memory = psutil.virtual_memory()
-                if memory.percent > self.thresholds['memory_usage']:
-                    self._create_alert('high_memory', f"Memory usage: {memory.percent:.1f}%")
-                
-                # Disk usage
-                disk = psutil.disk_usage('/')
-                if disk.percent > self.thresholds['disk_usage']:
-                    self._create_alert('high_disk', f"Disk usage: {disk.percent:.1f}%")
-                
-                time.sleep(30)  # Check every 30 seconds
-                
-            except Exception as e:
-                logger.error(f"System monitoring error: {e}")
-                time.sleep(60)
-    
-    def get_performance_report(self) -> Dict[str, Any]:
-        """Get comprehensive performance report"""
-        # Calculate statistics
-        recent_metrics = [m for m in self.metrics if (datetime.now() - m.timestamp).seconds < 3600]  # Last hour
-        
-        if not recent_metrics:
-            return {'error': 'No recent metrics available'}
-        
-        operations = defaultdict(list)
-        for metric in recent_metrics:
-            operations[metric.operation].append(metric)
-        
-        operation_stats = {}
-        for operation, metrics in operations.items():
-            durations = [m.duration for m in metrics]
-            success_count = sum(1 for m in metrics if m.success)
-            
-            operation_stats[operation] = {
-                'count': len(metrics),
-                'avg_duration': sum(durations) / len(durations),
-                'max_duration': max(durations),
-                'min_duration': min(durations),
-                'success_rate': (success_count / len(metrics)) * 100
-            }
+    def get_performance_metrics(self) -> Dict[str, Any]:
+        """Get performance metrics"""
+        cache_hit_rate = (
+            self.metrics['cache_hits'] / (self.metrics['cache_hits'] + self.metrics['cache_misses'])
+            if (self.metrics['cache_hits'] + self.metrics['cache_misses']) > 0 else 0
+        )
         
         return {
-            'system_resources': {
-                'cpu_percent': psutil.cpu_percent(),
-                'memory_percent': psutil.virtual_memory().percent,
-                'disk_percent': psutil.disk_usage('/').percent
-            },
-            'operation_stats': operation_stats,
-            'recent_alerts': self.alerts[-10:],  # Last 10 alerts
-            'cache_stats': cache_manager.get_stats(),
-            'database_stats': db_optimizer.get_query_performance()
+            'total_requests': self.metrics['total_requests'],
+            'cache_hits': self.metrics['cache_hits'],
+            'cache_misses': self.metrics['cache_misses'],
+            'cache_hit_rate': f"{cache_hit_rate:.2%}",
+            'avg_processing_time': f"{self.metrics['avg_processing_time']:.2f}s",
+            'parallel_processing_count': self.metrics['parallel_processing_count'],
+            'cache_size': len(self.cache),
+            'max_cache_size': self.cache_size,
+            'active_workers': self.max_workers
         }
-
-class AsyncTaskManager:
-    """Asynchronous task management for performance optimization"""
     
-    def __init__(self):
-        self.tasks: Dict[str, asyncio.Task] = {}
-        self.task_results: Dict[str, Any] = {}
-        self.lock = asyncio.Lock()
-    
-    async def execute_async(self, task_id: str, coro):
-        """Execute an asynchronous task"""
-        async with self.lock:
-            if task_id in self.tasks:
-                # Cancel existing task
-                self.tasks[task_id].cancel()
-            
-            # Create new task
-            task = asyncio.create_task(coro)
-            self.tasks[task_id] = task
-        
-        try:
-            result = await task
-            self.task_results[task_id] = result
-            return result
-        except asyncio.CancelledError:
-            logger.info(f"Task {task_id} was cancelled")
-            raise
-        except Exception as e:
-            logger.error(f"Task {task_id} failed: {e}")
-            raise
-        finally:
-            async with self.lock:
-                if task_id in self.tasks:
-                    del self.tasks[task_id]
-    
-    def get_task_status(self, task_id: str) -> Dict[str, Any]:
-        """Get status of a task"""
-        if task_id in self.tasks:
-            task = self.tasks[task_id]
-            return {
-                'status': 'running',
-                'done': task.done(),
-                'cancelled': task.cancelled()
-            }
-        elif task_id in self.task_results:
-            return {
-                'status': 'completed',
-                'result': self.task_results[task_id]
-            }
-        else:
-            return {'status': 'not_found'}
+    def cleanup(self):
+        """Cleanup resources"""
+        self.executor.shutdown(wait=True)
+        self.cache.clear()
 
-# Global instances
-db_optimizer = DatabaseOptimizer()
-cache_manager = CacheManager()
-performance_monitor = PerformanceMonitor()
-async_task_manager = AsyncTaskManager()
+# Global instance
+performance_optimizer = PerformanceOptimizer()
 
-def optimize_query(query: str, params: tuple = None) -> List[Dict]:
-    """Optimized database query execution"""
-    return performance_monitor.track_operation('database_query', db_optimizer.execute_query, query, params)
+def get_optimized_detection(text: str, session_id: str, ai_response: str = "") -> Dict[str, Any]:
+    """Get optimized detection result"""
+    return performance_optimizer.optimized_detection(text, session_id, ai_response)
 
-def cache_get(key: str) -> Optional[Any]:
-    """Get value from cache"""
-    return cache_manager.get(key)
-
-def cache_set(key: str, value: Any, ttl: int = 3600):
-    """Set value in cache"""
-    cache_manager.set(key, value, ttl)
-
-def cache_invalidate(pattern: str = None):
-    """Invalidate cache entries"""
-    cache_manager.invalidate(pattern)
-
-def get_performance_report() -> Dict[str, Any]:
-    """Get comprehensive performance report"""
-    return performance_monitor.get_performance_report()
-
-async def execute_async_task(task_id: str, coro):
-    """Execute an asynchronous task"""
-    return await async_task_manager.execute_async(task_id, coro)
-
-def get_task_status(task_id: str) -> Dict[str, Any]:
-    """Get task status"""
-    return async_task_manager.get_task_status(task_id)
-
-# Performance decorators
-def track_performance(operation_name: str = None):
-    """Decorator to track function performance"""
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            name = operation_name or func.__name__
-            return performance_monitor.track_operation(name, func, *args, **kwargs)
-        return wrapper
-    return decorator
-
-def cache_result(ttl: int = 3600, key_func: Callable = None):
-    """Decorator to cache function results"""
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Generate cache key
-            if key_func:
-                cache_key = key_func(*args, **kwargs)
-            else:
-                cache_key = f"{func.__name__}:{hash(str(args) + str(kwargs))}"
-            
-            # Try to get from cache
-            cached_result = cache_manager.get(cache_key)
-            if cached_result is not None:
-                return cached_result
-            
-            # Execute function and cache result
-            result = func(*args, **kwargs)
-            cache_manager.set(cache_key, result, ttl)
-            return result
-        return wrapper
-    return decorator 
+def get_performance_metrics() -> Dict[str, Any]:
+    """Get performance metrics"""
+    return performance_optimizer.get_performance_metrics() 

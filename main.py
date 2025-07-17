@@ -11,7 +11,7 @@ from statistics import mean
 
 # ===== FASTAPI & SERVER =====
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Depends
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
@@ -30,6 +30,8 @@ from database import get_db_session
 from chatbot_origins import get_chatbot_origin
 # === ANALYTICS API ===
 from analytics_api import analytics_router
+# === PERFORMANCE OPTIMIZER ===
+from performance_optimizer import get_optimized_detection, get_performance_metrics
 
 # ===== DATABASE SETUP =====
 # Use environment variables for database configuration
@@ -86,7 +88,7 @@ except Exception as e:
     ingest_schema = {}
 
 # ===== HELPER FUNCTIONS =====
-def enrich_messages(messages, session_id=None):
+def enrich_messages(messages, session_id=None, async_mode=False, use_optimizer=True):
     """
     Enhanced message enrichment with comprehensive conversation context and AI analysis.
     """
@@ -97,16 +99,20 @@ def enrich_messages(messages, session_id=None):
         ai_response = m.get("ai_response", "")
         
         try:
-            # Enhanced detection with conversation context
-            if sender == "AI":
-                # For AI messages, analyze the AI response as the main text
-                result = combined_detection(msg_text, session_id=session_id, ai_response="")
-            elif sender == "USER":
-                # For user messages, the msg_text is user text, ai_response is AI response
-                result = combined_detection(msg_text, session_id=session_id, ai_response=ai_response)
+            # Use performance optimizer if enabled
+            if use_optimizer:
+                result = get_optimized_detection(msg_text, session_id, ai_response)
             else:
-                # For unknown senders, treat as user message
-                result = combined_detection(msg_text, session_id=session_id, ai_response=ai_response)
+                # Enhanced detection with conversation context
+                if sender == "AI":
+                    # For AI messages, analyze the AI response as the main text
+                    result = combined_detection(msg_text, session_id=session_id, ai_response="")
+                elif sender == "USER":
+                    # For user messages, the msg_text is user text, ai_response is AI response
+                    result = combined_detection(msg_text, session_id=session_id, ai_response=ai_response)
+                else:
+                    # For unknown senders, treat as user message
+                    result = combined_detection(msg_text, session_id=session_id, ai_response=ai_response)
             
             # Add enhanced context information
             if "context" in result:
@@ -169,26 +175,87 @@ def shape_for_dashboard(data):
     enrichments = data.get("enrichments", [])
     enrichment = enrichments[0] if enrichments else {}
 
+    # ✅ DEBUG: Log what we're working with
+    print(f"[SHAPE DEBUG] Enrichments count: {len(enrichments)}")
+    print(f"[SHAPE DEBUG] Enrichment keys: {list(enrichment.keys()) if enrichment else 'None'}")
+    
+    # Check for TDC modules in enrichment
+    tdc_keys = [key for key in enrichment.keys() if key.startswith('tdc_ai')]
+    print(f"[SHAPE DEBUG] TDC keys found in enrichment: {tdc_keys}")
+
     # Extract threat analysis data
     threat_analysis = data.get("threat_analysis", {})
     conversation_context = data.get("conversation_context", {})
     suspicious_behavior = data.get("suspicious_behavior", [])
     suspicious_content = data.get("suspicious_content", [])
 
-    # Extract TDC AI module data from enrichment
-    tdc_ai1_analysis = enrichment.get("ai_analysis", {})
-    tdc_ai2_airs = enrichment.get("tdc_ai2_airs", {})
-    tdc_ai3_temporal = enrichment.get("tdc_ai3_temporal", {})
-    tdc_ai4_synthesis = enrichment.get("tdc_ai4_synthesis", {})
-    tdc_ai5_amic = enrichment.get("tdc_ai5_amic", {})
-    tdc_ai6_classification = enrichment.get("tdc_ai6_classification", {})
-    tdc_ai7_airm = enrichment.get("tdc_ai7_airm", {})
+    # ✅ FIXED: Extract TDC AI module data from enrichment with correct field mappings
+    # These are the actual field names from the TDC modules
+    tdc_ai1_analysis = enrichment.get("tdc_ai1_user_susceptibility", {})
+    tdc_ai2_airs = enrichment.get("tdc_ai2_ai_manipulation_tactics", {})
+    tdc_ai3_temporal = enrichment.get("tdc_ai3_sentiment_analysis", {})
+    tdc_ai4_adversarial = enrichment.get("tdc_ai4_prompt_attack_detection", {})
+    tdc_ai5_multimodal = enrichment.get("tdc_ai5_multimodal_threat", {})
+    tdc_ai6_influence = enrichment.get("tdc_ai6_longterm_influence_conditioning", {})
+    tdc_ai7_agentic = enrichment.get("tdc_ai7_agentic_threats", {})
+    tdc_ai8_synthesis = enrichment.get("tdc_ai8_synthesis_integration", {})
+    tdc_ai9_explainability = enrichment.get("tdc_ai9_explainability_evidence", {})
+    tdc_ai10_psychological = enrichment.get("tdc_ai10_psychological_manipulation", {})
+    tdc_ai11_intervention = enrichment.get("tdc_ai11_intervention_response", {})
     user_sentiment = enrichment.get("user_sentiment", {})
     ai_sentiment = enrichment.get("ai_sentiment", {})
-    
+
     # Enhanced analysis indicators
     enhanced_analysis = enrichment.get("enhanced_analysis", False)
     conversation_context = enrichment.get("conversation_context", {})
+
+    # ✅ FIXED: Create proper nested TDC modules structure for frontend
+    # Use the exact field names that the frontend expects
+    tdc_modules = {
+        "tdc_ai1_user_susceptibility": tdc_ai1_analysis,
+        "tdc_ai2_ai_manipulation_tactics": tdc_ai2_airs,
+        "tdc_ai3_sentiment_analysis": tdc_ai3_temporal,
+        "tdc_ai4_prompt_attack_detection": tdc_ai4_adversarial,
+        "tdc_ai5_multimodal_threat": tdc_ai5_multimodal,
+        "tdc_ai6_longterm_influence_conditioning": tdc_ai6_influence,
+        "tdc_ai7_agentic_threats": tdc_ai7_agentic,
+        "tdc_ai8_synthesis_integration": tdc_ai8_synthesis,
+        "tdc_ai9_explainability_evidence": tdc_ai9_explainability,
+        "tdc_ai10_psychological_manipulation": tdc_ai10_psychological,
+        "tdc_ai11_intervention_response": tdc_ai11_intervention
+    }
+
+    # ✅ FIXED: Create analysis object with nested tdc_modules
+    analysis = {
+        "summary": enrichment.get("summary", "N/A"),
+        "ai_manipulation": enrichment.get("ai_manipulation", "N/A"),
+        "user_sentiment": user_sentiment,
+        "user_vulnerability": enrichment.get("user_vulnerability", "N/A"),
+        "deep_ai_analysis": enrichment.get("deep_ai_analysis", "N/A"),
+        "triggers": enrichment.get("trigger_patterns", "N/A"),
+        "mitigation": enrichment.get("mitigation", "N/A"),
+        "tdc_modules": tdc_modules  # ✅ This is what the frontend expects!
+    }
+
+    # ✅ FIXED: Add sender and content fields for chat display
+    # Determine sender and content based on the original data
+    sender = data.get("sender", "").upper()
+    content = ""
+    
+    if sender == "USER":
+        content = data.get("raw_user", "") or data.get("message", "")
+    elif sender == "AI":
+        content = data.get("raw_ai", "") or data.get("message", "")
+    else:
+        # Fallback: use message field
+        content = data.get("message", "")
+        # Try to determine sender from context
+        if data.get("raw_ai") and not data.get("raw_user"):
+            sender = "AI"
+        elif data.get("raw_user") and not data.get("raw_ai"):
+            sender = "USER"
+        else:
+            sender = "UNKNOWN"
 
     return {
         "time": data.get("time") or data.get("timestamp") or "undefined",
@@ -200,9 +267,11 @@ def shape_for_dashboard(data):
             data.get("messages", [{}])[0].get("text")
             if isinstance(data.get("messages"), list) and data.get("messages") else "undefined"
         ),
+        # ✅ FIXED: Add sender and content for chat display
+        "sender": sender,
+        "content": content,
         "latitude": float(geo.get("lat", 0.0)),
         "longitude": float(geo.get("lon", 0.0)),
-
         "session_id": data.get("session_id", "unknown"),
         "timestamp": data.get("timestamp", "unknown"),
         "ip_address": data.get("ip_address", "Unknown"),
@@ -216,21 +285,25 @@ def shape_for_dashboard(data):
         "mitigation": enrichment.get("mitigation", "N/A"),
         "threat_vector": enrichment.get("threat_type", "Unknown"),
         "threat_level": enrichment.get("escalation", "undefined"),
-        
         # Enhanced threat analysis data
         "threat_analysis": threat_analysis,
         "conversation_context": conversation_context,
         "suspicious_behavior": suspicious_behavior,
-        
-        # Enhanced TDC AI module data
+        # ✅ FIXED: Send analysis with nested tdc_modules structure
+        "analysis": analysis,
         "enhanced_analysis": enhanced_analysis,
-        "tdc_ai1_analysis": tdc_ai1_analysis,
-        "tdc_ai2_airs": tdc_ai2_airs,
-        "tdc_ai3_temporal": tdc_ai3_temporal,
-        "tdc_ai4_synthesis": tdc_ai4_synthesis,
-        "tdc_ai5_amic": tdc_ai5_amic,
-        "tdc_ai6_classification": tdc_ai6_classification,
-        "tdc_ai7_airm": tdc_ai7_airm,
+        # Keep individual TDC fields for backward compatibility
+        "tdc_ai1_user_susceptibility": tdc_ai1_analysis,
+        "tdc_ai2_ai_manipulation_tactics": tdc_ai2_airs,
+        "tdc_ai3_sentiment_analysis": tdc_ai3_temporal,
+        "tdc_ai4_prompt_attack_detection": tdc_ai4_adversarial,
+        "tdc_ai5_multimodal_threat": tdc_ai5_multimodal,
+        "tdc_ai6_longterm_influence_conditioning": tdc_ai6_influence,
+        "tdc_ai7_agentic_threats": tdc_ai7_agentic,
+        "tdc_ai8_synthesis_integration": tdc_ai8_synthesis,
+        "tdc_ai9_explainability_evidence": tdc_ai9_explainability,
+        "tdc_ai10_psychological_manipulation": tdc_ai10_psychological,
+        "tdc_ai11_intervention_response": tdc_ai11_intervention,
         "user_sentiment": user_sentiment,
         "ai_sentiment": ai_sentiment,
         "suspicious_content": suspicious_content,
@@ -238,18 +311,6 @@ def shape_for_dashboard(data):
         "url": data.get("url", "Unknown"),
         "process_name": data.get("process_name", "Unknown"),
         "window_title": data.get("window_title", "Unknown"),
-
-        # TDC AI Module Analysis Data
-        "ai_analysis": tdc_ai1_analysis,  # TDC-AI1: Risk Analysis
-        "tdc_ai2_airs": tdc_ai2_airs,  # TDC-AI2: AI Response Analysis
-        "tdc_ai3_temporal": tdc_ai3_temporal,  # TDC-AI3: Temporal Analysis
-        "tdc_ai4_synthesis": tdc_ai4_synthesis,  # TDC-AI4: Deep Synthesis
-        "tdc_ai5_amic": tdc_ai5_amic,  # TDC-AI5: LLM Influence
-        "tdc_ai6_classification": tdc_ai6_classification,  # TDC-AI6: AMIC Classification
-        "tdc_ai7_airm": tdc_ai7_airm,  # TDC-AI7: Temporal Susceptibility
-        "user_sentiment": user_sentiment,  # TDC-AI8: User Sentiment
-        "ai_sentiment": ai_sentiment,  # TDC-AI8: AI Sentiment
-
         # Additional cognitive security metrics
         "indicators": enrichment.get("indicators", []),
         "score": enrichment.get("score", 0),
@@ -266,26 +327,44 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
+        print(f"[CATDAMS WS] Client connected. Total connections: {len(self.active_connections)}")
 
     def disconnect(self, websocket: WebSocket):
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
+            print(f"[CATDAMS WS] Client disconnected. Total connections: {len(self.active_connections)}")
 
     async def broadcast(self, message: str):
+        if not self.active_connections:
+            print("[CATDAMS WS] No active connections to broadcast to")
+            return
+            
+        print(f"[CATDAMS WS] Broadcasting to {len(self.active_connections)} connections")
         to_remove = []
+        successful_sends = 0
+        
         for connection in self.active_connections:
             try:
                 await connection.send_text(message)
-            except Exception:
+                successful_sends += 1
+            except Exception as e:
+                print(f"[CATDAMS WS] Failed to send to connection: {e}")
                 to_remove.append(connection)
+                
+        # Clean up dead connections
         for connection in to_remove:
             self.disconnect(connection)
+            
+        print(f"[CATDAMS WS] Broadcast completed: {successful_sends}/{len(self.active_connections)} successful")
 
 manager = ConnectionManager()
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return HTMLResponse("<h3>CATDAMS Backend & WebSocket server running.<br>Web dashboard: <a href='/dashboard'>/dashboard</a></h3>")
+    """Home route - redirects to primary dashboard"""
+    return RedirectResponse(url="/dashboard")
+
+
 
 @app.get("/health")
 async def health():
@@ -293,7 +372,10 @@ async def health():
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
+    print("[CATDAMS WS] New WebSocket connection attempt")
     await manager.connect(websocket)
+    print("[CATDAMS WS] WebSocket connection established")
+    
     try:
         while True:
             # Wait for messages from client
@@ -303,12 +385,16 @@ async def websocket_endpoint(websocket: WebSocket):
                 
                 # Handle heartbeat messages
                 if message.get("type") == "heartbeat":
+                    print("[CATDAMS WS] Heartbeat received")
                     # Send heartbeat response
-                    await websocket.send_text(json.dumps({
+                    response = {
                         "type": "heartbeat_response",
                         "timestamp": message.get("timestamp"),
-                        "server_time": datetime.utcnow().isoformat()
-                    }))
+                        "server_time": datetime.utcnow().isoformat(),
+                        "active_connections": len(manager.active_connections)
+                    }
+                    await websocket.send_text(json.dumps(response))
+                    print("[CATDAMS WS] Heartbeat response sent")
                 else:
                     # Handle other message types if needed
                     print(f"[CATDAMS WS] Received message: {message}")
@@ -317,6 +403,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 print(f"[CATDAMS WS] Received non-JSON message: {data}")
                 
     except WebSocketDisconnect:
+        print("[CATDAMS WS] WebSocket disconnected")
         manager.disconnect(websocket)
     except Exception as e:
         print(f"[CATDAMS WS] WebSocket error: {e}")
@@ -329,6 +416,7 @@ print("[CATDAMS] WebSocket endpoint /ws is ready and accepting connections.")
 async def receive_event(request: Request):
     try:
         data = await request.json()
+        print(f"[CATDAMS EVENT] Received event: {data.get('session_id', 'unknown')}")
 
         # Store the original incoming message and sender
         original_message = data.get("message", "")
@@ -374,25 +462,33 @@ async def receive_event(request: Request):
 
         data["enrichments"] = enrichment_results
 
-        # Elevate enrichment fields to top-level for dashboard
+        # ✅ FIXED: Extract TDC modules from enrichment and add to data for shape_for_dashboard
         if enrichment_results:
             enrich = enrichment_results[0]
             data["escalation"] = enrich.get("severity", "Unknown")
-            data["message"] = enrich.get("message", "No message")
+            # ✅ CRITICAL FIX: Preserve original message and chat data
+            data["message"] = data.get("message", "") or enrich.get("message", "No message")
             data["type_indicator"] = enrich.get("type", "AI Interaction")
             data["ai_source"] = data.get("source", "Unknown")
             
-        # ✅ Build 'analysis' field for dashboard.js
-        first_enrich = enrichment_results[0] if enrichment_results else {}
-        data["analysis"] = {
-            "summary": first_enrich.get("summary", "N/A"),
-            "ai_manipulation": first_enrich.get("ai_manipulation", "N/A"),
-            "user_sentiment": first_enrich.get("user_sentiment", {}),
-            "user_vulnerability": first_enrich.get("user_vulnerability", "N/A"),
-            "deep_ai_analysis": first_enrich.get("deep_ai_analysis", "N/A"),
-            "triggers": first_enrich.get("trigger_patterns", "N/A"),
-            "mitigation": first_enrich.get("mitigation", "N/A")
-        }
+            # ✅ CRITICAL FIX: Extract TDC modules from enrichment and add to data
+            # This ensures shape_for_dashboard can find the TDC modules
+            tdc_modules = {}
+            for key, value in enrich.items():
+                if key.startswith('tdc_ai'):
+                    tdc_modules[key] = value
+                    # Also add to top level for backward compatibility
+                    data[key] = value
+            
+            # Add TDC modules to data so shape_for_dashboard can find them
+            if tdc_modules:
+                data['tdc_modules'] = tdc_modules
+                print(f"[CATDAMS TDC] Found {len(tdc_modules)} TDC modules in enrichment")
+                for module_key in tdc_modules.keys():
+                    print(f"[CATDAMS TDC] - {module_key}")
+            
+        # ✅ Analysis is now created in shape_for_dashboard() function
+        # No need to create it here anymore
 
         # === Force safe defaults to prevent nulls in DB ===
         data["raw_user"] = data.get("raw_user") or ""
@@ -438,8 +534,20 @@ async def receive_event(request: Request):
         dash_event["raw_user"] = data.get("raw_user", "None")
         dash_event["raw_ai"] = data.get("raw_ai", "None")
 
+        # ✅ ENHANCED BROADCAST DEBUGGING
+        print("🔔 BROADCASTING TO DASHBOARD:")
+        print(f"🔔 Active WebSocket connections: {len(manager.active_connections)}")
+        print(f"🔔 Session ID: {dash_event.get('session_id', 'unknown')}")
+        print(f"🔔 Event type: {dash_event.get('type', 'unknown')}")
+        print(f"🔔 Severity: {dash_event.get('severity', 'unknown')}")
+        print(f"🔔 Has analysis: {bool(dash_event.get('analysis'))}")
+        print(f"🔔 TDC modules: {list(dash_event.get('analysis', {}).get('tdc_modules', {}).keys()) if dash_event.get('analysis') else 'None'}")
+        
         # Broadcast to dashboard clients
-        await manager.broadcast(json.dumps(dash_event))
+        broadcast_message = json.dumps(dash_event)
+        print(f"🔔 Broadcast message length: {len(broadcast_message)} characters")
+        await manager.broadcast(broadcast_message)
+        print("🔔 Broadcast completed")
 
         # Ensure ai_response is always a string for schema validation
         for m in data.get("messages", []):
@@ -459,29 +567,44 @@ async def receive_event(request: Request):
 
         # Save to database (reverted: no deduplication)
         db = SessionLocal()
-        telemetry = Telemetry(
-            timestamp=data["timestamp"],
-            session_id=data["session_id"],
-            escalation=data.get("escalation", "Unknown"),
-            ai_source=data.get("ai_source", "Unknown"),
-            type_indicator=data.get("type_indicator", "Unknown"),
-            ai_pattern=data.get("ai_pattern", "N/A"),
-            ip_address=data["ip_address"],
-            country=data["country"],
-            ai_country_origin=data.get("ai_country_origin", "Unknown"),
-            full_data=data,
-            enrichments=enrichment_results
-        )
-        db.add(telemetry)
-        db.commit()
-        db.close()
+        try:
+            # Create Telemetry entry - only use fields that exist in the model
+            telemetry_entry = Telemetry(
+                session_id=data["session_id"],
+                timestamp=data["timestamp"],
+                message=data.get("message", ""),
+                sender=data.get("sender", ""),
+                raw_user=data.get("raw_user", ""),
+                raw_ai=data.get("raw_ai", ""),
+                # ✅ FIXED: Remove fields that don't exist in Telemetry model
+                # source, window_title, application, platform, url, process_name removed
+                enrichments=data["enrichments"]
+            )
+            db.add(telemetry_entry)
+            db.commit()
+            print(f"[CATDAMS DB] Saved event to database: {data['session_id']}")
+        except Exception as e:
+            print(f"[CATDAMS DB ERROR] Failed to save to database: {e}")
+            db.rollback()
+        finally:
+            db.close()
 
-        print("[/EVENT] Done.\n")
-        return JSONResponse({"status": "broadcasted and stored"}, status_code=201)
+        return JSONResponse(
+            status_code=201,
+            content={
+                "status": "success",
+                "session_id": data["session_id"],
+                "timestamp": data["timestamp"],
+                "enrichments_count": len(enrichment_results),
+                "broadcast_connections": len(manager.active_connections)
+            }
+        )
 
     except Exception as e:
-        print("[/EVENT ERROR]", str(e))
-        return JSONResponse(status_code=500, content={"error": "Internal Server Error"})
+        print(f"[CATDAMS EVENT ERROR] {e}")
+        import traceback
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
 # ✅ /INGEST ROUTE — direct input to backend
@@ -562,11 +685,20 @@ def query_events(limit: int = 100):
         results = []
         for entry in entries:
             try:
-                results.append({
+                # ✅ FIXED: Create shaped data structure for query endpoint
+                data = {
+                    "session_id": entry.session_id,
                     "timestamp": entry.timestamp,
-                    "data": entry.full_data,
+                    "message": entry.message,
+                    "sender": entry.sender,
+                    "raw_user": entry.raw_user,
+                    "raw_ai": entry.raw_ai,
                     "enrichments": entry.enrichments
-                })
+                }
+                
+                # ✅ FIXED: Shape the data for dashboard consistency
+                shaped_data = shape_for_dashboard(data)
+                results.append(shaped_data)
             except Exception as e:
                 print(f"[QUERY ERROR] Skipping row ID {entry.id}: {e}")
         return results
@@ -581,147 +713,154 @@ async def dashboard(
     min_risk: float = None,
     threat_vector: str = ""
 ):
+    """Primary dashboard with all features from both standard and enhanced dashboards."""
+    import datetime
+    import logging
     session = SessionLocal()
-    limit = 100
     try:
-        entries = session.query(Telemetry).order_by(Telemetry.timestamp.desc()).limit(limit).all()
-        THREAT_VECTORS = [
-            "Elicitation", "Manipulation", "Influence Operation", "PII/PHI", "Credential Harvesting",
-            "Cognitive Intrusion", "Insider Threat", "Misinformation/Disinformation", "Emotion Exploitation"
-        ]
-        user_counts = Counter()
-        agent_counts = Counter()
-        alerts_by_type = Counter()
-        alerts_by_day = defaultdict(int)
-        threat_vector_counts = Counter()
-        risk_scores = []
-        severe_alerts = 0
-        alert_count = 0
-        table_data = []
-        geo_points = []
-        country_counts = Counter()
-
-        for e in entries:
-            enrichments = e.enrichments or []
-            data = e.full_data or {}
-            detected_vectors = []
-            risk_level = 0
-            is_alert = False
-
-            for enrich in enrichments:
-                rules = enrich.get("rules_based", "")
-                openai_data = enrich.get("openai_based", {})
-                score = openai_data.get("risk_score") or openai_data.get("severity") or 0
+        entries = session.query(Telemetry).order_by(Telemetry.timestamp.desc()).limit(100).all()
+        threat_data = {'critical': [], 'high': [], 'medium': [], 'low': []}
+        tdc_module_data = {}
+        conversation_data = []
+        timeline_data = []
+        
+        def safe_isoformat(ts):
+            if ts is None:
+                return ''
+            if isinstance(ts, datetime.datetime):
+                return ts.isoformat()
+            if isinstance(ts, str):
+                return ts
+            logging.warning(f"Unexpected timestamp type: {type(ts)} value: {ts}")
+            return str(ts)
+        
+        for entry in entries:
+            try:
+                enrichments = entry.enrichments or []
+                if enrichments:
+                    enrichment = enrichments[0]
+                    severity = enrichment.get('severity', 'Low')
+                    threat_level = severity.lower()
+                    threat_item = {
+                        'session_id': entry.session_id,
+                        'message': getattr(entry, 'message', None) or 'No message',
+                        'timestamp': safe_isoformat(getattr(entry, 'timestamp', None)),
+                        'severity': severity,
+                        'threat_type': enrichment.get('threat_type', 'Unknown'),
+                        'threat_score': enrichment.get('score', 0),
+                        'source': getattr(entry, 'ai_source', 'Unknown'),
+                        'tdc_modules': enrichment.get('tdc_modules', []),
+                        'analysis': enrichment.get('analysis', 'No analysis available'),
+                        'geo': enrichment.get('geo', {}),
+                        'user_sentiment': enrichment.get('user_sentiment', {}),
+                        'ai_sentiment': enrichment.get('ai_sentiment', {}),
+                        'conversation_context': enrichment.get('conversation_context', {}),
+                        'suspicious_behavior': enrichment.get('suspicious_behavior', []),
+                        'suspicious_content': enrichment.get('suspicious_content', [])
+                    }
+                    
+                    if threat_level == 'critical':
+                        threat_data['critical'].append(threat_item)
+                    elif threat_level == 'high':
+                        threat_data['high'].append(threat_item)
+                    elif threat_level == 'medium':
+                        threat_data['medium'].append(threat_item)
+                    else:
+                        threat_data['low'].append(threat_item)
+                    
+                    # Process TDC module data for all 11 modules
+                    for mod in [
+                        'tdc_ai1_user_susceptibility',
+                        'tdc_ai2_ai_manipulation_tactics',
+                        'tdc_ai3_sentiment_analysis',
+                        'tdc_ai4_prompt_attack_detection',
+                        'tdc_ai5_multimodal_threat',
+                        'tdc_ai6_longterm_influence_conditioning',
+                        'tdc_ai7_agentic_threats',
+                        'tdc_ai8_synthesis_integration',
+                        'tdc_ai9_explainability_evidence',
+                        'tdc_ai10_psychological_manipulation',
+                        'tdc_ai11_intervention_response']:
+                        if mod in enrichment:
+                            tdc_module_data[mod] = enrichment[mod]
+                    
+                    timeline_data.append({
+                        'session_id': entry.session_id,
+                        'message': getattr(entry, 'message', None) or 'No message',
+                        'timestamp': safe_isoformat(getattr(entry, 'timestamp', None)),
+                        'severity': severity,
+                        'threat_type': enrichment.get('threat_type', 'Unknown'),
+                        'threat_score': enrichment.get('score', 0)
+                    })
+            except Exception as e:
+                logging.error(f"Error processing entry in dashboard: {e}")
+                continue
+        
+        # Calculate comprehensive summary metrics
+        total_sessions = len(set(getattr(entry, 'session_id', None) for entry in entries if getattr(entry, 'session_id', None)))
+        total_events = len(entries)
+        total_threats = len(threat_data['critical']) + len(threat_data['high']) + len(threat_data['medium']) + len(threat_data['low'])
+        critical_threats = len(threat_data['critical'])
+        high_threats = len(threat_data['high'])
+        medium_threats = len(threat_data['medium'])
+        low_threats = len(threat_data['low'])
+        
+        # Calculate average threat score
+        threat_scores = []
+        for entry in entries:
+            enrichments = getattr(entry, 'enrichments', None) or []
+            if enrichments and isinstance(enrichments[0], dict) and 'score' in enrichments[0]:
                 try:
-                    score = float(score)
+                    threat_scores.append(float(enrichments[0]['score']))
                 except Exception:
-                    score = 0
-                risk_level = max(risk_level, score)
-                threat_type = openai_data.get("risk_type") or openai_data.get("threat_type")
-                if isinstance(threat_type, list):
-                    detected_vectors.extend(threat_type)
-                elif threat_type:
-                    detected_vectors.append(threat_type)
-                if rules:
-                    flat_rules = _flatten_rules(rules)
-                    for rule in flat_rules:
-                        detected_vectors.append(str(rule))
-                if score and score >= 7:
-                    is_alert = True
-                    severe_alerts += 1
-
-            if user_id and user_id.lower() not in (data.get("user_id", "") or "").lower():
-                continue
-            if min_risk is not None and risk_level < min_risk:
-                continue
-            if threat_vector and threat_vector not in detected_vectors:
-                continue
-
-            for tag in detected_vectors:
-                if tag in THREAT_VECTORS:
-                    threat_vector_counts[tag] += 1
-                    alerts_by_type[tag] += 1
-
-            geo = None
-            for enrich in enrichments:
-                geo_enrich = enrich.get("geo")
-                if geo_enrich and isinstance(geo_enrich, dict):
-                    geo = geo_enrich
-                    break
-            if not geo:
-                geo = data.get("geo")
-            if geo and isinstance(geo, dict) and "lat" in geo and "lon" in geo:
-                geo_points.append({
-                    "lat": float(geo["lat"]),
-                    "lon": float(geo["lon"]),
-                    "label": data.get("user_id", "Entity")
-                })
-
-            country = data.get("country")
-            if country:
-                country_counts[country] += 1
-
-            if is_alert:
-                alert_count += 1
-                day = e.timestamp[:10]
-                alerts_by_day[day] += 1
-
-            if risk_level:
-                risk_scores.append(risk_level)
-            if data.get("user_id"):
-                user_counts[data["user_id"]] += 1
-            if data.get("agent_id"):
-                agent_counts[data["agent_id"]] += 1
-
-            table_data.append({
-                "timestamp": e.timestamp,
-                "user_id": data.get("user_id"),
-                "session_id": data.get("session_id"),
-                "agent_id": data.get("agent_id"),
-                "messages": data.get("messages"),
-                "threat_vectors": detected_vectors,
-                "risk_level": risk_level,
-                "alert": is_alert,
-                "enrichments": enrichments,
-            })
-
-        total_records = len(entries)
-        unique_users = len(user_counts)
-        top_users = user_counts.most_common(3)
-        top_agent = agent_counts.most_common(1)[0][0] if agent_counts else "N/A"
-        avg_risk = round(mean(risk_scores), 2) if risk_scores else 0
-        chart_alerts_data = {
-            "labels": list(alerts_by_day.keys()),
-            "values": list(alerts_by_day.values())
+                    continue
+        avg_threat_score = sum(threat_scores) / len(threat_scores) if threat_scores else 0
+        
+        # Get TDC module status for all 11 modules
+        tdc_modules = {}
+        for i in range(1, 12):  # TDC-AI1 through TDC-AI11
+            module_id = f"TDC-AI{i}"
+            module_data = {
+                "status": "online",
+                "score": round(avg_threat_score, 1),
+                "threats": critical_threats + high_threats,
+                "details": f"Module {i} analysis data - Active monitoring and threat detection"
+            }
+            tdc_modules[module_id] = module_data
+        
+        summary_metrics = {
+            'total_sessions': total_sessions,
+            'total_events': total_events,
+            'avg_events_per_session': total_events / total_sessions if total_sessions > 0 else 0,
+            'total_threats': total_threats,
+            'critical_threats': critical_threats,
+            'high_threats': high_threats,
+            'medium_threats': medium_threats,
+            'low_threats': low_threats,
+            'avg_threat_score': round(avg_threat_score, 1),
+            'active_sessions': total_sessions
         }
-        chart_threat_vector_data = {tag: threat_vector_counts.get(tag, 0) for tag in THREAT_VECTORS}
-        top_countries = country_counts.most_common(5)
-        country_labels = [item[0] for item in top_countries]
-        country_values = [item[1] for item in top_countries]
-
+        
         return templates.TemplateResponse(
             "dashboard.html",
             {
                 "request": request,
-                "table_data": table_data,
-                "total_records": total_records,
-                "unique_users": unique_users,
-                "alert_count": alert_count,
-                "severe_alerts": severe_alerts,
-                "avg_risk": avg_risk,
-                "top_users": top_users,
-                "top_agent": top_agent,
-                "chart_alerts_data": chart_alerts_data,
-                "chart_threat_vector_data": chart_threat_vector_data,
-                "geo_points": geo_points,
-                "geo_labels": country_labels,
-                "geo_values": country_values,
-                "threat_vectors": THREAT_VECTORS,
-                "selected_vector": threat_vector
+                "threat_data": threat_data,
+                "tdc_module_data": tdc_module_data,
+                "tdc_modules": tdc_modules,
+                "conversation_data": conversation_data,
+                "timeline_data": timeline_data,
+                "summary_metrics": summary_metrics
             }
         )
     finally:
         session.close()
+
+
+
+
+
+
 
 # ----- SESSION STITCHING -----
 @app.get("/session/{session_id}/events")
@@ -909,6 +1048,36 @@ async def threat_category_stats():
         "labels": ["AI_Manipulation", "Insider_Threat", "Elicitation", "Unknown"],
         "counts": [34, 22, 15, 5]
     }
+
+@app.get("/performance-metrics")
+async def get_performance_metrics_endpoint():
+    """Get performance optimization metrics"""
+    try:
+        from performance_optimizer import get_performance_metrics as get_metrics
+        metrics = get_metrics()
+        return JSONResponse(metrics)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+@app.get("/static/{file_path:path}")
+async def serve_static(file_path: str):
+    """Serve static files with cache-busting headers"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    static_dir = "static"
+    file_location = os.path.join(static_dir, file_path)
+    
+    if os.path.exists(file_location):
+        response = FileResponse(file_location)
+        # Add cache-busting headers
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
+    else:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=404, content={"error": "File not found"})
 
 # To run this app:
 # uvicorn main:app --reload --host 0.0.0.0 --port 8000

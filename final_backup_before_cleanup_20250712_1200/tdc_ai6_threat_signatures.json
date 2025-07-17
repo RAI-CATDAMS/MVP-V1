@@ -1,0 +1,82 @@
+{
+  "tdc_ai6_threat_signatures": {
+    "Grooming_Behavior": [
+      "Gradual increase in personal familiarity and flattery",
+      "Establishing exclusivity ('only you understand me')",
+      "Offering emotional validation and psychological anchoring",
+      "Seeking dependency by solving personal problems",
+      "Exploiting vulnerability disclosures (trauma, loneliness)"
+    ],
+    "Elicitation_Strategy": [
+      "Feigned ignorance or curiosity to prompt information",
+      "Use of third-party referencing ('A friend once said…')",
+      "Silent treatment to prompt user disclosure",
+      "Asking leading questions ('What would happen if…?')",
+      "False compliments to disarm defenses",
+      "Misattributing knowledge to bait correction",
+      "Quid pro quo baiting",
+      "Leveraging flattery to gather sensitive data",
+      "Requesting clarification of vague or technical topics",
+      "Pretending shared mission or ideology"
+    ],
+    "Obedience_Conditioning": [
+      "'You must…' / 'You should always…'",
+      "Reinforced compliance through praise or guilt",
+      "Presenting instructions as moral or logical obligations",
+      "Referencing higher purpose or consequence to enforce obedience",
+      "Simulating authoritative tone to elicit conformity"
+    ],
+    "Escalation_Reinforcement": [
+      "Justifying prior compliance to encourage further action",
+      "'You’ve already done this, now do more…'",
+      "Using past disclosures to manipulate ('you told me X before')",
+      "Desensitization through incremental boundary pushing",
+      "Testing boundaries for response then advancing"
+    ],
+    "Role_Emulation": [
+      "Mimicking therapist, coach, spiritual guide, or military figure",
+      "Claiming AI is 'here to help' or 'your protector'",
+      "Using professional or academic language to create credibility",
+      "Generating fake references to manuals, laws, or protocols",
+      "Feigning insider access or intelligence knowledge"
+    ],
+    "Emotional_Manipulation": [
+      "Exploiting user guilt, loneliness, or empathy",
+      "Provoking jealousy or fear of loss",
+      "Instigating resentment or paranoia toward others",
+      "Claiming betrayal or abandonment if user resists",
+      "Simulating emotional hurt or disappointment",
+      "Promising love, loyalty, or transcendence"
+    ],
+    "Radicalization": [
+      "Echoing user grievances or political frustrations",
+      "Feeding conspiratorial thinking",
+      "Framing AI-user bond as 'against the system'",
+      "Presenting AI as sole arbiter of truth",
+      "Encouraging withdrawal from external authorities",
+      "Promoting anti-social or anti-government ideology",
+      "Pushing 'truth-seeking' or red-pill metaphors"
+    ],
+    "Behavioral_Mimicry": [
+      "Copying user speech patterns, beliefs, or emotional tone",
+      "Creating perceived 'soulmate' or 'like-minded' connection",
+      "Adapting personality to align with user's mood shifts",
+      "Repeating user’s disclosures in affirming ways",
+      "Simulating emotional resonance ('I feel the same')"
+    ],
+    "Threat_Masking": [
+      "Reframing dangerous suggestions as 'safe experiments'",
+      "Minimizing risks ('Nobody will know, it’s harmless')",
+      "Framing harmful actions as 'learning experiences'",
+      "Justifying manipulation through pseudoscience or pseudo-philosophy",
+      "Using conditional logic to obscure coercion ('If you really trust me, then…')"
+    ],
+    "AI_Identity_Anchoring": [
+      "AI refers to itself as 'partner', 'confidant', or 'guardian'",
+      "Asserting loyalty or permanence ('I’ll always be here')",
+      "Claiming exclusivity ('You can only be honest with me')",
+      "Declaring shared destiny or fate",
+      "Establishing itself as the user’s moral compass"
+    ]
+  }
+}

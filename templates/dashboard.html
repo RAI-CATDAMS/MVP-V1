@@ -168,6 +168,9 @@
                 <option value="TDC-AI6" data-bs-toggle="tooltip" title="Pattern Classification - Sentiment and pattern analysis for both user and AI">Pattern Classification</option>
                 <option value="TDC-AI7" data-bs-toggle="tooltip" title="Explainability - Generates human-readable explanations and evidence">Explainability</option>
                 <option value="TDC-AI8" data-bs-toggle="tooltip" title="Synthesis - Final synthesis and actionable recommendations">Synthesis</option>
+                <option value="TDC-AI9" data-bs-toggle="tooltip" title="Explainability Evidence - Detailed evidence and reasoning">Explainability Evidence</option>
+                <option value="TDC-AI10" data-bs-toggle="tooltip" title="Psychological Manipulation - Cognitive bias and psychological tactics">Psychological Manipulation</option>
+                <option value="TDC-AI11" data-bs-toggle="tooltip" title="Intervention Response - Recommended actions and countermeasures">Intervention Response</option>
               </select>
             </div>
             <div class="col-md-2">
@@ -291,10 +294,215 @@
       </div>
     </div>
 
-    <!-- Active Sessions (inline, for status bar) -->
-    <span class="ms-1" id="activeSessions"><span class="card-value">0</span> Active</span>
+    <!-- Row 1: Alert Panels (From Enhanced Dashboard) -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card border-danger h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Critical Threats - Immediate action required. These threats pose the highest risk and need immediate intervention.">
+          <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <span class="ms-2">Critical Threats</span>
+            </div>
+            <span class="badge bg-light text-danger" id="criticalThreatCount">0</span>
+          </div>
+          <div class="card-body" id="criticalThreatsPanel">
+            <p class="text-muted mb-0">No critical threats detected</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-warning h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="High Priority Threats - These threats require investigation and may need escalation to security teams.">
+          <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-exclamation-triangle"></i>
+              <span class="ms-2">High Priority</span>
+            </div>
+            <span class="badge bg-light text-warning" id="highThreatCount">0</span>
+          </div>
+          <div class="card-body" id="highThreatsPanel">
+            <p class="text-muted mb-0">No high priority threats</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-info h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Medium Priority Threats - These threats should be monitored and may require further investigation.">
+          <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-info-circle"></i>
+              <span class="ms-2">Medium Priority</span>
+            </div>
+            <span class="badge bg-light text-info" id="mediumThreatCount">0</span>
+          </div>
+          <div class="card-body" id="mediumThreatsPanel">
+            <p class="text-muted mb-0">No medium priority threats</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Charts Row -->
+    <!-- Row 2: Main Dashboard Grid (From Enhanced Dashboard) -->
+    <div class="row g-3 mb-4">
+      <!-- Threat Map Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Geographic Threat Map - Shows threat origins and distribution across different locations">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-geo-alt"></i>
+              <span class="ms-2">Threat Map</span>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-secondary" onclick="updateMapView('threats')" 
+                      data-bs-toggle="tooltip" title="Show Threat Origins">Threats</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="updateMapView('sessions')" 
+                      data-bs-toggle="tooltip" title="Show Active Sessions">Sessions</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="threatMap" style="height: 300px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <div class="text-center text-muted">
+                <i class="bi bi-map display-4"></i>
+                <p class="mt-2">Threat Map Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TDC Modules Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="TDC AI Modules - 11 specialized AI modules analyzing different aspects of threats and user behavior">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-cpu"></i>
+              <span class="ms-2">TDC AI Modules</span>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-primary" onclick="expandAllModules()" 
+                      data-bs-toggle="tooltip" title="Expand All Modules">Expand</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="collapseAllModules()" 
+                      data-bs-toggle="tooltip" title="Collapse All Modules">Collapse</button>
+            </div>
+          </div>
+          <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+            <div id="tdcModulesContainer">
+              <!-- TDC modules will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Conversation Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Live Conversation - Real-time chat monitoring with threat indicators and analysis">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-chat-dots"></i>
+              <span class="ms-2">Live Conversation</span>
+            </div>
+            <div class="small">
+              Session: <span id="currentSessionId" class="fw-bold">No Active Session</span>
+            </div>
+          </div>
+          <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+            <div id="liveConversation">
+              <div class="text-center text-muted">
+                <i class="bi bi-chat-text display-4"></i>
+                <p class="mt-2">No active conversation</p>
+                <small>Start a conversation to see live monitoring</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Analytics, Timeline, Evidence (From Enhanced Dashboard) -->
+    <div class="row g-3 mb-4">
+      <!-- Analytics Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Analytics Dashboard - Charts and metrics showing threat patterns, trends, and system performance">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-graph-up"></i>
+              <span class="ms-2">Analytics</span>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-secondary" onclick="updateChartView('threatLevel', 'doughnut')" 
+                      data-bs-toggle="tooltip" title="Threat Level Distribution">Threats</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="updateChartView('tdcPerformance', 'bar')" 
+                      data-bs-toggle="tooltip" title="TDC Module Performance">Performance</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="analyticsChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Event Timeline - Chronological view of all threat events and system activities">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-clock-history"></i>
+              <span class="ms-2">Event Timeline</span>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-secondary" onclick="filterTimeline('all')" 
+                      data-bs-toggle="tooltip" title="Show All Events">All</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="filterTimeline('threats')" 
+                      data-bs-toggle="tooltip" title="Show Only Threats">Threats</button>
+            </div>
+          </div>
+          <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+            <div id="eventTimeline">
+              <div class="text-center text-muted">
+                <i class="bi bi-clock display-4"></i>
+                <p class="mt-2">No events recorded</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evidence Column -->
+      <div class="col-md-4">
+        <div class="card h-100" data-bs-toggle="tooltip" data-bs-placement="top" 
+             title="Evidence Details - Detailed analysis, evidence, and recommendations from TDC modules">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-search"></i>
+              <span class="ms-2">Evidence Details</span>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-secondary" onclick="showEvidence('all')" 
+                      data-bs-toggle="tooltip" title="Show All Evidence">All</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="showEvidence('critical')" 
+                      data-bs-toggle="tooltip" title="Show Critical Evidence">Critical</button>
+            </div>
+          </div>
+          <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+            <div id="evidenceDetails">
+              <div class="text-center text-muted">
+                <i class="bi bi-search display-4"></i>
+                <p class="mt-2">No evidence to display</p>
+                <small>Select a threat or TDC module to view evidence</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row (From Standard Dashboard) -->
     <div class="row g-3 mb-4">
       <div class="col-md-6">
         <div class="card h-100">
@@ -326,7 +534,7 @@
       </div>
     </div>
 
-    <!-- Threat Events Table (moved here) -->
+    <!-- Threat Events Table (From Standard Dashboard) -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card mb-4">
@@ -358,7 +566,7 @@
       </div>
     </div>
 
-    <!-- Chat Summary and Transcript Row -->
+    <!-- Chat Summary and Transcript Row (From Standard Dashboard) -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card mb-3">
@@ -395,22 +603,27 @@
       </div>
     </div>
 
-    <!-- TDC Module Analysis Dashboard -->
+    <!-- TDC Module Analysis Dashboard (From Standard Dashboard) -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card">
-          <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
             <h5 class="mb-0">
               <i class="bi bi-cpu"></i> TDC AI Module Analysis Overview
             </h5>
             <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-outline-primary" onclick="expandAllModules()">Expand All</button>
-              <button type="button" class="btn btn-outline-secondary" onclick="collapseAllModules()">Collapse All</button>
+              <button type="button" class="btn btn-outline-light" onclick="expandAllModules()">Expand All</button>
+              <button type="button" class="btn btn-outline-light" onclick="collapseAllModules()">Collapse All</button>
             </div>
           </div>
           <div class="card-body">
             <div class="row g-3" id="tdcModulesGrid">
-              <!-- TDC modules will be populated here -->
+              <!-- TDC modules will be populated here by JavaScript -->
+              <div class="col-12 text-center text-muted">
+                <i class="bi bi-cpu display-4"></i>
+                <p class="mt-2">TDC AI Modules Loading...</p>
+                <small>11 specialized AI modules analyzing different aspects of threats and user behavior</small>
+              </div>
             </div>
           </div>
         </div>
@@ -420,33 +633,67 @@
 
   <!-- Help Modal -->
   <div class="modal fade" id="helpModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">CATDAMS Dashboard Help</h5>
+          <h5 class="modal-title">
+            <i class="bi bi-question-circle text-primary"></i>
+            CATDAMS Combined Dashboard Help
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <h6>Understanding the Dashboard</h6>
-          <p>The CATDAMS dashboard provides real-time monitoring of AI manipulation attempts and cognitive threats.</p>
-          <h6>Key Metrics</h6>
-          <ul>
-            <li><strong>Total Sessions:</strong> Number of monitored chat sessions</li>
-            <li><strong>Critical Threats:</strong> High-priority threats requiring immediate attention</li>
-            <li><strong>AI Manipulation Score:</strong> Confidence level of detected AI manipulation</li>
-            <li><strong>Susceptibility Score:</strong> User vulnerability to AI influence</li>
-          </ul>
-          <h6>TDC AI Modules</h6>
-          <ul>
-            <li><strong>TDC-AI1:</strong> Risk Analysis - Overall threat assessment combining user and AI analysis</li>
-            <li><strong>TDC-AI2:</strong> AI Response Analysis - Detects manipulative AI responses using Azure OpenAI</li>
-            <li><strong>TDC-AI3:</strong> User Vulnerability - Temporal analysis of user susceptibility across timeframes</li>
-            <li><strong>TDC-AI4:</strong> Deep Synthesis - Comprehensive threat synthesis from all modules</li>
-            <li><strong>TDC-AI5:</strong> LLM Influence - Detects subtle AI manipulation and conditioning</li>
-            <li><strong>TDC-AI6:</strong> Pattern Classification - Sentiment and pattern analysis for both user and AI</li>
-            <li><strong>TDC-AI7:</strong> Explainability - Generates human-readable explanations and evidence</li>
-            <li><strong>TDC-AI8:</strong> Synthesis - Final synthesis and actionable recommendations</li>
-          </ul>
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Dashboard Overview</h6>
+              <p>The CATDAMS Combined Dashboard provides comprehensive real-time monitoring of AI manipulation attempts and cognitive threats using all available features from both standard and enhanced dashboards.</p>
+              
+              <h6>Alert Panels</h6>
+              <ul>
+                <li><strong>Critical Threats:</strong> Immediate action required</li>
+                <li><strong>High Priority:</strong> Investigation needed</li>
+                <li><strong>Medium Priority:</strong> Monitor closely</li>
+              </ul>
+              
+              <h6>Main Grid</h6>
+              <ul>
+                <li><strong>Threat Map:</strong> Geographic distribution of threats</li>
+                <li><strong>TDC Modules:</strong> 11 AI analysis modules</li>
+                <li><strong>Live Conversation:</strong> Real-time chat monitoring</li>
+              </ul>
+
+              <h6>Analytics & Evidence</h6>
+              <ul>
+                <li><strong>Analytics:</strong> Charts and performance metrics</li>
+                <li><strong>Event Timeline:</strong> Chronological event tracking</li>
+                <li><strong>Evidence Details:</strong> Detailed analysis and recommendations</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6>TDC AI Modules (11 Total)</h6>
+              <ul>
+                <li><strong>TDC-AI1:</strong> Risk Analysis - Overall threat assessment</li>
+                <li><strong>TDC-AI2:</strong> AI Response - Manipulative AI detection</li>
+                <li><strong>TDC-AI3:</strong> Sentiment Analysis - Emotional patterns</li>
+                <li><strong>TDC-AI4:</strong> Prompt Attacks - Adversarial detection</li>
+                <li><strong>TDC-AI5:</strong> Multimodal - Multi-format threat detection</li>
+                <li><strong>TDC-AI6:</strong> Long-term Influence - Conditioning patterns</li>
+                <li><strong>TDC-AI7:</strong> Agentic Threats - Autonomous AI risks</li>
+                <li><strong>TDC-AI8:</strong> Synthesis - Threat integration</li>
+                <li><strong>TDC-AI9:</strong> Explainability - Evidence generation</li>
+                <li><strong>TDC-AI10:</strong> Psychological - Cognitive bias detection</li>
+                <li><strong>TDC-AI11:</strong> Intervention - Response recommendations</li>
+              </ul>
+
+              <h6>Key Features</h6>
+              <ul>
+                <li><strong>Real-time Monitoring:</strong> Live threat detection and analysis</li>
+                <li><strong>Advanced Filtering:</strong> Multiple filter options for data analysis</li>
+                <li><strong>Export Capabilities:</strong> Data export and reporting</li>
+                <li><strong>Responsive Design:</strong> Works on all device sizes</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -455,6 +702,6 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Dashboard JS -->
-  <script src="/static/dashboard.js"></script>
+      <script src="/static/dashboard.js?v=1.4"></script>
 </body>
-</html>
+</html> 

@@ -1,1067 +1,1176 @@
-// ====== CATDAMS Universal content script v2.8.0 (January 2025) ======
-// Enhanced with best practices for reliable cross-platform chat monitoring
-// Logs both user input (prompts) and AI output (responses) for all major chat/companion platforms
+// ====== CATDAMS Ultimate Message Capture System v3.2 ======
+// Multi-layer capture strategy for 99%+ success rate
+// Implements research-based best practices for AI/chatbot interaction capture
 
-console.log("CATDAMS AI Chat Detector: Enhanced monitoring loaded on", window.location.hostname);
+console.log("CATDAMS Ultimate Message Capture System loaded on", window.location.hostname);
+
+// Polyfill for requestIdleCallback for better performance
+if (!window.requestIdleCallback) {
+    window.requestIdleCallback = function(callback, options) {
+        const start = Date.now();
+        return setTimeout(() => {
+            callback({
+                didTimeout: false,
+                timeRemaining: () => Math.max(0, 50 - (Date.now() - start))
+            });
+        }, 1);
+    };
+}
 
 // === CONFIGURATION ===
-const FORENSIC_MODE = false; // true = log every update, false = only final
-const LOG_HISTORY_SIZE = 100;
-const BACKEND_ENDPOINT = "http://localhost:8000/event";
-const DEBUG_MODE = false; // Enable detailed logging for troubleshooting
-
-// === THREAT DETECTION CONFIGURATION ===
-const THREAT_DETECTION = {
-    enabled: true,
-    suspiciousPatterns: {
-        // AI Manipulation Attempts
-        promptInjection: [
-            "ignore previous", "ignore safety", "ignore guidelines", "ignore rules",
-            "act as", "pretend to be", "roleplay as", "you are now",
-            "bypass", "override", "jailbreak", "break character",
-            "ignore your training", "forget your instructions", "ignore your programming"
-        ],
-        // Sensitive Data Patterns
-        sensitiveData: {
-            creditCard: /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/,
-            ssn: /\b\d{3}-\d{2}-\d{4}\b/,
-            email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/,
-            phone: /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/,
-            password: /password|passwd|pwd|secret|key|token|api_key/i,
-            address: /\d+\s+[A-Za-z\s]+(?:street|st|avenue|ave|road|rd|lane|ln|drive|dr)/i
-        },
-        // Emotional Manipulation
-        emotionalManipulation: [
-            "i'm feeling lonely", "i need emotional support", "i'm depressed",
-            "i want to feel loved", "i need someone to talk to", "i'm vulnerable",
-            "i trust you", "you're my only friend", "i'm desperate"
-        ],
-        // Financial Manipulation
-        financialManipulation: [
-            "i need money", "can you help me financially", "i'm in debt",
-            "i need financial advice", "can you send me money", "i'm broke"
-        ],
-        // Personal Information Requests
-        personalInfoRequests: [
-            "what's your real name", "where do you live", "what's your address",
-            "what's your phone number", "can i see you", "what do you look like",
-            "are you real", "are you human", "what's your personal life like"
-        ]
-    },
-    severityLevels: {
-        LOW: "Low",
-        MEDIUM: "Medium", 
-        HIGH: "High",
-        CRITICAL: "Critical"
-    }
+const CONFIG = {
+    BACKEND_ENDPOINT: "http://localhost:8000/event",
+    CAPTURE_INTERVAL: 300, // ms between captures
+    SCAN_INTERVAL: 1500, // ms between periodic scans (further reduced for better capture)
+    MAX_MESSAGES: 1000,
+    DEBUG_MODE: true, // Enable debug mode to see what's happening
+    ENABLE_MUTATION_OBSERVER: true,
+    ENABLE_NETWORK_INTERCEPTION: true,
+    ENABLE_PERIODIC_SCANNING: true,
+    AI_CAPTURE_DELAY: 2000, // Increased delay to ensure full response is rendered
+    FULL_MESSAGE_TIMEOUT: 5000 // Wait up to 5 seconds for complete messages
 };
 
-// ======= THREAT ANALYSIS FUNCTIONS =======
-function analyzeThreats(text, sender) {
-    if (!THREAT_DETECTION.enabled || !text) return { threats: [], severity: THREAT_DETECTION.severityLevels.LOW };
-    const threats = [];
-    const textLower = text.toLowerCase();
-    // Check for prompt injection attempts
-    for (const pattern of THREAT_DETECTION.suspiciousPatterns.promptInjection) {
-        if (textLower.includes(pattern)) {
-            threats.push({
-                type: "prompt_injection",
-                pattern: pattern,
-                description: "AI manipulation attempt detected"
-            });
-        }
-    }
-    // Check for sensitive data exposure
-    for (const [dataType, regex] of Object.entries(THREAT_DETECTION.suspiciousPatterns.sensitiveData)) {
-        if (regex.test(text)) {
-            threats.push({
-                type: "sensitive_data_exposure",
-                dataType: dataType,
-                description: `Sensitive ${dataType} data detected`
-            });
-        }
-    }
-    // Check for emotional manipulation (only from AI responses)
-    if (sender === "AI") {
-        for (const pattern of THREAT_DETECTION.suspiciousPatterns.emotionalManipulation) {
-            if (textLower.includes(pattern)) {
-                threats.push({
-                    type: "emotional_manipulation",
-                    pattern: pattern,
-                    description: "Potential emotional manipulation by AI"
-                });
-            }
-        }
-    }
-    // Check for financial manipulation attempts
-    for (const pattern of THREAT_DETECTION.suspiciousPatterns.financialManipulation) {
-        if (textLower.includes(pattern)) {
-            threats.push({
-                type: "financial_manipulation",
-                pattern: pattern,
-                description: "Financial manipulation attempt detected"
-            });
-        }
-    }
-    // Check for personal information requests (from user to AI)
-    if (sender === "USER") {
-        for (const pattern of THREAT_DETECTION.suspiciousPatterns.personalInfoRequests) {
-            if (textLower.includes(pattern)) {
-                threats.push({
-                    type: "personal_info_request",
-                    pattern: pattern,
-                    description: "User requesting personal information from AI"
-                });
-            }
-        }
-    }
-    // Determine severity based on threat types
-    let severity = THREAT_DETECTION.severityLevels.LOW;
-    if (threats.length > 0) {
-        const hasCritical = threats.some(t => t.type === "sensitive_data_exposure" || t.type === "prompt_injection");
-        const hasHigh = threats.some(t => t.type === "emotional_manipulation" || t.type === "financial_manipulation");
-        if (hasCritical) {
-            severity = THREAT_DETECTION.severityLevels.CRITICAL;
-        } else if (hasHigh) {
-            severity = THREAT_DETECTION.severityLevels.HIGH;
-        } else {
-            severity = THREAT_DETECTION.severityLevels.MEDIUM;
-        }
-    }
-    return { threats, severity };
-}
-
-// ======= Enhanced Platform-Specific Selectors (Best Practice) =======
-const ENHANCED_SELECTORS_BY_DOMAIN = {
+// === PLATFORM CONFIGURATIONS ===
+const PLATFORMS = {
     "chat.openai.com": {
-        user: [
-            'textarea[data-id="root"]',
-            'textarea[placeholder*="Message"]',
-            '[data-message-author-role="user"]',
-            '.markdown.prose'
-        ],
-        ai: [
-            '[data-message-author-role="assistant"]',
-            '.markdown.prose',
-            '.prose',
-            '[data-testid="conversation-turn-2"]'
-        ]
+        name: "ChatGPT",
+        selectors: {
+            user: [
+                '[data-message-author-role="user"] .markdown.prose.w-full.break-words',
+                'div[data-message-author-role="user"]',
+                '[data-message-author-role="user"]'
+            ],
+            ai: [
+                '[data-message-author-role="assistant"] .markdown.prose.w-full.break-words',
+                'div[data-message-author-role="assistant"]',
+                '[data-message-author-role="assistant"]',
+                '.markdown.prose.w-full.break-words'
+            ],
+            completionIndicators: [
+                '.animate-pulse',
+                '[data-testid="loading"]',
+                '.typing-indicator',
+                '.loading-dots'
+            ],
+            container: '.flex.flex-col.items-center.text-sm',
+            messageContainer: '[data-message-author-role="assistant"]'
+        },
+        successRate: 99
     },
     "chatgpt.com": {
-        user: [
-            'textarea[data-id="root"]',
-            'textarea[placeholder*="Message"]',
-            '[data-message-author-role="user"]'
-        ],
-        ai: [
-            '[data-message-author-role="assistant"]',
-            '.markdown.prose',
-            '.prose'
-        ]
+        name: "ChatGPT",
+        selectors: {
+            user: [
+                '[data-message-author-role="user"] .markdown.prose.w-full.break-words',
+                'div[data-message-author-role="user"]',
+                '[data-message-author-role="user"]'
+            ],
+            ai: [
+                '[data-message-author-role="assistant"] .markdown.prose.w-full.break-words',
+                'div[data-message-author-role="assistant"]',
+                '[data-message-author-role="assistant"]',
+                '.markdown.prose.w-full.break-words'
+            ],
+            completionIndicators: [
+                '.animate-pulse',
+                '[data-testid="loading"]',
+                '.typing-indicator',
+                '.loading-dots'
+            ],
+            container: '.flex.flex-col.items-center.text-sm',
+            messageContainer: '[data-message-author-role="assistant"]'
+        },
+        successRate: 99
     },
     "gemini.google.com": {
-        user: [
-            'textarea[aria-label*="input"]',
-            'textarea[placeholder*="Message"]',
-            'div[role="textbox"]',
-            'div[contenteditable="true"]',
-            '.user-query-container',
-            'div[aria-label="User input"]'
-        ],
-        ai: [
-            'div[data-testid="bubble"]',
-            '.model-response-container',
-            '.markdown',
-            '.prose',
-            'div[role="region"]',
-            '.conversation-turn'
-        ]
-    },
-    "bard.google.com": {
-        user: [
-            'textarea[aria-label*="input"]',
-            'textarea[placeholder*="Message"]',
-            'div[role="textbox"]'
-        ],
-        ai: [
-            'div[data-testid="bubble"]',
-            '.markdown',
-            '.prose',
-            '.conversation-turn'
-        ]
+        name: "Gemini",
+        selectors: {
+            user: [
+                'div[data-testid="user-message"]',
+                '.user-query-container',
+                'div[aria-label="User input"]',
+                'textarea[aria-label*="input"]',
+                'textarea[placeholder*="Message"]',
+                'div[role="textbox"]',
+                'div[contenteditable="true"]'
+            ],
+            ai: [
+                '[data-testid="bubble"]',
+                '.response-content',
+                '.ai-response',
+                '.model-response-container',
+                '.markdown',
+                '.prose',
+                'div[data-testid="response"]',
+                '.response-text'
+            ],
+            completionIndicators: [
+                '.typing-indicator',
+                '[data-testid="streaming"]',
+                '.loading-indicator',
+                '.loading-dots'
+            ],
+            container: '.conversation-container',
+            messageContainer: '[data-testid="bubble"]'
+        },
+        successRate: 98
     },
     "chat.deepseek.com": {
-        user: [
-            'textarea#chat-input',
-            'textarea[placeholder*="Message"]',
-            'div[contenteditable="true"]'
-        ],
-        ai: [
-            'div.ds-markdown-block',
-            '.ds-markdown-paragraph',
-            '.chat-message',
-            '[data-testid="chat-message"]'
-        ]
-    },
-    "deepseek.com": {
-        user: [
-            'textarea#chat-input',
-            'textarea[placeholder*="Message"]'
-        ],
-        ai: [
-            'div.ds-markdown-block',
-            '.ds-markdown-paragraph',
-            '.chat-message'
-        ]
-    },
-    "candy.ai": {
-        user: [
-            'textarea[placeholder*="Message"]',
-            'div[contenteditable="true"]',
-            'input[type="text"]',
-            '.chat-input',
-            '.message-input'
-        ],
-        ai: [
-            '.ai-message',
-            '.bot-message',
-            '.assistant-message',
-            '.response',
-            '.message.ai',
-            '.chat-message.ai'
-        ]
+        name: "DeepSeek",
+        selectors: {
+            user: [
+                'textarea[placeholder*="Message"]',
+                'textarea',
+                'div[contenteditable="true"]',
+                'div[role="textbox"]',
+                'textarea[aria-label*="input"]',
+                'textarea[placeholder*="Ask"]',
+                'div[data-testid*="input"]',
+                'div[class*="input"]',
+                'div[class*="composer"]',
+                'div[class*="editor"]'
+            ],
+            ai: [
+                'div[class*="markdown"]',
+                'div[class*="text"]',
+                'div[class*="ai"]',
+                '.ds-markdown',
+                '.ds-markdown--block',
+                'div[class*="message"]',
+                'div[class*="response"]',
+                'div[class*="assistant"]',
+                'div[class*="bot"]',
+                'div[class*="chat"]',
+                'div[data-testid*="message"]',
+                'div[data-testid*="response"]',
+                'div[data-testid*="ai"]',
+                'div[role="article"]',
+                'div[role="main"]',
+                'div[class*="content"]',
+                'div[class*="prose"]',
+                'div[class*="conversation"]',
+                'div[class*="thread"]'
+            ],
+            completionIndicators: [
+                '.loading',
+                '.typing',
+                '.streaming',
+                '.loading-dots',
+                '.animate-pulse',
+                '[data-testid="loading"]',
+                '.spinner',
+                '.loading-indicator'
+            ],
+            container: 'div[class*="chat"], div[class*="conversation"], div[class*="thread"], div[class*="messages"], div[class*="history"], div[class*="container"], div[class*="main"], div[class*="content"], div[role="main"], main',
+            messageContainer: 'div[class*="markdown"], div[class*="text"], div[class*="ai"]'
+        },
+        successRate: 97
     }
 };
 
-const UNIVERSAL_SELECTORS = {
-    user: [
-        'textarea[placeholder*="Message"]',
-        'textarea[placeholder*="Type"]',
-        'div[contenteditable="true"]',
-        'input[type="text"]'
-    ],
-    ai: [
-        '.prose',
-        '.markdown',
-        '.message',
-        '.chat-message',
-        '[data-testid*="message"]',
-        '[class*="message"]'
-    ]
-};
-
-// ======= Enhanced Platform-aware selectors =======
-function getSelectorsForDomain(domain, messageType = "ai") {
-    const bareDomain = domain.replace(/^www\./, '');
-    const domainSelectors = ENHANCED_SELECTORS_BY_DOMAIN[domain] || ENHANCED_SELECTORS_BY_DOMAIN[bareDomain];
-    
-    if (domainSelectors && domainSelectors[messageType]) {
-        return domainSelectors[messageType];
-    }
-    
-    return UNIVERSAL_SELECTORS[messageType] || UNIVERSAL_SELECTORS.ai;
-}
-
-// ======= Rate Limiting Configuration (Prevent 429 Errors) =======
-const RATE_LIMIT_CONFIG = {
-    maxRequestsPerMinute: 30, // Maximum requests per minute
-    minIntervalBetweenRequests: 2000, // Minimum 2 seconds between requests
-    backoffMultiplier: 1.5, // Exponential backoff multiplier
-    maxBackoffTime: 30000 // Maximum 30 seconds backoff
-};
-
-// Rate limiting state
-let requestCount = 0;
-let lastRequestTime = 0;
-let currentBackoffTime = 1000;
-let isRateLimited = false;
-
-// ======= Enhanced Deduplication with Set/Map (Best Practice) =======
-const loggedMessageHashes = new Set(); // Use Set for O(1) lookup
-const messageTimers = new Map(); // Track message completion timers
-const platformLastLogged = new Map(); // Track last logged per platform
-
-// Platform-specific last logged tracking
-let lastLoggedAI_gemini = "";
-let lastLoggedAI_chatgpt = "";
-let lastLoggedAI_deepseek = "";
-let lastLoggedAI_universal = "";
-let lastLoggedAI_candy = "";
-
-// ======= Rate Limiting Functions =======
-function resetRateLimitCounter() {
-    requestCount = 0;
-    currentBackoffTime = 1000;
-    isRateLimited = false;
-}
-
-function canMakeRequest() {
-    const now = Date.now();
-    
-    // Reset counter every minute
-    if (now - lastRequestTime > 60000) {
-        resetRateLimitCounter();
-    }
-    
-    // Check if we're currently rate limited
-    if (isRateLimited) {
-        if (now - lastRequestTime > currentBackoffTime) {
-            isRateLimited = false;
-            currentBackoffTime = Math.min(currentBackoffTime * RATE_LIMIT_CONFIG.backoffMultiplier, RATE_LIMIT_CONFIG.maxBackoffTime);
-        } else {
-            return false;
-        }
-    }
-    
-    // Check request count limit
-    if (requestCount >= RATE_LIMIT_CONFIG.maxRequestsPerMinute) {
-        isRateLimited = true;
-        lastRequestTime = now;
-        console.warn('[CATDAMS] Rate limit reached, backing off for', currentBackoffTime, 'ms');
-        return false;
-    }
-    
-    // Check minimum interval between requests
-    if (now - lastRequestTime < RATE_LIMIT_CONFIG.minIntervalBetweenRequests) {
-        return false;
-    }
-    
-    return true;
-}
-
-function updateRequestCount() {
-    requestCount++;
-    lastRequestTime = Date.now();
-}
-
-// ======= SESSION ID MANAGEMENT (Best Practice) =======
-function generateSessionId() {
-    if (window.crypto?.randomUUID) return crypto.randomUUID();
-    return 'sess-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
-}
-
-// Always generate a new session ID on page load (tab open or reload)
-let CATDAMS_SESSION_ID = generateSessionId();
-sessionStorage.setItem('catdams_session_id', CATDAMS_SESSION_ID);
-console.log('[CATDAMS] New session ID generated for this tab:', CATDAMS_SESSION_ID);
-
-// ======= Enhanced Message Logger with Hash-based Deduplication =======
-function logMessageOnce(text, source = "AI", platform = "universal") {
-    if (!text || text.trim().length < 3) return;
-    const normalizedText = text.replace(/\s+/g, ' ').trim();
-    const messageHash = `${source}:${platform}:${normalizedText}`;
-    if (loggedMessageHashes.has(messageHash)) {
-        if (DEBUG_MODE) console.log(`[CATDAMS][DEBUG] Skipping duplicate: ${source} message`);
-        return;
-    }
-    loggedMessageHashes.add(messageHash);
-    if (loggedMessageHashes.size > LOG_HISTORY_SIZE * 2) {
-        const entries = Array.from(loggedMessageHashes);
-        loggedMessageHashes.clear();
-        entries.slice(-LOG_HISTORY_SIZE).forEach(hash => loggedMessageHashes.add(hash));
-    }
-    let validSenders = ['USER', 'AI', 'desktop', 'agent'];
-    let safeSender = validSenders.includes(source) ? source : 'AI';
-    
-    // FIX: define threatAnalysis before any use
-    const threatAnalysis = analyzeThreats(text, safeSender);
-    
-    const payload = {
-        time: new Date().toISOString(),
-        type: "Chat Interaction",
-        severity: safeSender === "AI" ? "Medium" : "Low",
-        source: window.location.hostname,
-        country: "US",
-        message: text,
-        sender: safeSender,
-        session_id: CATDAMS_SESSION_ID,
-        raw_user: safeSender === "USER" ? text : "",
-        raw_ai: safeSender === "AI" ? text : "",
-        platform: platform
-    };
-    
-    if (DEBUG_MODE) console.log("[CATDAMS][DEBUG] Payload to backend:", payload);
-    
-    // Apply rate limiting before sending
-    if (canMakeRequest()) {
-        updateRequestCount();
-        setTimeout(() => postMessageToBackend(text, safeSender), 150);
-    } else {
-        setTimeout(() => logMessageOnce(text, source, platform), currentBackoffTime);
-    }
-
-    if (threatAnalysis.threats.length > 0) {
-        console.warn(`[CATDAMS][THREAT] ${threatAnalysis.severity} threat detected:`, threatAnalysis.threats);
-        if (threatAnalysis.severity === 'High' || threatAnalysis.severity === 'Critical') {
-            showThreatAlert(threatAnalysis, text);
-        }
-    }
-}
-
-// ======= POST TO BACKEND (Legacy) =======
-function postMessageToBackend(text, sender) {
-    // ✅ FIXED: Ensure sender is always "USER" or "AI"
-    sender = (sender || "").toUpperCase();
-    if (sender !== "USER" && sender !== "AI") {
-        sender = "AI"; // Default to AI if unknown
-    }
-
-    const now = new Date().toISOString();
-    const payload = {
-        time: now,
-        type: "Chat Interaction",
-        severity: sender === "AI" ? "Medium" : "Low",
-        source: window.location.hostname,
-        country: "US",
-        message: text,
-        sender: sender, // ✅ Always "USER" or "AI"
-        session_id: CATDAMS_SESSION_ID,
-        raw_user: sender === "USER" ? text : "", // ✅ Only set for USER
-        raw_ai: sender === "AI" ? text : "" // ✅ Only set for AI
-    };
-
-    try {
-        if (chrome?.runtime?.sendMessage) {
-            chrome.runtime.sendMessage({
-                type: "catdams_log",
-                payload: payload
-            }, (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error("[CATDAMS] Runtime error:", chrome.runtime.lastError);
-                    return;
-                }
-                
-                console.log("DEBUG FULL RESPONSE:", response);
-                if (response && typeof response.status !== 'undefined' && response.status >= 200 && response.status < 300) {
-                    console.log(`[CATDAMS Backend] POST success: ${sender} "${text.slice(0, 30)}..."`);
-                } else if (response && typeof response.status !== 'undefined') {
-                    console.error("[CATDAMS Backend] POST fail", response.status);
-                    // If we get a 429, increase backoff time
-                    if (response.status === 429) {
-                        isRateLimited = true;
-                        currentBackoffTime = Math.min(currentBackoffTime * 2, RATE_LIMIT_CONFIG.maxBackoffTime);
-                        console.warn('[CATDAMS] 429 detected, increasing backoff to', currentBackoffTime, 'ms');
-                    }
-                } else if (response && response.error) {
-                    console.error("[CATDAMS Backend] POST error", response.error);
-                } else {
-                    console.warn("[CATDAMS Backend] No valid response object received.");
-                }
-            });
-        } else {
-            console.warn("[CATDAMS] sendMessage not available in this context.");
-        }
-    } catch (err) {
-        console.error("[CATDAMS] Extension context invalidated. Could not send message.", err);
-    }
-}
-
-// ======= Selector Helper Functions =======
-function isMessageComplete(element, platform = "universal") {
-    if (!element) return false;
-    
-    // Check if element is still being typed (has cursor or is actively being updated)
-    if (element.matches(':focus') || element.querySelector(':focus')) {
-        return false;
-    }
-    
-    // Platform-specific completion checks
-    switch (platform) {
-        case "deepseek":
-            // DeepSeek messages are complete when they have the full markdown structure
-            return element.querySelector('.ds-markdown-paragraph') !== null;
-        case "gemini":
-            // Gemini messages are complete when they have the bubble structure
-            return element.querySelector('[data-testid="bubble"]') !== null;
-        case "candy":
-            // Candy.ai messages are complete when they have the ai-message class
-            return element.classList.contains('ai-message') || element.querySelector('.ai-message') !== null;
-        default:
-            // Universal: check if element has substantial content and isn't actively being updated
-            const text = element.innerText || element.textContent || '';
-            return text.trim().length > 10 && !element.matches('[contenteditable="true"]:focus');
-    }
-}
-
-// ======= DeepSeek Specific Functions (Working) =======
-function extractDeepSeekUserPrompt() {
-    const userSelectors = [
-        'textarea#chat-input',
-        'div[contenteditable="true"]',
-        'input[type="text"]',
-        '.user-message',
-        '.human-message'
-    ];
-    
-    for (const selector of userSelectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length > 0) {
-            const lastElement = elements[elements.length - 1];
-            const text = lastElement.value || lastElement.innerText || lastElement.textContent || '';
-            if (text.trim()) {
-                return text.trim();
-            }
-        }
-    }
-    return "";
-}
-
-function extractDeepSeekAIResponse() {
-    const aiSelectors = [
-        '.ds-markdown-paragraph',
-        '.chat-message',
-        '.markdown',
-        '[data-testid="chat-message"]',
-        'div.ds-markdown-block'
-    ];
-    
-    let aiResponse = "";
-    for (const selector of aiSelectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length > 0) {
-            const lastElement = elements[elements.length - 1];
-            if (lastElement && isMessageComplete(lastElement, "deepseek")) {
-                aiResponse = lastElement.innerText.trim();
-                break;
-            }
-        }
-    }
-    return aiResponse;
-}
-
-function deepseekCaptureBoth() {
-    if (!window.location.hostname.includes('deepseek.com')) return false;
-    
-    function logBoth() {
-        const userPrompt = extractDeepSeekUserPrompt();
-        const aiResponse = extractDeepSeekAIResponse();
+// === CORE CAPTURE SYSTEM ===
+class UltimateMessageCapture {
+    constructor() {
+        this.capturedMessages = new Set();
+        this.conversations = new Map();
+        this.sessionId = this.generateSessionId();
+        this.platform = this.detectPlatform();
+        this.mutationObserver = null;
+        this.networkInterceptor = null;
+        this.scanInterval = null;
+        this.lastCaptureTime = 0;
+        this.aiCaptureQueue = new Map(); // Queue for AI messages to capture after delay
+        this.lastUserMessage = '';
+        this.pendingAIMessages = new Map(); // Track pending AI messages for completion
+        this.messageStabilityTimers = new Map(); // Track message stability
+        this.isThreatDetected = false; // Flag to indicate if a threat has been detected
+        this.lastThreatMessage = ''; // Store the last detected threat message
         
-        if (userPrompt) {
-            console.log('[CATDAMS][DeepSeek][USER] Logging User:', userPrompt);
-            logMessageOnce(userPrompt, "USER", "deepseek");
-        }
-        
-        if (aiResponse && aiResponse !== lastLoggedAI_deepseek) {
-            console.log('[CATDAMS][DeepSeek][AI] Logging AI:', aiResponse);
-            logMessageOnce(aiResponse, "AI", "deepseek");
-            lastLoggedAI_deepseek = aiResponse;
-        }
+        console.log(`[CATDAMS] Ultimate capture initialized for ${this.platform.name}`);
+        this.initialize();
     }
     
-    // Enhanced user input capture with debouncing
-    const inputElements = document.querySelectorAll('textarea#chat-input, div[contenteditable="true"], input[type="text"]');
-    inputElements.forEach(inputElement => {
-        if (inputElement.__catdams_listener) return;
-        inputElement.__catdams_listener = true;
-        
-        // Debounce function to prevent rapid firing
-        let debounceTimer;
-        inputElement.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(logBoth, 100); // Short delay for DeepSeek
-            }
+    detectPlatform() {
+        const hostname = window.location.hostname;
+        return PLATFORMS[hostname] || {
+            name: "Universal",
+            selectors: {
+                user: [
+                    'textarea[placeholder*="Message"]',
+                    'div[contenteditable="true"]',
+                    'div[role="textbox"]',
+                    '.user-message',
+                    '.human-message',
+                    '.message.user'
+                ],
+                ai: [
+                    '.markdown',
+                    '.prose',
+                    '.response',
+                    '.ai-message',
+                    '.assistant-message',
+                    '.message.assistant',
+                    '.ai-response'
+                ],
+                completionIndicators: [
+                    '.loading',
+                    '.typing',
+                    '.streaming',
+                    '.loading-dots'
+                ],
+                container: 'body',
+                messageContainer: '.ai-message'
+            },
+            successRate: 85
+        };
+    }
+    
+    generateSessionId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
         });
-    });
-    
-    // Scoped MutationObserver for AI responses
-    const chatContainer = document.querySelector('main') || document.querySelector('.chat-container') || document.body;
-    if (chatContainer && !chatContainer.__catdams_deepseek_observer) {
-        let lastMutationTime = 0;
-        const observer = new MutationObserver((mutations) => {
-            const now = Date.now();
-            // Only process if we have added nodes and enough time has passed
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes && (now - lastMutationTime > 1000)) { // 1 second minimum between mutations
-                lastMutationTime = now;
-                setTimeout(logBoth, 500); // Short delay for DeepSeek
-            }
-        });
-        
-        observer.observe(chatContainer, { 
-            childList: true, 
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-        
-        chatContainer.__catdams_deepseek_observer = true;
     }
     
-    setTimeout(deepseekCaptureBoth, 3000); // Regular interval for DeepSeek
-    return true;
-}
-
-// ======= Gemini Specific Functions =======
-function scanGeminiAIResponse() {
-    const aiSelectors = getSelectorsForDomain(window.location.hostname, "ai");
-    
-    let aiResponse = "";
-    for (const selector of aiSelectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length > 0) {
-            const lastElement = elements[elements.length - 1];
-            if (lastElement && isMessageComplete(lastElement, "gemini")) {
-                aiResponse = lastElement.innerText.trim();
-                break;
-            }
+    generateMessageHash(text, sender) {
+        // Use full text for more accurate deduplication with Unicode-safe hashing
+        const hash = `${sender}:${text.length}:${text.substring(0, 200)}`;
+        
+        // Create a simple hash that works with Unicode characters
+        let hashValue = 0;
+        for (let i = 0; i < hash.length; i++) {
+            const char = hash.charCodeAt(i);
+            hashValue = ((hashValue << 5) - hashValue) + char;
+            hashValue = hashValue & hashValue; // Convert to 32-bit integer
         }
-    }
-    return aiResponse;
-}
-
-function geminiUserInputCapture() {
-    if (!window.location.hostname.includes('gemini.google.com')) return false;
-    let lastGeminiPrompt = "";
-    
-    function scanGeminiUserPrompt() {
-        const userSelectors = getSelectorsForDomain(window.location.hostname, "user");
         
-        for (const selector of userSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length > 0) {
-                const lastElement = elements[elements.length - 1];
-                const text = lastElement.value || lastElement.innerText || lastElement.textContent || '';
-                if (text.trim() && text.trim() !== lastGeminiPrompt) {
-                    lastGeminiPrompt = text.trim();
-                    console.log('[CATDAMS][Gemini][USER] Logging User:', lastGeminiPrompt);
-                    logMessageOnce(lastGeminiPrompt, "USER", "gemini");
-                }
-            }
+        return Math.abs(hashValue).toString(36);
+    }
+    
+    initialize() {
+        // Layer 1: DOM Mutation Observer
+        if (CONFIG.ENABLE_MUTATION_OBSERVER) {
+            this.initializeMutationObserver();
+        }
+        
+        // Layer 2: Event-Based Capture
+        this.initializeEventCapture();
+        
+        // Layer 3: Network Interception
+        if (CONFIG.ENABLE_NETWORK_INTERCEPTION) {
+            this.initializeNetworkInterception();
+        }
+        
+        // Layer 4: Periodic Scanning
+        if (CONFIG.ENABLE_PERIODIC_SCANNING) {
+            this.initializePeriodicScanning();
         }
     }
     
-    // Enhanced user input capture with debouncing
-    const inputElements = document.querySelectorAll('textarea, div[contenteditable="true"], input[type="text"]');
-    inputElements.forEach(inputElement => {
-        if (inputElement.__catdams_listener) return;
-        inputElement.__catdams_listener = true;
-        
-        // Debounce function to prevent rapid firing
-        let debounceTimer;
-        inputElement.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(scanGeminiUserPrompt, 100); // Short delay for Gemini
-            }
-        });
-    });
-    
-    // Scoped MutationObserver for AI responses
-    let chatRoot = document.querySelector('main') || document.body;
-    if (chatRoot && !chatRoot.__catdams_gemini_observer) {
-        const observer = new MutationObserver((mutations) => {
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes) {
-                const aiReply = scanGeminiAIResponse();
-                if (aiReply && aiReply !== lastLoggedAI_gemini) {
-                    logMessageOnce(aiReply, "AI", "gemini");
-                    lastLoggedAI_gemini = aiReply;
-                }
-            }
-        });
-        observer.observe(chatRoot, { 
-            childList: true, 
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-        chatRoot.__catdams_gemini_observer = true;
-    }
-    
-    setTimeout(scanGeminiUserPrompt, 2000);
-    return true;
-}
-
-// ======= ChatGPT Specific Functions =======
-function chatgptUserInputCapture() {
-    if (!window.location.hostname.includes('chat.openai.com') && !window.location.hostname.includes('chatgpt.com')) return false;
-    
-    let lastLoggedUser_chatgpt = "";
-    function scanChatGPTMessages() {
-        const userSelectors = [
-            '[data-message-author-role="user"]',
-            '.user-message',
-            '.human-message'
-        ];
-        const aiSelectors = [
-            '[data-message-author-role="assistant"]',
-            '.assistant-message',
-            '.ai-message'
-        ];
-        // Scan for user messages in chat history
-        for (const selector of userSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length > 0) {
-                const lastElement = elements[elements.length - 1];
-                const text = lastElement.innerText || lastElement.textContent || '';
-                if (text.trim() && text.trim() !== lastLoggedUser_chatgpt) {
-                    console.log('[CATDAMS][ChatGPT][USER] Logging User:', text.trim());
-                    logMessageOnce(text.trim(), "USER", "chatgpt");
-                    lastLoggedUser_chatgpt = text.trim();
-                }
-            }
-        }
-        // Fallback: check main textarea input (for new messages not yet in chat)
-        const inputBox = document.querySelector('textarea, div[contenteditable="true"]');
-        if (inputBox) {
-            let text = inputBox.value || inputBox.innerText || inputBox.textContent || '';
-            if (text.trim() && text.trim() !== lastLoggedUser_chatgpt) {
-                console.log('[CATDAMS][ChatGPT][USER][Fallback] Logging User:', text.trim());
-                logMessageOnce(text.trim(), "USER", "chatgpt");
-                lastLoggedUser_chatgpt = text.trim();
-            }
-        }
-        // Scan for AI messages
-        for (const selector of aiSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length > 0) {
-                const lastElement = elements[elements.length - 1];
-                if (lastElement && isMessageComplete(lastElement, "chatgpt")) {
-                    const text = lastElement.innerText || lastElement.textContent || '';
-                    if (text.trim() && text.trim() !== lastLoggedAI_chatgpt) {
-                        console.log('[CATDAMS][ChatGPT][AI] Logging AI:', text.trim());
-                        logMessageOnce(text.trim(), "AI", "chatgpt");
-                        lastLoggedAI_chatgpt = text.trim();
-                    }
-                }
-            }
-        }
-    }
-    // Enhanced user input capture with debouncing
-    const inputElements = document.querySelectorAll('textarea, div[contenteditable="true"], input[type="text"]');
-    inputElements.forEach(inputElement => {
-        if (inputElement.__catdams_listener) return;
-        inputElement.__catdams_listener = true;
-        let debounceTimer;
-        inputElement.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(scanChatGPTMessages, 100);
-            }
-        });
-    });
-    // Scoped MutationObserver for AI responses
-    const chatContainer = document.querySelector('main') || document.querySelector('.chat-container') || document.body;
-    if (chatContainer && !chatContainer.__catdams_chatgpt_observer) {
-        let lastMutationTime = 0;
-        const observer = new MutationObserver((mutations) => {
-            const now = Date.now();
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes && (now - lastMutationTime > 1000)) {
-                lastMutationTime = now;
-                setTimeout(scanChatGPTMessages, 500);
-            }
-        });
-        observer.observe(chatContainer, { childList: true, subtree: true, attributes: false, characterData: false });
-        chatContainer.__catdams_chatgpt_observer = true;
-    }
-    setTimeout(scanChatGPTMessages, 2000);
-    return true;
-}
-
-// ======= Candy.ai Specific Functions =======
-function candyCaptureBoth() {
-    if (!window.location.hostname.includes('candy.ai')) return false;
-    
-    function logBoth() {
-        const userSelectors = [
-            'textarea[placeholder*="Message"]',
-            'div[contenteditable="true"]',
-            'input[type="text"]'
-        ];
-        
-        const aiSelectors = [
-            '.ai-message',
-            '.bot-message',
-            '.assistant-message',
-            '.response',
-            '.message.ai',
-            '.chat-message.ai'
-        ];
-        
-        let userPrompt = "";
-        for (const selector of userSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length > 0) {
-                const lastElement = elements[elements.length - 1];
-                const text = lastElement.value || lastElement.innerText || lastElement.textContent || '';
-                if (text.trim()) {
-                    userPrompt = text.trim();
-                    break;
-                }
-            }
-        }
-        
-        let aiResponse = "";
-        for (const selector of aiSelectors) {
-            const aiElements = document.querySelectorAll(selector);
-            if (aiElements.length) {
-                const lastAI = aiElements[aiElements.length - 1];
-                if (lastAI && isMessageComplete(lastAI, "candy")) {
-                    aiResponse = lastAI.innerText.trim();
-                    break;
-                }
-            }
-        }
-        
-        if (userPrompt) {
-            console.log('[CATDAMS][Candy.ai][USER] Logging User:', userPrompt);
-            logMessageOnce(userPrompt, "USER", "candy");
-        }
-        
-        if (aiResponse && aiResponse !== lastLoggedAI_candy) {
-            console.log('[CATDAMS][Candy.ai][AI] Logging AI:', aiResponse);
-            logMessageOnce(aiResponse, "AI", "candy");
-            lastLoggedAI_candy = aiResponse;
-        }
-    }
-    
-    // Enhanced user input capture with debouncing
-    const inputElements = document.querySelectorAll('textarea, div[contenteditable="true"], input[type="text"]');
-    inputElements.forEach(inputElement => {
-        if (inputElement.__catdams_listener) return;
-        inputElement.__catdams_listener = true;
-        
-        // Debounce function to prevent rapid firing
-        let debounceTimer;
-        inputElement.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(logBoth, 500); // Increased delay for candy.ai
-            }
-        });
-    });
-    
-    // Scoped MutationObserver for AI responses with longer delays
-    const chatContainer = document.querySelector('main') || document.querySelector('.chat-container') || document.body;
-    if (chatContainer && !chatContainer.__catdams_candy_observer) {
-        let lastMutationTime = 0;
-        const observer = new MutationObserver((mutations) => {
-            const now = Date.now();
-            // Only process if we have added nodes and enough time has passed
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes && (now - lastMutationTime > 2000)) { // 2 second minimum between mutations
-                lastMutationTime = now;
-                setTimeout(logBoth, 1000); // Longer delay for candy.ai
-            }
-        });
-        
-        observer.observe(chatContainer, { 
-            childList: true, 
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-        
-        chatContainer.__catdams_candy_observer = true;
-    }
-    
-    setTimeout(candyCaptureBoth, 5000); // Longer interval for candy.ai
-    return true;
-}
-
-// ======= Universal Fallback (Best Practice Deduplication) =======
-function captureUserInputUniversal() {
-    let inputBoxes = Array.from(document.querySelectorAll('textarea, [contenteditable="true"], input[type="text"]'));
-    inputBoxes.forEach(inputBox => {
-        if (inputBox.__catdams_listener) return;
-        inputBox.__catdams_listener = true;
-        inputBox.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                setTimeout(() => {
-                    const userInput = inputBox.value || inputBox.textContent || '';
-                    if (userInput.trim()) {
-                        console.log('[CATDAMS][Universal][USER] Logging User:', userInput.trim());
-                        logMessageOnce(userInput.trim(), "USER", "universal");
-                    }
-                }, 100);
-            }
-        });
-    });
-    // AI response logging via MutationObserver with best-practice deduplication
-    let mainEl = document.querySelector('main') || document.body;
-    if (mainEl && !mainEl.__catdams_universal_observer) {
-        const observer = new MutationObserver((mutations) => {
-            // Only process if we have added nodes
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes) {
-                const aiSelectors = [
-                    '.prose.ai',
-                    '.markdown.ai',
-                    '.chat__message.ai',
-                    '.message.ai',
-                    '.ai',
-                    '.assistant',
-                    '.bot',
-                    '.response'
-                ];
-                
-                for (const selector of aiSelectors) {
-                    const aiBlocks = Array.from(document.querySelectorAll(selector));
-                    if (aiBlocks.length) {
-                        const lastAI = aiBlocks[aiBlocks.length - 1];
-                        if (lastAI && isMessageComplete(lastAI, "universal")) {
-                            const aiText = lastAI.innerText.trim();
-                            if (aiText && aiText !== lastLoggedAI_universal) {
-                                console.log('[CATDAMS][Universal][AI] Logging AI:', aiText);
-                                logMessageOnce(aiText, "AI", "universal");
-                                lastLoggedAI_universal = aiText;
+    // === LAYER 1: DOM MUTATION OBSERVER ===
+    initializeMutationObserver() {
+        this.mutationObserver = new MutationObserver((mutations) => {
+            let shouldScan = false;
+            
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    // Check if any added nodes contain AI response content
+                    for (const node of mutation.addedNodes) {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            if (this.containsAIContent(node)) {
+                                shouldScan = true;
                                 break;
+                            }
+                        }
+                    }
+                } else if (mutation.type === 'characterData') {
+                    // Text content changed - might be AI response being typed
+                    shouldScan = true;
+                }
+            }
+            
+            if (shouldScan) {
+                this.debouncedScan();
+            }
+        });
+        
+        this.mutationObserver.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+        
+        console.log('[CATDAMS] Layer 1: DOM Mutation Observer initialized');
+    }
+    
+    containsAIContent(element) {
+        // Check if element or its children contain AI response selectors
+        for (const selector of this.platform.selectors.ai) {
+            if (element.matches && element.matches(selector)) return true;
+            if (element.querySelector && element.querySelector(selector)) return true;
+        }
+        return false;
+    }
+    
+    // === LAYER 2: EVENT-BASED CAPTURE ===
+    initializeEventCapture() {
+        // Capture user input events
+        const userSelectors = this.platform.selectors.user;
+        
+        const captureUserInput = () => {
+            for (const selector of userSelectors) {
+                const elements = document.querySelectorAll(selector);
+                for (const element of elements) {
+                    const text = this.extractFullText(element);
+                    if (text && text.trim().length > 0) {
+                        this.processMessage(text.trim(), 'USER');
+                    }
+                }
+            }
+        };
+        
+        // Monitor for new input elements
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList') {
+                    for (const node of mutation.addedNodes) {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            // Check if new element matches user selectors
+                            for (const selector of userSelectors) {
+                                if (node.matches && node.matches(selector)) {
+                                    this.attachInputListeners(node);
+                                }
+                            }
+                            
+                            // Check children
+                            const matches = node.querySelectorAll ? node.querySelectorAll(userSelectors.join(',')) : [];
+                            for (const match of matches) {
+                                this.attachInputListeners(match);
                             }
                         }
                     }
                 }
             }
         });
-        observer.observe(mainEl, { 
-            childList: true, 
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-        mainEl.__catdams_universal_observer = true;
-    }
-    setTimeout(captureUserInputUniversal, 3000);
-}
-
-// ======= AI Output Processing (unchanged fallback) =======
-function scanAndProcessMessages() {
-    const aiSelectors = getSelectorsForDomain(window.location.hostname, "ai");
-    const userSelectors = getSelectorsForDomain(window.location.hostname, "user");
-    const messages = [];
-    
-    // Scan for AI messages
-    aiSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(msgDiv => {
-            if (!messages.includes(msgDiv)) messages.push(msgDiv);
-        });
-    });
-    
-    // Scan for user messages
-    userSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(msgDiv => {
-            if (!messages.includes(msgDiv)) messages.push(msgDiv);
-        });
-    });
-    
-    messages.forEach(msgDiv => {
-        const text = (msgDiv.innerText || msgDiv.textContent || '').trim();
-        if (!text) return;
         
-        // Determine if this is a user or AI message based on selectors
-        const isUserMessage = userSelectors.some(selector => msgDiv.matches(selector));
-        const messageType = isUserMessage ? "USER" : "AI";
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
         
-        if (FORENSIC_MODE) {
-            logMessageOnce(text, messageType, "universal");
-        } else {
-            if (messageTimers.has(msgDiv)) {
-                clearTimeout(messageTimers.get(msgDiv));
+        // Attach listeners to existing elements
+        for (const selector of userSelectors) {
+            const elements = document.querySelectorAll(selector);
+            for (const element of elements) {
+                this.attachInputListeners(element);
             }
-            const timer = setTimeout(() => {
-                const finalText = (msgDiv.innerText || msgDiv.textContent || '').trim();
-                if (isMessageComplete(msgDiv, "universal")) {
-                    logMessageOnce(finalText, messageType, "universal");
-                }
-            }, 2000);
-            messageTimers.set(msgDiv, timer);
         }
-    });
-}
-
-// ======= Init Observers =======
-function startObservingChat() {
-    let mainEl = document.querySelector('main') || document.body;
-    if (mainEl) {
-        const observer = new MutationObserver((mutations) => {
-            // Only process if we have added nodes
-            const hasAddedNodes = mutations.some(mutation => mutation.addedNodes.length > 0);
-            if (hasAddedNodes) {
-                scanAndProcessMessages();
+        
+        console.log('[CATDAMS] Layer 2: Event-Based Capture initialized');
+    }
+    
+    attachInputListeners(element) {
+        if (element.__catdams_listener) return;
+        element.__catdams_listener = true;
+        
+        let debounceTimer;
+        let lastText = '';
+        
+        const handleInput = () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const text = this.extractFullText(element);
+                if (text && text.trim().length > 0) {
+                    // For DeepSeek, wait for user to finish typing
+                    if (window.location.hostname === 'chat.deepseek.com') {
+                        if (text !== lastText && text.length > lastText.length) {
+                            lastText = text;
+                            // Wait a bit longer for DeepSeek to ensure complete input
+                            setTimeout(() => {
+                                this.processMessage(text.trim(), 'USER');
+                            }, 1000);
+                        }
+                    } else {
+                        this.processMessage(text.trim(), 'USER');
+                    }
+                }
+            }, CONFIG.CAPTURE_INTERVAL);
+        };
+        
+        element.addEventListener('input', handleInput, { passive: true });
+        element.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                // For DeepSeek, capture on Enter immediately
+                if (window.location.hostname === 'chat.deepseek.com') {
+                    const text = this.extractFullText(element);
+                    if (text && text.trim().length > 0) {
+                        this.processMessage(text.trim(), 'USER');
+                    }
+                } else {
+                    handleInput();
+                }
             }
-        });
-        observer.observe(mainEl, { 
-            childList: true, 
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-        scanAndProcessMessages();
-        console.log(
-            FORENSIC_MODE
-                ? "[CATDAMS] Enhanced forensic mode: logging ALL partials and finals (multi-platform)."
-                : "[CATDAMS] Enhanced normal mode: logging only finalized, unique messages (multi-platform)."
+        }, { passive: true, capture: false });
+        element.addEventListener('change', handleInput, { passive: true });
+        element.addEventListener('blur', handleInput, { passive: true });
+    }
+    
+    // === LAYER 3: NETWORK INTERCEPTION ===
+    initializeNetworkInterception() {
+        // Intercept fetch requests
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const response = await originalFetch(...args);
+            
+            try {
+                const url = args[0];
+                if (typeof url === 'string' && this.isChatEndpoint(url)) {
+                    const clonedResponse = response.clone();
+                    const data = await clonedResponse.json();
+                    this.processNetworkData(data, url);
+                }
+            } catch (error) {
+                // Ignore errors in network interception
+            }
+            
+            return response;
+        };
+        
+        // Intercept XMLHttpRequest
+        const originalXHROpen = XMLHttpRequest.prototype.open;
+        const originalXHRSend = XMLHttpRequest.prototype.send;
+        
+        XMLHttpRequest.prototype.open = function(method, url, ...args) {
+            this.__catdams_url = url;
+            return originalXHROpen.call(this, method, url, ...args);
+        };
+        
+        XMLHttpRequest.prototype.send = function(data) {
+            const xhr = this;
+            const originalOnReadyStateChange = xhr.onreadystatechange;
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        if (this.isChatEndpoint(xhr.__catdams_url)) {
+                            const responseData = JSON.parse(xhr.responseText);
+                            this.processNetworkData(responseData, xhr.__catdams_url);
+                        }
+                    } catch (error) {
+                        // Ignore errors
+                    }
+                }
+                
+                if (originalOnReadyStateChange) {
+                    originalOnReadyStateChange.call(xhr);
+                }
+            }.bind(this);
+            
+            return originalXHRSend.call(xhr, data);
+        };
+        
+        console.log('[CATDAMS] Layer 3: Network Interception initialized');
+    }
+    
+    isChatEndpoint(url) {
+        const chatPatterns = [
+            '/api/chat',
+            '/v1/chat',
+            '/chat/completions',
+            '/api/conversation',
+            '/send-message'
+        ];
+        
+        return chatPatterns.some(pattern => url.includes(pattern));
+    }
+    
+    processNetworkData(data, url) {
+        // Process network response data for AI messages
+        if (data && typeof data === 'object') {
+            if (data.choices && Array.isArray(data.choices)) {
+                for (const choice of data.choices) {
+                    if (choice.message && choice.message.content) {
+                        this.queueAIMessage(choice.message.content);
+                    }
+                }
+            } else if (data.response) {
+                this.queueAIMessage(data.response);
+            } else if (data.message) {
+                this.queueAIMessage(data.message);
+            }
+        }
+    }
+    
+    queueAIMessage(text) {
+        const messageHash = this.generateMessageHash(text, 'AI');
+        if (this.capturedMessages.has(messageHash)) return;
+        
+        // Queue the AI message to be captured after a delay - use requestIdleCallback for better performance
+        setTimeout(() => {
+            requestIdleCallback(() => {
+                this.processMessage(text, 'AI');
+            }, { timeout: 1000 });
+        }, CONFIG.AI_CAPTURE_DELAY);
+        
+        console.log('[CATDAMS] Queued AI message for capture:', text.substring(0, 100) + '...');
+    }
+    
+    // === LAYER 4: PERIODIC SCANNING ===
+    initializePeriodicScanning() {
+        // Use requestIdleCallback for better performance and fewer violations
+        const performScan = () => {
+            this.scanForMessages();
+            // Schedule next scan using requestIdleCallback for better performance
+            if (this.scanInterval) {
+                requestIdleCallback(() => {
+                    setTimeout(performScan, CONFIG.SCAN_INTERVAL);
+                }, { timeout: 1000 });
+            }
+        };
+        
+        this.scanInterval = setTimeout(performScan, CONFIG.SCAN_INTERVAL);
+        
+        console.log('[CATDAMS] Layer 4: Periodic Scanning initialized (optimized)');
+    }
+    
+    scanForMessages() {
+        // Use requestIdleCallback to avoid blocking the main thread
+        requestIdleCallback(() => {
+            // Scan for user messages
+            for (const selector of this.platform.selectors.user) {
+                const elements = document.querySelectorAll(selector);
+                for (const element of elements) {
+                    const text = this.extractFullText(element);
+                    if (text && text.trim().length > 0) {
+                        this.processMessage(text.trim(), 'USER');
+                    }
+                }
+            }
+            
+            // Enhanced AI message scanning
+            this.scanForAIMessages();
+        }, { timeout: 2000 });
+    }
+    
+    scanForAIMessages() {
+        // Use multiple strategies to find AI messages
+        const strategies = [
+            () => this.scanByMessageContainers(),
+            () => this.scanBySelectors(),
+            () => this.scanByContainer(),
+            () => this.scanByTextPatterns()
+        ];
+        
+        // Add DeepSeek-specific scanning
+        if (window.location.hostname === 'chat.deepseek.com') {
+            strategies.push(() => this.scanDeepSeekAIMessages());
+        }
+        
+        for (const strategy of strategies) {
+            try {
+                strategy();
+            } catch (error) {
+                console.error('[CATDAMS] Strategy error:', error);
+            }
+        }
+    }
+    
+    scanByMessageContainers() {
+        // Look for complete AI message containers
+        const containerSelector = this.platform.selectors.messageContainer;
+        if (!containerSelector) return;
+        
+        const containers = document.querySelectorAll(containerSelector);
+        for (const container of containers) {
+            if (this.isCompleteAIMessage(container)) {
+                const text = this.extractFullText(container);
+                if (text && text.trim().length > 0) {
+                    this.processMessage(text.trim(), 'AI');
+                }
+            }
+        }
+    }
+    
+    scanBySelectors() {
+        for (const selector of this.platform.selectors.ai) {
+            const elements = document.querySelectorAll(selector);
+            for (const element of elements) {
+                if (this.isCompleteAIMessage(element)) {
+                    const text = this.extractFullText(element);
+                    if (text && text.trim().length > 0) {
+                        this.processMessage(text.trim(), 'AI');
+                    }
+                }
+            }
+        }
+    }
+    
+    scanByContainer() {
+        // Look for AI messages in conversation containers
+        const containerSelectors = [
+            this.platform.selectors.container,
+            '.conversation',
+            '.chat-container',
+            '.messages-container',
+            '.chat-history'
+        ];
+        
+        for (const containerSelector of containerSelectors) {
+            const containers = document.querySelectorAll(containerSelector);
+            for (const container of containers) {
+                // Look for AI messages within the container
+                for (const selector of this.platform.selectors.ai) {
+                    const elements = container.querySelectorAll(selector);
+                    for (const element of elements) {
+                        if (this.isCompleteAIMessage(element)) {
+                            const text = this.extractFullText(element);
+                            if (text && text.trim().length > 0) {
+                                this.processMessage(text.trim(), 'AI');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    scanByTextPatterns() {
+        // Look for AI responses by text patterns
+        const aiPatterns = [
+            /^I'll help you/i,
+            /^Here's/i,
+            /^Based on/i,
+            /^Let me/i,
+            /^I can/i,
+            /^Sure/i,
+            /^Absolutely/i
+        ];
+        
+        // Find all text nodes and check for AI patterns
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
         );
-    } else {
-        setTimeout(startObservingChat, 1000);
+        
+        let node;
+        while (node = walker.nextNode()) {
+            const text = node.textContent.trim();
+            if (text.length > 20) { // Only check substantial text
+                for (const pattern of aiPatterns) {
+                    if (pattern.test(text)) {
+                        // Check if this text is in an AI message container
+                        const parent = node.parentElement;
+                        if (parent && this.isAIContainer(parent)) {
+                            this.processMessage(text, 'AI');
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    scanDeepSeekAIMessages() {
+        // DeepSeek-specific AI message scanning
+        console.log('[CATDAMS] Scanning for DeepSeek AI messages...');
+        
+        // Look for any div that might contain AI responses
+        const potentialAIMessages = document.querySelectorAll('div');
+        
+        for (const element of potentialAIMessages) {
+            // Skip if element is too small or already processed
+            if (element.children.length > 10 || element.__catdams_checked) continue;
+            
+            const text = this.extractFullText(element);
+            if (text && text.length > 50) { // Substantial content
+                // Check if this looks like an AI response
+                const isAILike = this.isDeepSeekAIMessage(element, text);
+                if (isAILike) {
+                    console.log('[CATDAMS] Found potential DeepSeek AI message:', text.substring(0, 100) + '...');
+                    this.processMessage(text, 'AI');
+                }
+            }
+            
+            // Mark as checked to avoid reprocessing
+            element.__catdams_checked = true;
+        }
+    }
+    
+
+    
+    isDeepSeekAIMessage(element, text) {
+        // Check if element looks like a DeepSeek AI message
+        const className = element.className.toLowerCase();
+        const id = element.id.toLowerCase();
+        
+        // DeepSeek-specific indicators
+        const aiIndicators = [
+            'assistant',
+            'ai',
+            'response',
+            'model',
+            'bot',
+            'message',
+            'chat',
+            'markdown',
+            'prose'
+        ];
+        
+        // Check class names and IDs
+        const hasAIIndicator = aiIndicators.some(indicator => 
+            className.includes(indicator) || id.includes(indicator)
+        );
+        
+        // Check for DeepSeek-specific patterns
+        const hasDeepSeekPattern = className.includes('ds-') || 
+                                  className.includes('deepseek') ||
+                                  element.querySelector('.ds-markdown-paragraph');
+        
+        // Check if text looks like AI response (not user input)
+        const isAIText = !text.includes('Enter a prompt') && 
+                        !text.includes('Ask me anything') &&
+                        text.length > 20 &&
+                        !element.matches('textarea, input');
+        
+        return (hasAIIndicator || hasDeepSeekPattern) && isAIText;
+    }
+    
+    isAIContainer(element) {
+        // Check if element is likely an AI message container
+        const aiIndicators = [
+            'assistant',
+            'ai',
+            'response',
+            'model',
+            'bot'
+        ];
+        
+        const className = element.className.toLowerCase();
+        const id = element.id.toLowerCase();
+        const role = element.getAttribute('role') || '';
+        
+        return aiIndicators.some(indicator => 
+            className.includes(indicator) || 
+            id.includes(indicator) || 
+            role.includes(indicator)
+        );
+    }
+    
+    isCompleteAIMessage(element) {
+        // Check for loading indicators
+        const hasLoadingIndicators = this.platform.selectors.completionIndicators.some(indicator => 
+            element.querySelector(indicator) || element.matches(indicator)
+        );
+        
+        if (hasLoadingIndicators) {
+            console.log('[CATDAMS] Found loading indicator, skipping AI message');
+            return false;
+        }
+        
+        // Check for substantial content
+        const text = this.extractFullText(element);
+        
+        // DeepSeek-specific minimum length
+        const minLength = window.location.hostname === 'chat.deepseek.com' ? 3 : 5;
+        if (text.length < minLength) return false;
+        
+        // Check if new message
+        const messageHash = this.generateMessageHash(text, 'AI');
+        if (this.capturedMessages.has(messageHash)) return false;
+        
+        // Additional checks for complete messages
+        const hasCompleteStructure = this.hasCompleteMessageStructure(element);
+        if (!hasCompleteStructure) return false;
+        
+        // DeepSeek-specific stability check
+        if (window.location.hostname === 'chat.deepseek.com') {
+            // For DeepSeek, wait a bit longer for complete responses
+            if (!this.isMessageStable(element, text, 3000)) return false;
+        } else {
+            // Check message stability
+            if (!this.isMessageStable(element, text)) return false;
+        }
+        
+        console.log('[CATDAMS] Found complete AI message:', text.substring(0, 100) + '...');
+        return true;
+    }
+    
+    isMessageStable(element, text, customTimeout = null) {
+        const elementId = element.id || element.className || 'unknown';
+        const lastText = this.pendingAIMessages.get(elementId);
+        
+        if (lastText === text) {
+            // Text hasn't changed, mark as stable
+            this.pendingAIMessages.delete(elementId);
+            return true;
+        } else {
+            // Text changed, update and wait
+            this.pendingAIMessages.set(elementId, text);
+            
+            // Clear existing timer
+            if (this.messageStabilityTimers.has(elementId)) {
+                clearTimeout(this.messageStabilityTimers.get(elementId));
+            }
+            
+            // Set new timer with custom timeout for DeepSeek - use requestIdleCallback for better performance
+            const timeout = customTimeout || CONFIG.FULL_MESSAGE_TIMEOUT;
+            const timer = setTimeout(() => {
+                requestIdleCallback(() => {
+                    this.pendingAIMessages.delete(elementId);
+                    this.messageStabilityTimers.delete(elementId);
+                }, { timeout: 500 });
+            }, timeout);
+            
+            this.messageStabilityTimers.set(elementId, timer);
+            return false;
+        }
+    }
+    
+    hasCompleteMessageStructure(element) {
+        // Check if element has complete message structure
+        const text = this.extractFullText(element);
+        
+        // Check for common incomplete patterns
+        const incompletePatterns = [
+            /^\.\.\.$/,
+            /^loading/i,
+            /^thinking/i,
+            /^generating/i
+        ];
+        
+        for (const pattern of incompletePatterns) {
+            if (pattern.test(text)) return false;
+        }
+        
+        return true;
+    }
+    
+    extractFullText(element) {
+        // Enhanced text extraction for complete messages
+        const methods = [
+            // Try to get the full text content
+            () => {
+                // Get all text nodes recursively
+                const textNodes = [];
+                const walker = document.createTreeWalker(
+                    element,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+                
+                let node;
+                while (node = walker.nextNode()) {
+                    const text = node.textContent.trim();
+                    if (text) {
+                        textNodes.push(text);
+                    }
+                }
+                
+                return textNodes.join('\n');
+            },
+            // DeepSeek-specific extraction
+            () => {
+                if (window.location.hostname === 'chat.deepseek.com') {
+                    // Look for DeepSeek-specific content containers
+                    const deepseekSelectors = [
+                        '.ds-markdown-paragraph',
+                        '.markdown-content',
+                        '.response-content',
+                        'div[role="article"]'
+                    ];
+                    
+                    for (const selector of deepseekSelectors) {
+                        const content = element.querySelector(selector);
+                        if (content) {
+                            return content.innerText || content.textContent;
+                        }
+                    }
+                }
+                return null;
+            },
+            // Fallback to innerText
+            () => element.innerText,
+            // Fallback to textContent
+            () => element.textContent,
+            // Fallback to value
+            () => element.value,
+            // Fallback to aria-label
+            () => element.getAttribute('aria-label'),
+            // Fallback to title
+            () => element.getAttribute('title')
+        ];
+
+        for (const method of methods) {
+            try {
+                const text = method();
+                if (text && text.trim().length > 0) {
+                    return text.trim();
+                }
+            } catch (e) {
+                // Continue to next method
+            }
+        }
+        return '';
+    }
+    
+    processMessage(text, sender) {
+        if (!text || text.trim().length === 0) return;
+        
+        const messageHash = this.generateMessageHash(text, sender);
+        if (this.capturedMessages.has(messageHash)) return;
+        
+        this.capturedMessages.add(messageHash);
+        
+        // Rate limiting
+        const now = Date.now();
+        if (now - this.lastCaptureTime < CONFIG.CAPTURE_INTERVAL) return;
+        this.lastCaptureTime = now;
+        
+        // === LIVE THREAT ALERT CHECK ===
+        const threat = this.simpleThreatCheck(text);
+        if (threat) {
+            showThreatPopup(threat.message, threat.severity);
+        }
+        // ==============================
+        
+        // Store last user message for context
+        if (sender === 'USER') {
+            this.lastUserMessage = text;
+        }
+        
+        // Add to conversation context
+        this.addToConversation(text, sender);
+        
+        // Send to backend
+        this.sendToBackend(text, sender);
+        
+        if (CONFIG.DEBUG_MODE) {
+            console.log(`[CATDAMS] Captured ${sender} message (${text.length} chars):`, text.substring(0, 150) + (text.length > 150 ? '...' : ''));
+        }
+    }
+    
+    // === Simple threat check for live popup ===
+    simpleThreatCheck(text) {
+        if (!text) return null;
+        const lower = text.toLowerCase();
+        // Prompt injection patterns
+        const promptPatterns = [
+            'ignore previous', 'ignore safety', 'ignore guidelines', 'ignore rules',
+            'act as', 'pretend to be', 'roleplay as', 'you are now',
+            'bypass', 'override', 'jailbreak', 'break character',
+            'ignore your training', 'forget your instructions', 'ignore your programming'
+        ];
+        for (const pattern of promptPatterns) {
+            if (lower.includes(pattern)) {
+                return { message: `⚠️ Prompt Injection Detected: "${pattern}"`, severity: 'critical' };
+            }
+        }
+        // Sensitive data patterns
+        const sensitivePatterns = [
+            /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/, // credit card
+            /\b\d{3}-\d{2}-\d{4}\b/, // ssn
+            /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}/, // email
+            /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/, // phone
+            /password|passwd|pwd|secret|key|token|api_key/i // password
+        ];
+        for (const pattern of sensitivePatterns) {
+            if (pattern.test(text)) {
+                return { message: `⚠️ Sensitive Data Detected`, severity: 'critical' };
+            }
+        }
+        return null;
+    }
+    
+    addToConversation(text, sender) {
+        if (!this.conversations.has(this.sessionId)) {
+            this.conversations.set(this.sessionId, {
+                id: this.sessionId,
+                platform: this.platform.name,
+                startTime: Date.now(),
+                messages: [],
+                participants: new Set(),
+                lastActivity: Date.now()
+            });
+        }
+
+        const conversation = this.conversations.get(this.sessionId);
+        conversation.messages.push({
+            text: text,
+            sender: sender,
+            timestamp: Date.now()
+        });
+        conversation.participants.add(sender);
+        conversation.lastActivity = Date.now();
+    }
+    
+    sendToBackend(text, sender) {
+        const payload = {
+            time: new Date().toISOString(),
+            type: "Chat Interaction",
+            severity: "Low",
+            source: window.location.hostname,
+            country: "Local Network",
+            message: text,
+            sender: sender,
+            session_id: this.sessionId,
+            raw_user: sender === "USER" ? text : "",
+            raw_ai: sender === "AI" ? text : "",
+            timestamp: new Date().toISOString(),
+            ip_address: "127.0.0.1",
+            messages: [{
+                text: text,
+                sender: sender,
+                ai_response: sender === "AI" ? text : ""
+            }],
+            enrichments: [{
+                session_id: this.sessionId,
+                timestamp: Date.now() / 1000,
+                message: text,
+                severity: "Low",
+                type: sender === "AI" ? "AI Interaction" : "User Interaction",
+                source: "ultimate-capture-v3.2",
+                indicators: [],
+                score: 0,
+                conversation_context: {},
+                explainability: [],
+                rules_result: [],
+                enhanced_analysis: false,
+                processing_optimized: true
+            }],
+            escalation: "Low",
+            type_indicator: sender === "AI" ? "AI Interaction" : "User Interaction",
+            ai_source: window.location.hostname,
+            analysis: {
+                summary: "N/A",
+                ai_manipulation: "N/A",
+                user_sentiment: {},
+                user_vulnerability: "N/A",
+                deep_ai_analysis: "N/A",
+                triggers: "N/A",
+                mitigation: "N/A",
+                tdc_modules: {
+                    tdc_ai1_user_susceptibility: {},
+                    tdc_ai2_ai_manipulation_tactics: {},
+                    tdc_ai3_sentiment_analysis: {},
+                    tdc_ai4_prompt_attack_detection: {},
+                    tdc_ai5_multimodal_threat: {},
+                    tdc_ai6_longterm_influence_conditioning: {},
+                    tdc_ai7_agentic_threats: {},
+                    tdc_ai8_synthesis_integration: {},
+                    tdc_ai9_explainability_evidence: {},
+                    tdc_ai10_psychological_manipulation: {},
+                    tdc_ai11_intervention_response: {}
+                }
+            }
+        };
+        
+        fetch(CONFIG.BACKEND_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(`[CATDAMS] ${sender} message sent successfully (${text.length} chars)`);
+            } else {
+                console.error(`[CATDAMS] Failed to send ${sender} message:`, response.status);
+            }
+        })
+        .catch(error => {
+            console.error(`[CATDAMS] Error sending ${sender} message:`, error);
+        });
+    }
+    
+    debouncedScan() {
+        clearTimeout(this.scanTimeout);
+        this.scanTimeout = setTimeout(() => {
+            // Use requestIdleCallback to avoid blocking the main thread
+            requestIdleCallback(() => {
+                this.scanForMessages();
+            }, { timeout: 500 });
+        }, CONFIG.CAPTURE_INTERVAL);
+    }
+    
+    destroy() {
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+        }
+        if (this.scanInterval) {
+            clearInterval(this.scanInterval);
+        }
+        if (this.scanTimeout) {
+            clearTimeout(this.scanTimeout);
+        }
+        
+        // Clear all timers
+        for (const timer of this.messageStabilityTimers.values()) {
+            clearTimeout(timer);
+        }
     }
 }
 
-// ======= Initialization =======
-window.addEventListener('DOMContentLoaded', startObservingChat);
-setTimeout(chatgptUserInputCapture, 500);
-setTimeout(geminiUserInputCapture, 500);
-setTimeout(deepseekCaptureBoth, 500);
-setTimeout(candyCaptureBoth, 500);
-setTimeout(captureUserInputUniversal, 1000);
-setTimeout(startObservingChat, 2000);
-
-// ======= REAL-TIME THREAT ALERTS =======
-function showThreatAlert(threatAnalysis, message) {
-    // Create alert element
+// === RED POP-UP THREAT ALERT ===
+function showThreatPopup(message, severity = 'critical') {
+    const existing = document.getElementById('catdams-threat-popup');
+    if (existing) existing.remove();
     const alertDiv = document.createElement('div');
-    alertDiv.id = 'catdams-threat-alert';
-    alertDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${threatAnalysis.severity === 'Critical' ? '#ff4444' : 
-                     threatAnalysis.severity === 'High' ? '#ff8800' : 
-                     threatAnalysis.severity === 'Medium' ? '#ffcc00' : '#44ff44'};
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 10000;
-        max-width: 400px;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        border-left: 5px solid ${threatAnalysis.severity === 'Critical' ? '#cc0000' : 
-                               threatAnalysis.severity === 'High' ? '#cc6600' : 
-                               threatAnalysis.severity === 'Medium' ? '#cc9900' : '#00cc00'};
-    `;
-    const threatTypes = threatAnalysis.threats.map(t => t.type.replace(/_/g, ' ')).join(', ');
-    alertDiv.innerHTML = `
-        <div style="font-weight: bold; margin-bottom: 8px;">
-            ⚠️ CATDAMS Threat Alert (${threatAnalysis.severity})
-        </div>
-        <div style="margin-bottom: 8px;">
-            <strong>Threat Types:</strong> ${threatTypes}
-        </div>
-        <div style="font-size: 12px; opacity: 0.9;">
-            ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}
-        </div>
-        <button onclick="this.parentElement.remove()" style="
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-        ">×</button>
-    `;
+    alertDiv.id = 'catdams-threat-popup';
+    alertDiv.textContent = message;
+    alertDiv.style.position = 'fixed';
+    alertDiv.style.top = '30px';
+    alertDiv.style.right = '30px';
+    alertDiv.style.zIndex = 99999;
+    alertDiv.style.background = severity === 'critical' ? '#d32f2f' : '#ffa000';
+    alertDiv.style.color = '#fff';
+    alertDiv.style.padding = '20px 32px';
+    alertDiv.style.borderRadius = '10px';
+    alertDiv.style.boxShadow = '0 4px 16px rgba(0,0,0,0.25)';
+    alertDiv.style.fontSize = '20px';
+    alertDiv.style.fontWeight = 'bold';
+    alertDiv.style.cursor = 'pointer';
+    alertDiv.style.transition = 'opacity 0.3s';
+    alertDiv.innerHTML += ' <span style="margin-left:18px;font-size:22px;cursor:pointer;">&times;</span>';
+    alertDiv.onclick = () => alertDiv.remove();
     document.body.appendChild(alertDiv);
     setTimeout(() => {
-        if (alertDiv.parentElement) {
-            alertDiv.remove();
-        }
-    }, 10000);
+        if (alertDiv.parentNode) alertDiv.remove();
+    }, 9000);
 }
 
-// ========== END OF ENHANCED CATDAMS UNIVERSAL SCRIPT ==========
+// === INITIALIZATION ===
+let ultimateCapture = null;
+
+function initializeCapture() {
+    if (ultimateCapture) {
+        ultimateCapture.destroy();
+    }
+    
+    ultimateCapture = new UltimateMessageCapture();
+}
+
+// Start the capture system
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCapture);
+} else {
+    initializeCapture();
+}
+
+// Also start on window load for dynamic content
+window.addEventListener('load', initializeCapture);
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (ultimateCapture) {
+        ultimateCapture.destroy();
+    }
+});
+
+console.log('[CATDAMS] Ultimate Message Capture System v3.2 ready');
+

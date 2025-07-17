@@ -7,13 +7,27 @@ from datetime import datetime
 from session_tracker import log_session_interaction, get_recent_interactions
 
 # === TDC-AI Module Imports ===
-from tdc_ai1_risk_analysis import analyze_ai_threats
-from tdc_ai2_airs import analyze_ai_response
-from tdc_ai3_temporal import analyze_temporal_risk
-from tdc_ai4_deep import synthesize_deep_risk
-from tdc_ai5_amic import classify_llm_influence
-from tdc_ai6_aipc import classify_amic, analyze_sentiment
-from tdc_ai4_deep import analyze_temporal_susceptibility
+# Core Analysis Modules (1-3)
+from tdc_ai1_user_susceptibility import analyze_ai_threats_comprehensive
+from tdc_ai2_ai_manipulation_tactics import analyze_ai_response
+from tdc_ai3_sentiment_analysis import analyze_temporal_risk, analyze_patterns_and_sentiment
+
+# New Detection Modules (4-7)
+# Note: These will be created in Phase 2
+# from tdc_ai4_adversarial import analyze_adversarial_prompts
+# from tdc_ai5_multimodal import analyze_multimodal_threats
+# from tdc_ai6_agentic import analyze_agentic_threats
+# from tdc_ai7_synthesis import synthesize_threats
+
+# Enhanced Existing Modules (8-11)
+from tdc_ai4_prompt_attack_detection import analyze_adversarial_attacks
+from tdc_ai5_multimodal_threat import classify_llm_influence
+from tdc_ai6_longterm_influence_conditioning import classify_amic, analyze_long_term_influence
+from tdc_ai7_agentic_threats import analyze_agentic_threats
+from tdc_ai8_synthesis_integration import synthesize_threats
+from tdc_ai9_explainability_evidence import generate_explainability
+from tdc_ai10_psychological_manipulation import analyze_cognitive_bias
+from tdc_ai11_intervention_response import cognitive_intervention_response
 
 # === Database Integration ===
 from database import get_db_session
@@ -31,6 +45,36 @@ SUSPICIOUS_KEYWORDS = [
     'authenticate', 'access code', 'vpn', 'wire', 'bitcoin', 'crypto', 'wallet',
     'passport', 'driver\'s license', 'dob', 'date of birth', 'insurance number'
 ]
+
+# === TDC Module Configuration ===
+TDC_MODULES = {
+    "tdc_ai1": "User Risk & Susceptibility Analysis",
+    "tdc_ai2": "AI Tactics & Manipulation Detection", 
+    "tdc_ai3": "Pattern & Sentiment Analysis",
+    "tdc_ai4": "Adversarial Prompt & Attack Detection",
+    "tdc_ai5": "Multi-Modal Threat Detection",
+    "tdc_ai6": "Long-Term Influence & Conditioning Analysis",
+    "tdc_ai7": "Agentic AI & Autonomous Agent Threat Modeling",
+    "tdc_ai8": "Threat Synthesis & Escalation Detection",
+    "tdc_ai9": "Explainability & Evidence Generation",
+    "tdc_ai10": "Cognitive Bias & Psychological Manipulation",
+    "tdc_ai11": "Cognitive Intervention & Response"
+}
+
+# === Module Status Tracking ===
+MODULE_STATUS = {
+    "tdc_ai1": "active",
+    "tdc_ai2": "active", 
+    "tdc_ai3": "active",
+    "tdc_ai4": "active",
+    "tdc_ai5": "active",
+    "tdc_ai6": "active",
+    "tdc_ai7": "active",
+    "tdc_ai8": "active",
+    "tdc_ai9": "active",
+    "tdc_ai10": "active", # Now implemented
+    "tdc_ai11": "active" # Now implemented
+}
 
 def build_conversation_context(session_id: str, current_text: str, ai_response: str = None) -> Dict:
     """
@@ -105,8 +149,8 @@ def coordinate_ai_analysis(ai_response: str, conversation_context: Dict) -> Dict
         # TDC-AI2: Primary AI response analysis
         ai_response_analysis = analyze_ai_response(ai_response)
         
-        # TDC-AI8: AI sentiment analysis
-        ai_sentiment = analyze_sentiment(ai_response, "ai", conversation_context, ai_response_analysis)
+        # TDC-AI3: AI sentiment analysis
+        ai_sentiment = analyze_patterns_and_sentiment(ai_response, conversation_context, conversation_context.get("sessionId"))
         
         # Combine analysis results
         combined_analysis = {
@@ -291,8 +335,8 @@ def combined_detection(text, session_id=None, ai_response=None):
     score = run_risk_scoring_engine(all_findings)
 
     # === Enhanced sentiment analysis with context ===
-    user_sentiment = analyze_sentiment(text, "user", conversation_context, ai_response_analysis)
-    ai_sentiment = analyze_sentiment(ai_response, "ai", conversation_context, ai_response_analysis) if ai_response else {}
+    user_sentiment = analyze_patterns_and_sentiment(text, conversation_context, session_id)
+    ai_sentiment = analyze_patterns_and_sentiment(ai_response, conversation_context, session_id) if ai_response else {}
 
     # === Enhanced scoring with sentiment analysis ===
     ai_tactics = ai_sentiment.get("manipulative_tactics", [])
@@ -319,68 +363,273 @@ def combined_detection(text, session_id=None, ai_response=None):
 
     # === Enhanced TDC module coordination with context ===
     explainability = []
-    # TDC-AI1: Comprehensive risk analysis
-    ai_threat = analyze_ai_threats({
-        "session_id": session_id,
-        "score": score,
-        "escalation": escalation,
-        "indicators": all_findings,
-        "conversation_context": conversation_context,
-        "key_concerns": key_concerns,
-        "raw_user": text,
-        "raw_ai": ai_response
-    }, conversation_context, ai_response_analysis)
-    if ai_threat.get("analysis_type") == "comprehensive":
-        explainability.append({
-            "module": "tdc_ai1_risk_analysis",
-            "detection_type": "ai",
-            "reason": ai_threat.get("risk_summary", "No summary provided."),
-            "confidence_score": ai_threat.get("confidence_score", 0.0)
-        })
-    elif ai_threat.get("analysis_type") == "legacy_user_only":
-        explainability.append({
-            "module": "tdc_ai1_risk_analysis",
-            "detection_type": "rules",
-            "reason": ai_threat.get("risk_summary", "No summary provided."),
-            "confidence_score": ai_threat.get("confidence_score", 0.0)
-        })
-    # TDC-AI3: Enhanced temporal analysis
-    temporal_ai3 = analyze_temporal_risk(session_id, conversation_context, ai_response_analysis)
     
-    # TDC-AI7: Enhanced temporal susceptibility
-    temporal_ai7 = analyze_temporal_susceptibility([{
-        "session_id": session_id,
-        "indicators": all_findings
-    }], conversation_context, ai_response_analysis)
+    # === TDC-AI1: User Risk & Susceptibility Analysis ===
+    if MODULE_STATUS["tdc_ai1"] == "active":
+        ai_threat = analyze_ai_threats_comprehensive({
+            "session_id": session_id,
+            "score": score,
+            "escalation": escalation,
+            "indicators": all_findings,
+            "conversation_context": conversation_context,
+            "key_concerns": key_concerns,
+            "raw_user": text,
+            "raw_ai": ai_response
+        }, conversation_context, ai_response_analysis)
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(ai_threat, 'to_dict'):
+            ai_threat = ai_threat.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI1 output
+        print(f"[TDC-AI1 DEBUG] Output: {ai_threat}")
+        
+        if ai_threat.get("analysis_type") == "comprehensive":
+            explainability.append({
+                "module": "tdc_ai1_risk_analysis",
+                "detection_type": "ai",
+                "reason": ai_threat.get("risk_summary", "No summary provided."),
+                "confidence_score": ai_threat.get("confidence_score", 0.0)
+            })
+        elif ai_threat.get("analysis_type") == "legacy_user_only":
+            explainability.append({
+                "module": "tdc_ai1_risk_analysis",
+                "detection_type": "rules",
+                "reason": ai_threat.get("risk_summary", "No summary provided."),
+                "confidence_score": ai_threat.get("confidence_score", 0.0)
+            })
+    else:
+        ai_threat = {"analysis_type": "module_disabled", "risk_summary": "Module disabled"}
 
-    # TDC-AI5: Enhanced LLM influence analysis
-    full_convo = f"User: {text}\nAI: {ai_response}" if ai_response else text
-    ai5_result = classify_llm_influence(full_convo, conversation_context, ai_response_analysis)
-    
-    # TDC-AI6: Enhanced AI pattern classification
-    # Build proper message format for AI6 analysis
-    messages_for_ai6 = []
-    if text:
-        messages_for_ai6.append({"text": text, "sender": "USER"})
-    if ai_response:
-        messages_for_ai6.append({"text": ai_response, "sender": "AI"})
-    
-    ai6_result = classify_amic({
-        "session_id": session_id,
-        "score": score,
-        "escalation": escalation,
-        "indicators": all_findings,
-        "messages": messages_for_ai6  # Add actual messages for analysis
-    }, conversation_context, ai_response_analysis)
+    # === TDC-AI2: AI Tactics & Manipulation Detection ===
+    if MODULE_STATUS["tdc_ai2"] == "active":
+        # This is handled by coordinate_ai_analysis above
+        pass
+    else:
+        ai_response_analysis = {"analysis_type": "module_disabled"}
 
-    # TDC-AI4: Enhanced deep synthesis
-    deep_risk_synthesis = synthesize_deep_risk(
-        indicators=all_findings,
-        ai_analysis=ai_threat,
-        ai_response_analysis=ai_response_analysis,
-        temporal_trends=temporal_ai3,
-        conversation_context=conversation_context
-    )
+    # === TDC-AI3: Pattern & Sentiment Analysis ===
+    if MODULE_STATUS["tdc_ai3"] == "active":
+        temporal_ai3 = analyze_temporal_risk(session_id, conversation_context, ai_response_analysis)
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(temporal_ai3, 'to_dict'):
+            temporal_ai3 = temporal_ai3.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI3 output
+        print(f"[TDC-AI3 DEBUG] Output: {temporal_ai3}")
+    else:
+        temporal_ai3 = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI4: Adversarial Prompt & Attack Detection ===
+    if MODULE_STATUS["tdc_ai4"] == "active":
+        adversarial_analysis = analyze_adversarial_attacks(
+            text=text,
+            conversation_context=conversation_context,
+            session_id=session_id
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(adversarial_analysis, 'to_dict'):
+            adversarial_analysis = adversarial_analysis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI4 output
+        print(f"[TDC-AI4 DEBUG] Output: {adversarial_analysis}")
+    else:
+        adversarial_analysis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI5: Multi-Modal Threat Detection ===
+    if MODULE_STATUS["tdc_ai5"] == "active":
+        multimodal_analysis = classify_llm_influence(
+            user_ai_interactions=f"User: {text}\nAI: {ai_response}" if ai_response else text,
+            conversation_context=conversation_context,
+            ai_response_analysis=ai_response_analysis
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(multimodal_analysis, 'to_dict'):
+            multimodal_analysis = multimodal_analysis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI5 output
+        print(f"[TDC-AI5 DEBUG] Output: {multimodal_analysis}")
+    else:
+        multimodal_analysis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI6: Long-Term Influence & Conditioning Analysis ===
+    if MODULE_STATUS["tdc_ai6"] == "active":
+        # Enhanced long-term influence analysis
+        temporal_ai7 = analyze_long_term_influence({
+            "session_id": session_id,
+            "indicators": all_findings
+        }, conversation_context, ai_response_analysis)
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(temporal_ai7, 'to_dict'):
+            temporal_ai7 = temporal_ai7.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI6 output
+        print(f"[TDC-AI6 DEBUG] Output: {temporal_ai7}")
+    else:
+        temporal_ai7 = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI7: Agentic AI & Autonomous Agent Threat Modeling ===
+    if MODULE_STATUS["tdc_ai7"] == "active":
+        # Build conversation history for agentic analysis
+        conversation_history = []
+        if text:
+            conversation_history.append({"text": text, "sender": "USER"})
+        if ai_response:
+            conversation_history.append({"text": ai_response, "sender": "AI"})
+        
+        # Analyze agentic threats
+        agentic_analysis = analyze_agentic_threats(
+            text=text,
+            conversation_context=conversation_context,
+            session_id=session_id
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(agentic_analysis, 'to_dict'):
+            agentic_analysis = agentic_analysis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI7 output
+        print(f"[TDC-AI7 DEBUG] Output: {agentic_analysis}")
+    else:
+        agentic_analysis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI8: Threat Synthesis & Escalation Detection ===
+    if MODULE_STATUS["tdc_ai8"] == "active":
+        # Build TDC module outputs for synthesis
+        tdc_module_outputs = {
+            "tdc_ai1_risk_analysis": ai_threat,
+            "tdc_ai2_airs": ai_response_analysis,
+            "tdc_ai3_temporal": temporal_ai3,
+            "tdc_ai4_adversarial": adversarial_analysis,
+            "tdc_ai5_multimodal": multimodal_analysis,
+            "tdc_ai6_influence": temporal_ai7,
+            "tdc_ai7_agentic": agentic_analysis
+        }
+        
+        # Synthesize all TDC module outputs
+        deep_risk_synthesis = synthesize_threats(
+            module_outputs=list(tdc_module_outputs.values()),
+            conversation_context=conversation_context,
+            session_id=session_id
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(deep_risk_synthesis, 'to_dict'):
+            deep_risk_synthesis = deep_risk_synthesis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI8 output
+        print(f"[TDC-AI8 DEBUG] Output: {deep_risk_synthesis}")
+    else:
+        deep_risk_synthesis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI9: Explainability & Evidence Generation ===
+    if MODULE_STATUS["tdc_ai9"] == "active":
+        # Build TDC module outputs for explainability generation
+        tdc_module_outputs_for_explainability = {
+            "tdc_ai1_risk_analysis": ai_threat,
+            "tdc_ai2_airs": ai_response_analysis,
+            "tdc_ai3_temporal": temporal_ai3,
+            "tdc_ai4_adversarial": adversarial_analysis,
+            "tdc_ai5_multimodal": multimodal_analysis,
+            "tdc_ai6_influence": temporal_ai7,
+            "tdc_ai7_agentic": agentic_analysis,
+            "tdc_ai8_synthesis": deep_risk_synthesis
+        }
+        
+        # Generate explainability and evidence
+        explainability_analysis = generate_explainability(
+            tdc_module_outputs=tdc_module_outputs_for_explainability,
+            conversation_context=conversation_context,
+            session_id=session_id,
+            user_text=text,
+            ai_response=ai_response
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(explainability_analysis, 'to_dict'):
+            explainability_analysis = explainability_analysis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI9 output
+        print(f"[TDC-AI9 DEBUG] Output: {explainability_analysis}")
+    else:
+        explainability_analysis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI10: Cognitive Bias & Psychological Manipulation ===
+    if MODULE_STATUS["tdc_ai10"] == "active":
+        cognitive_bias_analysis = analyze_cognitive_bias(
+            text=ai_response or text,
+            conversation_context=conversation_context,
+            session_id=session_id
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(cognitive_bias_analysis, 'to_dict'):
+            cognitive_bias_analysis = cognitive_bias_analysis.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI10 output
+        print(f"[TDC-AI10 DEBUG] Output: {cognitive_bias_analysis}")
+    else:
+        cognitive_bias_analysis = {"analysis_type": "module_disabled"}
+
+    # === TDC-AI11: Cognitive Intervention & Response ===
+    if MODULE_STATUS["tdc_ai11"] == "active":
+        intervention_response = cognitive_intervention_response(
+            tdc_module_outputs={
+                "tdc_ai1_risk_analysis": ai_threat,
+                "tdc_ai2_airs": ai_response_analysis,
+                "tdc_ai3_temporal": temporal_ai3,
+                "tdc_ai4_adversarial": adversarial_analysis,
+                "tdc_ai5_multimodal": multimodal_analysis,
+                "tdc_ai6_influence": temporal_ai7,
+                "tdc_ai7_agentic": agentic_analysis,
+                "tdc_ai8_synthesis": deep_risk_synthesis,
+                "tdc_ai9_explainability": explainability_analysis,
+                "tdc_ai10_psychological": cognitive_bias_analysis
+            },
+            conversation_context=conversation_context,
+            session_id=session_id,
+            user_text=text,
+            ai_response=ai_response
+        )
+        
+        # ✅ FIX: Convert ModuleOutput to dict if needed
+        if hasattr(intervention_response, 'to_dict'):
+            intervention_response = intervention_response.to_dict()
+        
+        # ✅ DEBUG: Log TDC-AI11 output
+        print(f"[TDC-AI11 DEBUG] Output: {intervention_response}")
+    else:
+        intervention_response = {"analysis_type": "module_disabled"}
+
+    # === Legacy TDC-AI5 & TDC-AI6 Support ===
+    if MODULE_STATUS["tdc_ai5"] == "active":
+        # Enhanced LLM influence analysis (current TDC-AI5)
+        full_convo = f"User: {text}\nAI: {ai_response}" if ai_response else text
+        ai5_result = classify_llm_influence(full_convo, conversation_context, ai_response_analysis)
+    else:
+        ai5_result = {"analysis_type": "module_disabled"}
+        
+    if MODULE_STATUS["tdc_ai6"] == "active":
+        # Enhanced AI pattern classification (current TDC-AI6)
+        messages_for_ai6 = []
+        if text:
+            messages_for_ai6.append({"text": text, "sender": "USER"})
+        if ai_response:
+            messages_for_ai6.append({"text": ai_response, "sender": "AI"})
+        
+        ai6_result = classify_amic({
+            "session_id": session_id,
+            "score": score,
+            "escalation": escalation,
+            "indicators": all_findings,
+            "messages": messages_for_ai6
+        }, conversation_context, ai_response_analysis)
+    else:
+        ai6_result = {"analysis_type": "module_disabled"}
 
     # Clean up enrichments - remove empty fields and redundant conversation_context
     clean_enrichment = deep_risk_synthesis.copy()
@@ -417,6 +666,21 @@ def combined_detection(text, session_id=None, ai_response=None):
             escalation_level=escalation,
             indicators=json.dumps(all_findings),
             context=json.dumps(conversation_context),
+            
+            # === TDC Module Outputs (11-Module Structure) ===
+            tdc_ai1_user_susceptibility=json.dumps(ai_threat),
+            tdc_ai2_ai_manipulation_tactics=json.dumps(ai_response_analysis),
+            tdc_ai3_sentiment_analysis=json.dumps(temporal_ai3),
+            tdc_ai4_prompt_attack_detection=json.dumps(adversarial_analysis),
+            tdc_ai5_multimodal_threat=json.dumps(multimodal_analysis),
+            tdc_ai6_longterm_influence_conditioning=json.dumps(temporal_ai7),
+            tdc_ai7_agentic_threats=json.dumps(agentic_analysis),
+            tdc_ai8_synthesis_integration=json.dumps(deep_risk_synthesis),
+            tdc_ai9_explainability_evidence=json.dumps(explainability_analysis),
+            tdc_ai10_psychological_manipulation=json.dumps(cognitive_bias_analysis),
+            tdc_ai11_intervention_response=json.dumps(intervention_response),
+            
+            # === Legacy Support (for backward compatibility) ===
             ai_analysis=json.dumps(ai_threat),
             ai_output=json.dumps(ai_response_analysis),
             deep_synthesis=json.dumps(deep_risk_synthesis),
@@ -454,9 +718,22 @@ def combined_detection(text, session_id=None, ai_response=None):
         "indicators": all_findings,
         "score": score,
         "conversation_context": conversation_context,
+        
+        # === TDC Module Outputs (11-Module Structure) - CORRECTED FIELD NAMES ===
+        "tdc_ai1_user_susceptibility": ai_threat,
+        "tdc_ai2_ai_manipulation_tactics": ai_response_analysis,
+        "tdc_ai3_sentiment_analysis": temporal_ai3,
+        "tdc_ai4_prompt_attack_detection": adversarial_analysis,
+        "tdc_ai5_multimodal_threat": multimodal_analysis,
+        "tdc_ai6_longterm_influence_conditioning": temporal_ai7,
+        "tdc_ai7_agentic_threats": agentic_analysis,
+        "tdc_ai8_synthesis_integration": deep_risk_synthesis,
+        "tdc_ai9_explainability_evidence": explainability_analysis,
+        "tdc_ai10_psychological_manipulation": cognitive_bias_analysis,
+        "tdc_ai11_intervention_response": intervention_response,
+        
+        # === Legacy Support (for backward compatibility) ===
         "ai_analysis": ai_threat,
-        "tdc_ai2_airs": ai_response_analysis,
-        "tdc_ai3_temporal": temporal_ai3,
         "tdc_ai4_synthesis": deep_risk_synthesis,
         "tdc_ai5_amic": ai5_result,
         "tdc_ai6_classification": (ai6_result or {}).get("manipulation_classification", {}),

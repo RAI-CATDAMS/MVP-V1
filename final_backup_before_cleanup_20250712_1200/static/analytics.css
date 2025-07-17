@@ -1,0 +1,295 @@
+/* CATDAMS Analytics CSS - Phase 1, Step 1.4 */
+/* Safe styling that doesn't interfere with existing dashboard styles */
+
+/* Analytics-specific variables */
+:root {
+    --analytics-primary: #2563eb;
+    --analytics-success: #10b981;
+    --analytics-warning: #f59e0b;
+    --analytics-danger: #ef4444;
+    --analytics-info: #3b82f6;
+    --analytics-secondary: #64748b;
+    
+    /* Analytics gradients */
+    --analytics-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --analytics-gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --analytics-gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --analytics-gradient-danger: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    
+    /* Analytics animations */
+    --analytics-transition-fast: 0.15s ease-in-out;
+    --analytics-transition-normal: 0.3s ease-in-out;
+    --analytics-transition-slow: 0.5s ease-in-out;
+}
+
+/* Analytics-specific card styles */
+.analytics-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--analytics-transition-normal);
+    overflow: hidden;
+}
+
+.analytics-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--analytics-primary);
+}
+
+.analytics-card .card-header {
+    background: var(--analytics-gradient-primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-weight: 600;
+}
+
+/* Analytics metrics cards */
+.analytics-metric-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all var(--analytics-transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.analytics-metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--analytics-gradient-primary);
+    transform: scaleX(0);
+    transition: transform var(--analytics-transition-normal);
+}
+
+.analytics-metric-card:hover::before {
+    transform: scaleX(1);
+}
+
+.analytics-metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.analytics-metric-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--analytics-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.analytics-metric-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* Analytics charts */
+.analytics-chart-container {
+    position: relative;
+    height: 300px;
+    margin: var(--spacing-md) 0;
+}
+
+.analytics-chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-secondary);
+}
+
+/* Analytics status indicators */
+.analytics-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.analytics-status.online {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--analytics-success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.analytics-status.offline {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--analytics-danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.analytics-status.loading {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--analytics-warning);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Analytics controls */
+.analytics-controls {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.analytics-controls .btn {
+    margin-right: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Analytics table enhancements */
+.analytics-table {
+    font-size: var(--font-size-sm);
+}
+
+.analytics-table th {
+    background-color: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.analytics-table td {
+    vertical-align: middle;
+    padding: var(--spacing-sm);
+}
+
+.analytics-table .badge {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Analytics animations */
+@keyframes analyticsPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.analytics-pulse {
+    animation: analyticsPulse 2s ease-in-out infinite;
+}
+
+@keyframes analyticsSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.analytics-slide-in {
+    animation: analyticsSlideIn 0.5s ease-out;
+}
+
+/* Analytics responsive design */
+@media (max-width: 768px) {
+    .analytics-metric-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .analytics-metric-value {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .analytics-chart-container {
+        height: 250px;
+    }
+    
+    .analytics-controls .btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 576px) {
+    .analytics-metric-card {
+        padding: var(--spacing-md);
+    }
+    
+    .analytics-metric-value {
+        font-size: var(--font-size-xl);
+    }
+    
+    .analytics-chart-container {
+        height: 200px;
+    }
+}
+
+/* Analytics dark theme support */
+body.dark-theme .analytics-card {
+    background: var(--dark-bg-primary);
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .analytics-metric-card {
+    background: var(--dark-bg-primary);
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .analytics-controls {
+    background: var(--dark-bg-secondary);
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .analytics-table th {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border-color);
+    color: var(--dark-text-primary);
+}
+
+/* Analytics accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .analytics-card,
+    .analytics-metric-card,
+    .analytics-pulse {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* Analytics focus styles */
+.analytics-card:focus,
+.analytics-metric-card:focus,
+.analytics-controls .btn:focus {
+    outline: 2px solid var(--analytics-primary);
+    outline-offset: 2px;
+}
+
+/* Analytics print styles */
+@media print {
+    .analytics-controls,
+    .analytics-chart-container {
+        display: none !important;
+    }
+    
+    .analytics-card,
+    .analytics-metric-card {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+} 

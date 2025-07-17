@@ -1,0 +1,73 @@
+{
+  "total_checks": 8,
+  "passed_checks": 8,
+  "failed_checks": 0,
+  "success_rate": 100.0,
+  "issues": [],
+  "warnings": [
+    {
+      "component": "Web Server",
+      "warning": "Dashboard endpoint not accessible: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)"
+    }
+  ],
+  "successes": [
+    {
+      "component": "Environment",
+      "message": "All required environment variables are set"
+    },
+    {
+      "component": "Dependencies",
+      "message": "All required packages are installed"
+    },
+    {
+      "component": "Files",
+      "message": "All critical files exist"
+    },
+    {
+      "component": "TDC Modules",
+      "message": "All 11 TDC modules are available"
+    },
+    {
+      "component": "Imports",
+      "message": "Detection engine imports successfully"
+    },
+    {
+      "component": "Imports",
+      "message": "Azure OpenAI integration imports successfully"
+    },
+    {
+      "component": "Imports",
+      "message": "Azure Cognitive Services integration imports successfully"
+    },
+    {
+      "component": "Web Server",
+      "message": "Health endpoint responding"
+    },
+    {
+      "component": "Detection Engine",
+      "message": "Normal message processed successfully"
+    },
+    {
+      "component": "Detection Engine",
+      "message": "Threat message processed successfully"
+    },
+    {
+      "component": "Azure OpenAI",
+      "message": "Integration enabled and configured"
+    },
+    {
+      "component": "Azure Cognitive Services",
+      "message": "Integration enabled and configured"
+    }
+  ],
+  "results": {
+    "Environment": true,
+    "Dependencies": true,
+    "Files": true,
+    "TDC Modules": true,
+    "Imports": true,
+    "Web Server": true,
+    "Detection Engine": true,
+    "Azure Integrations": true
+  }
+}

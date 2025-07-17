@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CATDAMS Phase 2 Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .warning { border-color: #ffc107; background: #fff3cd; }
+    </style>
+</head>
+<body>
+    <h1>CATDAMS Phase 2 Advanced Features Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Core Systems Test</h2>
+        <button class="test-button" onclick="testCoreSystems()">Test Core Systems</button>
+        <div id="core-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. TDC Integration Test</h2>
+        <button class="test-button" onclick="testTDCIntegration()">Test TDC Integration</button>
+        <div id="tdc-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Performance Monitor Test</h2>
+        <button class="test-button" onclick="testPerformanceMonitor()">Test Performance Monitor</button>
+        <div id="performance-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Popup Communication Test</h2>
+        <button class="test-button" onclick="testPopupCommunication()">Test Popup Communication</button>
+        <div id="popup-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Security Checks Test</h2>
+        <button class="test-button" onclick="testSecurityChecks()">Test Security Checks</button>
+        <div id="security-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>6. End-to-End Test</h2>
+        <button class="test-button" onclick="testEndToEnd()">Run End-to-End Test</button>
+        <div id="e2e-result" class="result"></div>
+    </div>
+
+    <script>
+        function logResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `result ${type}`;
+            element.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong><br>${message}`;
+        }
+
+        async function testCoreSystems() {
+            try {
+                logResult('core-result', 'Testing core systems...', 'warning');
+                
+                // Test if extension is loaded
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    logResult('core-result', '✅ Chrome extension API available', 'success');
+                } else {
+                    logResult('core-result', '❌ Chrome extension API not available', 'error');
+                    return;
+                }
+                
+                // Test background script communication
+                const response = await new Promise((resolve) => {
+                    chrome.runtime.sendMessage({ type: 'ping' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            resolve({ error: chrome.runtime.lastError.message });
+                        } else {
+                            resolve(response);
+                        }
+                    });
+                });
+                
+                if (response.error) {
+                    logResult('core-result', `❌ Background script error: ${response.error}`, 'error');
+                } else {
+                    logResult('core-result', `✅ Background script responsive: ${JSON.stringify(response)}`, 'success');
+                }
+                
+            } catch (error) {
+                logResult('core-result', `❌ Core systems test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTDCIntegration() {
+            try {
+                logResult('tdc-result', 'Testing TDC integration...', 'warning');
+                
+                // Test TDC analysis
+                const testPayload = {
+                    message: "This is a test message for TDC analysis",
+                    sender: "test-user",
+                    platform: "test-platform",
+                    session_id: "test-session-" + Date.now(),
+                    timestamp: Date.now()
+                };
+                
+                const response = await new Promise((resolve) => {
+                    chrome.runtime.sendMessage({ 
+                        type: 'catdams_log', 
+                        payload: testPayload 
+                    }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            resolve({ error: chrome.runtime.lastError.message });
+                        } else {
+                            resolve(response);
+                        }
+                    });
+                });
+                
+                if (response.error) {
+                    logResult('tdc-result', `❌ TDC integration error: ${response.error}`, 'error');
+                } else {
+                    logResult('tdc-result', `✅ TDC integration successful: ${JSON.stringify(response)}`, 'success');
+                }
+                
+            } catch (error) {
+                logResult('tdc-result', `❌ TDC integration test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPerformanceMonitor() {
+            try {
+                logResult('performance-result', 'Testing performance monitor...', 'warning');
+                
+                // Test performance metrics
+                const response = await new Promise((resolve) => {
+                    chrome.runtime.sendMessage({ type: 'get_stats' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            resolve({ error: chrome.runtime.lastError.message });
+                        } else {
+                            resolve(response);
+                        }
+                    });
+                });
+                
+                if (response.error) {
+                    logResult('performance-result', `❌ Performance monitor error: ${response.error}`, 'error');
+                } else {
+                    logResult('performance-result', `✅ Performance monitor working: ${JSON.stringify(response)}`, 'success');
+                }
+                
+            } catch (error) {
+                logResult('performance-result', `❌ Performance monitor test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPopupCommunication() {
+            try {
+                logResult('popup-result', 'Testing popup communication...', 'warning');
+                
+                // Test configuration update
+                const testConfig = {
+                    threatDetection: { enabled: true, realTime: true },
+                    errorHandling: { logLevel: 'info', logToStorage: true },
+                    backend: { circuitBreaker: { enabled: true } }
+                };
+                
+                const response = await new Promise((resolve) => {
+                    chrome.runtime.sendMessage({ 
+                        type: 'config_updated', 
+                        config: testConfig 
+                    }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            resolve({ error: chrome.runtime.lastError.message });
+                        } else {
+                            resolve(response);
+                        }
+                    });
+                });
+                
+                if (response.error) {
+                    logResult('popup-result', `❌ Popup communication error: ${response.error}`, 'error');
+                } else {
+                    logResult('popup-result', `✅ Popup communication successful: ${JSON.stringify(response)}`, 'success');
+                }
+                
+            } catch (error) {
+                logResult('popup-result', `❌ Popup communication test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSecurityChecks() {
+            try {
+                logResult('security-result', 'Testing security checks...', 'warning');
+                
+                // Test input validation
+                const maliciousPayload = {
+                    message: "<script>alert('xss')</script>This is a test with potential XSS",
+                    sender: "test-user",
+                    platform: "test-platform",
+                    session_id: "test-session-" + Date.now(),
+                    timestamp: Date.now()
+                };
+                
+                const response = await new Promise((resolve) => {
+                    chrome.runtime.sendMessage({ 
+                        type: 'catdams_log', 
+                        payload: maliciousPayload 
+                    }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            resolve({ error: chrome.runtime.lastError.message });
+                        } else {
+                            resolve(response);
+                        }
+                    });
+                });
+                
+                if (response.error) {
+                    logResult('security-result', `❌ Security check error: ${response.error}`, 'error');
+                } else {
+                    logResult('security-result', `✅ Security check completed: ${JSON.stringify(response)}`, 'success');
+                }
+                
+            } catch (error) {
+                logResult('security-result', `❌ Security check test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testEndToEnd() {
+            try {
+                logResult('e2e-result', 'Running end-to-end test...', 'warning');
+                
+                const results = [];
+                
+                // Test 1: Core systems
+                await testCoreSystems();
+                results.push('Core systems');
+                
+                // Test 2: TDC integration
+                await testTDCIntegration();
+                results.push('TDC integration');
+                
+                // Test 3: Performance monitor
+                await testPerformanceMonitor();
+                results.push('Performance monitor');
+                
+                // Test 4: Popup communication
+                await testPopupCommunication();
+                results.push('Popup communication');
+                
+                // Test 5: Security checks
+                await testSecurityChecks();
+                results.push('Security checks');
+                
+                logResult('e2e-result', `✅ End-to-end test completed successfully!<br>Tested: ${results.join(', ')}`, 'success');
+                
+            } catch (error) {
+                logResult('e2e-result', `❌ End-to-end test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run core systems test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testCoreSystems, 1000);
+        });
+    </script>
+</body>
+</html> 

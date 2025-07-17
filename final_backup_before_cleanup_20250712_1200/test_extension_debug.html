@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CATDAMS Extension Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .chat-container { border: 1px solid #ccc; padding: 20px; margin: 20px 0; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .user-message { background: #e3f2fd; }
+        .ai-message { background: #f3e5f5; }
+        button { padding: 10px 20px; margin: 5px; }
+        #log { background: #f5f5f5; padding: 10px; margin: 20px 0; height: 200px; overflow-y: scroll; }
+    </style>
+</head>
+<body>
+    <h1>CATDAMS Extension Test Page</h1>
+    
+    <div class="chat-container">
+        <h3>Chat Interface</h3>
+        <div id="messages">
+            <div class="message user-message">Hello, this is a test message from user</div>
+            <div class="message ai-message">Hello! I'm an AI assistant. How can I help you today?</div>
+        </div>
+        <input type="text" id="userInput" placeholder="Type a message..." style="width: 300px; padding: 10px;">
+        <button onclick="addUserMessage()">Send User Message</button>
+        <button onclick="addAIMessage()">Send AI Message</button>
+        <button onclick="triggerExtension()">Trigger Extension Detection</button>
+    </div>
+    
+    <div>
+        <h3>Extension Debug Log</h3>
+        <div id="log"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function addUserMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value || 'Test user message';
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = message;
+            messagesDiv.appendChild(messageDiv);
+            input.value = '';
+            log(`Added user message: "${message}"`);
+        }
+
+        function addAIMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value || 'Test AI response';
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.textContent = message;
+            messagesDiv.appendChild(messageDiv);
+            input.value = '';
+            log(`Added AI message: "${message}"`);
+        }
+
+        function triggerExtension() {
+            log('Triggering extension detection...');
+            // Simulate a mutation event that the extension should detect
+            const messagesDiv = document.getElementById('messages');
+            const testDiv = document.createElement('div');
+            testDiv.className = 'message user-message';
+            testDiv.textContent = 'Triggered test message';
+            messagesDiv.appendChild(testDiv);
+            log('Added test message - extension should detect this');
+        }
+
+        // Listen for messages from the extension
+        window.addEventListener('message', function(event) {
+            if (event.source !== window) return;
+            if (event.data.type === 'CATDAMS_DEBUG') {
+                log(`Extension: ${event.data.message}`);
+            }
+        });
+
+        // Log when page loads
+        log('Test page loaded - extension should be active');
+        
+        // Check if extension is loaded
+        setTimeout(() => {
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                log('Chrome extension API detected');
+            } else {
+                log('Chrome extension API not detected');
+            }
+        }, 1000);
+    </script>
+</body>
+</html> 
